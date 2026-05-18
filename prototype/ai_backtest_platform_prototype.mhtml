@@ -1,0 +1,1093 @@
+From: <Saved by Blink>
+Snapshot-Content-Location: file:///Users/reidlai/Library/Containers/net.whatsapp.WhatsApp/Data/tmp/documents/CAD27C02-6CE9-47BA-ACAA-3791700018DF/enterprise_ai_backtest_prototype_v2.html
+Subject: Enterprise AI Backtest Platform Prototype v2
+Date: Sat, 16 May 2026 22:31:02 +0800
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	type="text/html";
+	boundary="----MultipartBoundary--XWsQLmaHVmJIOlOqqC3yI5zjy0B6aRVmSWKaLaakpm----"
+
+
+------MultipartBoundary--XWsQLmaHVmJIOlOqqC3yI5zjy0B6aRVmSWKaLaakpm----
+Content-Type: text/html
+Content-ID: <frame-2411786BFFB785ED626DB43247700A71@mhtml.blink>
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///Users/reidlai/Library/Containers/net.whatsapp.WhatsApp/Data/tmp/documents/CAD27C02-6CE9-47BA-ACAA-3791700018DF/enterprise_ai_backtest_prototype_v2.html
+
+<!DOCTYPE html><html lang=3D"zh-Hant"><head><meta http-equiv=3D"Content-Typ=
+e" content=3D"text/html; charset=3DUTF-8"><link rel=3D"stylesheet" type=3D"=
+text/css" href=3D"cid:css-4f8f73d0-985f-40eb-b4f7-4a04053c323a@mhtml.blink"=
+ />
+
+<meta name=3D"viewport" content=3D"width=3Ddevice-width, initial-scale=3D1.=
+0">
+<title>Enterprise AI Backtest Platform Prototype v2</title>
+
+</head>
+<body>
+<div class=3D"app">
+<aside class=3D"sidebar">
+  <div class=3D"brand"><div class=3D"logo">AI</div><div><h1>Research Termin=
+al</h1><span>Backtest Prototype v2</span></div></div>
+
+  <div class=3D"nav-title">LEVEL 1 / MAIN</div>
+  <div class=3D"nav">
+    <button class=3D"">=F0=9F=8F=A0 Dashboard <span class=3D"badge">Home</s=
+pan></button>
+    <button class=3D"">=F0=9F=A7=A0 AI Strategy Builder <span class=3D"badg=
+e">Core</span></button>
+    <button class=3D"">=F0=9F=8F=A6 Fundamental Screener <span class=3D"bad=
+ge">4</span></button>
+    <button class=3D"">=F0=9F=93=90 Technical Screener <span class=3D"badge=
+">5</span></button>
+    <button class=3D"">=E2=9A=99=EF=B8=8F Backtest Engine <span class=3D"ba=
+dge">6</span></button>
+  </div>
+
+  <div class=3D"nav-title">LEVEL 2 / RESULT</div>
+  <div class=3D"nav">
+    <button class=3D"">=F0=9F=93=88 Performance Result <span class=3D"badge=
+">7</span></button>
+    <button class=3D"active">=F0=9F=8C=90 Market Regime <span class=3D"badg=
+e">8</span></button>
+    <button>=F0=9F=93=B0 Sentiment / Events <span class=3D"badge">9</span><=
+/button>
+    <button>=F0=9F=93=8B Trade Log <span class=3D"badge">428</span></button=
+>
+    <button>=E2=9A=99=EF=B8=8F Settings / Billing <span class=3D"badge">Usa=
+ge</span></button>
+  </div>
+
+  <div class=3D"nav-title">LIVE CONTROLS</div>
+  <div class=3D"field"><label>Total Return %</label><input id=3D"inputRetur=
+n" type=3D"number" value=3D"186.4"></div>
+  <div class=3D"field"><label>Max Drawdown %</label><input id=3D"inputDD" t=
+ype=3D"number" value=3D"24.8"></div>
+  <div class=3D"field"><label>Win Rate %</label><input id=3D"inputWin" type=
+=3D"number" value=3D"56.2"></div>
+  <button class=3D"btn primary" style=3D"width:100%;margin-top:8px">Simulat=
+e Re-run</button>
+</aside>
+
+<main class=3D"main">
+  <div class=3D"topbar">
+    <div class=3D"search">=F0=9F=94=8E <input id=3D"globalSearch" placehold=
+er=3D"=E6=90=9C=E5=B0=8B=E7=AD=96=E7=95=A5=E3=80=81=E8=82=A1=E7=A5=A8=E3=80=
+=81=E8=B2=A1=E5=8B=99=E6=A2=9D=E4=BB=B6=E3=80=81=E6=8A=80=E8=A1=93=E6=8C=87=
+=E6=A8=99=E3=80=81Regime=E3=80=81AI =E5=95=8F=E9=A1=8C"></div>
+    <button class=3D"btn green">Save</button>
+    <button class=3D"btn amber">Export JSON</button>
+    <button class=3D"btn primary">Send to AI</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section id=3D"dashboard" class=3D"page">
+    <div class=3D"grid">
+      <div class=3D"panel col-8">
+        <div class=3D"panel-title"><h2>Investment Research Workbench / =E7=
+=94=A8=E6=88=B6=E7=99=BB=E5=85=A5=E7=AC=AC=E4=B8=80=E5=B1=8F</h2><span>=E4=
+=B8=8D=E6=98=AF welcome page=EF=BC=8C=E6=98=AF=E6=8A=95=E8=B3=87=E7=A0=94=
+=E7=A9=B6=E5=B7=A5=E4=BD=9C=E5=8F=B0</span></div>
+        <div class=3D"metric-grid">
+          <div class=3D"metric"><div class=3D"top">=F0=9F=87=BA=F0=9F=87=B8=
+ S&amp;P 500 <span>Market</span></div><div class=3D"num good">5,284</div><d=
+iv class=3D"sub">+0.62% today</div></div>
+          <div class=3D"metric"><div class=3D"top">=F0=9F=92=BB Nasdaq <spa=
+n>Growth</span></div><div class=3D"num good">18,940</div><div class=3D"sub"=
+>Risk-on leadership</div></div>
+          <div class=3D"metric"><div class=3D"top">=F0=9F=87=AD=F0=9F=87=B0=
+ Hang Seng <span>HK</span></div><div class=3D"num warn">19,120</div><div cl=
+ass=3D"sub">Sideway regime</div></div>
+          <div class=3D"metric"><div class=3D"top">=E2=9A=A0 VIX <span>Vol<=
+/span></div><div class=3D"num info">18.7</div><div class=3D"sub">Medium vol=
+atility</div></div>
+          <div class=3D"metric"><div class=3D"top">=F0=9F=8F=A6 10Y Yield <=
+span>Rates</span></div><div class=3D"num warn">4.21%</div><div class=3D"sub=
+">Rate pressure</div></div>
+          <div class=3D"metric"><div class=3D"top">=F0=9F=93=81 My Strategi=
+es <span>Saved</span></div><div class=3D"num">48</div><div class=3D"sub">La=
+st run: 12 min ago</div></div>
+          <div class=3D"metric"><div class=3D"top">=F0=9F=A7=AA Backtest Qu=
+eue <span>Status</span></div><div class=3D"num info">3</div><div class=3D"s=
+ub">1 running =C2=B7 2 waiting</div></div>
+          <div class=3D"metric"><div class=3D"top">=F0=9F=94=94 Alerts <spa=
+n>Signals</span></div><div class=3D"num warn">12</div><div class=3D"sub">Pr=
+ice / Financial / Strategy</div></div>
+        </div>
+      </div>
+
+      <div class=3D"panel col-4">
+        <div class=3D"panel-title"><h2>AI Research Box</h2><span>=E5=B9=B3=
+=E5=8F=B0=E6=A0=B8=E5=BF=83=E5=85=A5=E5=8F=A3</span></div>
+        <div class=3D"field">
+          <textarea id=3D"homeAIInput">=E6=88=91=E6=83=B3=E6=89=BE=E5=87=BA=
+ PE =E4=BD=8E=E6=96=BC=E8=A1=8C=E6=A5=AD=E5=B9=B3=E5=9D=87=E3=80=81Revenue =
+growth =E8=B6=85=E9=81=8E 15%=E3=80=81RSI =E4=BD=8E=E6=96=BC 35=E3=80=81=E8=
+=82=A1=E5=83=B9=E9=AB=98=E6=96=BC 200MA=EF=BC=8C=E4=B8=A6=E5=9B=9E=E6=B8=AC=
+=E9=81=8E=E5=8E=BB 10 =E5=B9=B4=EF=BC=8C=E6=AF=8F=E6=AC=A1=E5=8F=AA=E7=94=
+=A8 10% =E8=B3=87=E9=87=91=EF=BC=8C=E8=B7=8C 8% =E6=AD=A2=E8=9D=95=E3=80=82=
+</textarea>
+        </div>
+        <button class=3D"btn primary" style=3D"width:100%">Convert to Strat=
+egy</button>
+        <div class=3D"toolbar" style=3D"margin-top:10px">
+          <button class=3D"chip">=E6=96=B0=E5=A2=9E=E7=AD=96=E7=95=A5</butt=
+on>
+          <button class=3D"chip">=E6=96=B0=E5=A2=9E=E5=9B=9E=E6=B8=AC</butt=
+on>
+          <button class=3D"chip">Fundamental Screener</button>
+          <button class=3D"chip">Technical Screener</button>
+          <button class=3D"chip">Market Regime</button>
+          <button class=3D"chip">=E5=AE=8C=E6=88=90=E5=A0=B1=E5=91=8A</butt=
+on>
+        </div>
+      </div>
+
+      <div class=3D"panel col-12">
+        <div class=3D"panel-title"><h2>Main Function Gateway / =E4=B8=BB=E5=
+=8A=9F=E8=83=BD=E8=B7=B3=E6=9D=BF</h2><span>=E7=AC=AC2=E5=B1=A4=E5=8A=9F=E8=
+=83=BD=E5=85=A5=E5=8F=A3</span></div>
+        <div class=3D"card-list">
+          <div class=3D"feature-card"><h3>=F0=9F=A7=A0 AI Strategy Builder<=
+/h3><p>=E8=87=AA=E7=84=B6=E8=AA=9E=E8=A8=80=E8=BD=89=E6=8F=9B=E6=88=90 Mark=
+et=E3=80=81Fundamental Filter=E3=80=81Technical Filter=E3=80=81Backtest Per=
+iod=E3=80=81Risk Rule=E3=80=82</p></div>
+          <div class=3D"feature-card"><h3>=F0=9F=8F=A6 Fundamental Screenin=
+g</h3><p>=E5=83=8F Koyfin / FactSet =E9=A1=9E=E5=9E=8B=EF=BC=9A=E4=BC=B0=E5=
+=80=BC=E3=80=81=E8=B3=AA=E9=87=8F=E3=80=81=E6=88=90=E9=95=B7=E3=80=81=E8=B2=
+=A0=E5=82=B5=E3=80=81=E8=A1=8C=E6=A5=AD=E7=9B=B8=E5=B0=8D=E3=80=81Ranking S=
+ystem=E3=80=82</p></div>
+          <div class=3D"feature-card"><h3>=F0=9F=93=90 Technical Screening<=
+/h3><p>SMA / EMA / MACD / RSI / ATR / Bollinger / Volume / Pattern Scanner=
+=E3=80=82</p></div>
+          <div class=3D"feature-card"><h3>=E2=9A=99=EF=B8=8F Backtest Engin=
+e</h3><p>Single Stock=E3=80=81Watchlist=E3=80=81Screener Result=E3=80=81Ind=
+ex Universe=E3=80=81Strategy Comparison=E3=80=82</p></div>
+          <div class=3D"feature-card"><h3>=F0=9F=8C=90 Market Regime</h3><p=
+>Bull=E3=80=81Bear=E3=80=81High Vol=E3=80=81Risk-On=E3=80=81Risk-Off=E3=80=
+=81Inflation Shock=E3=80=81Rate Cut Cycle=E3=80=82</p></div>
+          <div class=3D"feature-card"><h3>=F0=9F=93=B0 Sentiment &amp; Even=
+ts</h3><p>=E6=96=B0=E8=81=9E=E3=80=81=E8=B2=A1=E5=A0=B1=E3=80=81=E5=88=86=
+=E6=9E=90=E5=B8=AB=E4=BF=AE=E8=A8=82=E3=80=81Fed=E3=80=81CPI / NFP=E3=80=81=
+Insider=E3=80=81Social Sentiment=E3=80=82</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUILDER -->
+  <section id=3D"builder" class=3D"page">
+    <div class=3D"grid">
+      <div class=3D"panel col-7">
+        <div class=3D"panel-title"><h2>AI Strategy Builder Requirement</h2>=
+<span>3.1 =E8=87=AA=E7=84=B6=E8=AA=9E=E8=A8=80=E8=BC=B8=E5=85=A5</span></di=
+v>
+        <div class=3D"field">
+          <label>Natural Language Strategy Input</label>
+          <textarea id=3D"builderInput">=E6=88=91=E6=83=B3=E6=89=BE=E5=87=
+=BA=E7=BE=8E=E8=82=A1=E4=B8=AD=EF=BC=9APE =E4=BD=8E=E6=96=BC=E8=A1=8C=E6=A5=
+=AD=E5=B9=B3=E5=9D=87=EF=BC=8CRevenue growth =E8=B6=85=E9=81=8E 15%=EF=BC=
+=8CRSI =E4=BD=8E=E6=96=BC 35=EF=BC=8C=E8=82=A1=E5=83=B9=E9=AB=98=E6=96=BC 2=
+00MA=EF=BC=8C=E5=9B=9E=E6=B8=AC=E9=81=8E=E5=8E=BB 10 =E5=B9=B4=EF=BC=8C=E6=
+=AF=8F=E6=AC=A1=E5=8F=AA=E7=94=A8 10% =E8=B3=87=E9=87=91=EF=BC=8C=E8=B7=8C =
+8% =E6=AD=A2=E8=9D=95=E3=80=82</textarea>
+        </div>
+        <div class=3D"toolbar">
+          <button class=3D"btn primary">Parse Strategy</button>
+          <button class=3D"btn green">Send to Backtest</button>
+          <button class=3D"btn amber">Open Fundamental Screener</button>
+          <button class=3D"btn amber">Open Technical Screener</button>
+        </div>
+        <div id=3D"builderOutput" class=3D"builder-output">=E6=8C=89=E3=80=
+=8CParse Strategy=E3=80=8D=E5=BE=8C=EF=BC=8CAI =E6=9C=83=E6=8A=8A=E8=87=AA=
+=E7=84=B6=E8=AA=9E=E8=A8=80=E8=BD=89=E6=88=90=E7=B5=90=E6=A7=8B=E5=8C=96=E7=
+=AD=96=E7=95=A5=E3=80=82</div>
+      </div>
+
+      <div class=3D"panel col-5">
+        <div class=3D"panel-title"><h2>Structured Strategy Object</h2><span=
+>=E5=8F=AF=E9=80=81 API / Database</span></div>
+        <table>
+          <tbody><tr><th>=E9=A1=9E=E5=88=A5</th><th>=E7=B3=BB=E7=B5=B1=E7=
+=90=86=E8=A7=A3</th></tr>
+          <tr><td>Market</td><td id=3D"sMarket">US Stocks</td></tr>
+          <tr><td>Fundamental Filter</td><td id=3D"sFund">PE below sector a=
+verage; Revenue growth &gt; 15%</td></tr>
+          <tr><td>Technical Filter</td><td id=3D"sTech">RSI &lt; 35; Price =
+&gt; 200MA</td></tr>
+          <tr><td>Backtest Period</td><td id=3D"sPeriod">10 years</td></tr>
+          <tr><td>Position Size</td><td id=3D"sSize">10% capital</td></tr>
+          <tr><td>Risk Rule</td><td id=3D"sRisk">Stop loss 8%</td></tr>
+        </tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <!-- FUNDAMENTAL -->
+  <section id=3D"fundamental" class=3D"page">
+    <div class=3D"panel">
+      <div class=3D"panel-title"><h2>Fundamental Screening Requirement</h2>=
+<span>=E4=BC=81=E6=A5=AD=E7=B4=9A=E8=B2=A1=E5=8B=99=E7=AF=A9=E9=81=B8=E5=99=
+=A8=EF=BC=9AUniverse =C2=B7 Valuation =C2=B7 Quality =C2=B7 Growth =C2=B7 D=
+ebt =C2=B7 Sector Relative =C2=B7 Ranking</span></div>
+      <div class=3D"filter-grid">
+        <div class=3D"filter-box"><h4>=F0=9F=8C=8D Universe</h4><small>=E9=
+=81=B8=E6=93=87=E8=82=A1=E7=A5=A8=E6=B1=A0</small><select id=3D"universe"><=
+option>US All Stocks</option><option>S&amp;P 500</option><option>Nasdaq 100=
+</option><option>Russell 1000</option><option>Russell 2000</option><option>=
+HK All Stocks</option><option>Hang Seng Index</option><option>Sector Univer=
+se</option><option>Custom Watchlist</option></select></div>
+        <div class=3D"filter-box"><h4>=F0=9F=92=B5 PE Ratio</h4><small>&lt;=
+ 15 / &lt; Sector Median</small><input id=3D"pe" type=3D"range" min=3D"5" m=
+ax=3D"40" value=3D"15" class=3D"slider"><b id=3D"peVal">PE &lt; 15</b></div=
+>
+        <div class=3D"filter-box"><h4>=F0=9F=93=88 Revenue Growth YoY</h4><=
+small>Growth Filter</small><input id=3D"rev" type=3D"range" min=3D"0" max=
+=3D"50" value=3D"15" class=3D"slider"><b id=3D"revVal">&gt; 15%</b></div>
+        <div class=3D"filter-box"><h4>=F0=9F=8F=86 ROIC</h4><small>Quality =
+Filter</small><input id=3D"roic" type=3D"range" min=3D"0" max=3D"40" value=
+=3D"10" class=3D"slider"><b id=3D"roicVal">&gt; 10%</b></div>
+
+        <div class=3D"filter-box"><h4>=F0=9F=93=8A Valuation Filters</h4><s=
+mall>PE / Forward PE / PB / PS / EV/EBITDA / PEG / FCF Yield / Dividend Yie=
+ld</small><button class=3D"chip active">PE vs Sector</button><button class=
+=3D"chip">EV/EBITDA</button><button class=3D"chip">FCF Yield</button></div>
+        <div class=3D"filter-box"><h4>=F0=9F=92=8E Profitability / Quality<=
+/h4><small>Gross Margin=E3=80=81Operating Margin=E3=80=81Net Margin=E3=80=
+=81ROE=E3=80=81ROA=E3=80=81ROIC=E3=80=81FCF Margin=E3=80=81Earnings Stabili=
+ty</small><button class=3D"chip active">Gross Margin &gt; 40%</button><butt=
+on class=3D"chip">ROE &gt; 15%</button></div>
+        <div class=3D"filter-box"><h4>=F0=9F=9A=80 Growth Filters</h4><smal=
+l>Revenue CAGR 3Y=E3=80=81EPS Growth=E3=80=81EBITDA Growth=E3=80=81FCF Grow=
+th=E3=80=81Analyst Revision</small><button class=3D"chip active">Revenue &g=
+t; 15%</button><button class=3D"chip">EPS CAGR 3Y</button></div>
+        <div class=3D"filter-box"><h4>=F0=9F=9B=A1 Balance Sheet / Debt</h4=
+><small>Debt/Equity=E3=80=81Net Debt/EBITDA=E3=80=81Current Ratio=E3=80=81I=
+nterest Coverage=E3=80=81Cash/Debt</small><button class=3D"chip active">Int=
+erest Coverage</button><button class=3D"chip">Cash/Debt</button></div>
+      </div>
+    </div>
+
+    <div class=3D"grid">
+      <div class=3D"panel col-5">
+        <div class=3D"panel-title"><h2>Ranking System</h2><span>Factor Weig=
+ht</span></div>
+        <table>
+          <tbody><tr><th>Factor</th><th>Weight</th></tr>
+          <tr><td>Value Score</td><td><input type=3D"range" value=3D"30"><b=
+>30%</b></td></tr>
+          <tr><td>Quality Score</td><td><input type=3D"range" value=3D"30">=
+<b>30%</b></td></tr>
+          <tr><td>Growth Score</td><td><input type=3D"range" value=3D"20"><=
+b>20%</b></td></tr>
+          <tr><td>Momentum Score</td><td><input type=3D"range" value=3D"20"=
+><b>20%</b></td></tr>
+        </tbody></table>
+      </div>
+      <div class=3D"panel col-7">
+        <div class=3D"panel-title"><h2>Screener Result Ranking</h2><span>=
+=E5=8F=AF=E7=9B=B4=E6=8E=A5=E9=80=81 Backtest</span></div>
+        <div class=3D"table-wrap">
+          <table>
+            <tbody><tr><th>Rank</th><th>Symbol</th><th>Value</th><th>Qualit=
+y</th><th>Growth</th><th>Momentum</th><th>Total Score</th><th>Action</th></=
+tr>
+            <tr><td>1</td><td>AAPL</td><td>72</td><td>92</td><td>80</td><td=
+>65</td><td class=3D"good">78</td><td><button class=3D"chip">Backtest</butt=
+on></td></tr>
+            <tr><td>2</td><td>MSFT</td><td>65</td><td>95</td><td>82</td><td=
+>70</td><td class=3D"good">79</td><td><button class=3D"chip">Backtest</butt=
+on></td></tr>
+            <tr><td>3</td><td>NVDA</td><td>48</td><td>90</td><td>96</td><td=
+>88</td><td class=3D"good">81</td><td><button class=3D"chip">Backtest</butt=
+on></td></tr>
+            <tr><td>4</td><td>GOOG</td><td>76</td><td>88</td><td>75</td><td=
+>62</td><td>75</td><td><button class=3D"chip">Backtest</button></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNICAL -->
+  <section id=3D"technical" class=3D"page">
+    <div class=3D"panel">
+      <div class=3D"panel-title"><h2>Technical Screening Requirement</h2><s=
+pan>Trend =C2=B7 Momentum =C2=B7 Volatility =C2=B7 Volume =C2=B7 Pattern Sc=
+anner</span></div>
+      <div class=3D"filter-grid">
+        <div class=3D"filter-box"><h4>=F0=9F=93=88 Trend Indicators</h4><sm=
+all>SMA / EMA / MACD / ADX / Ichimoku</small><select><option>Price &gt; SMA=
+200</option><option>EMA20 &gt; EMA50</option><option>MACD crosses above sig=
+nal</option><option>ADX &gt; 25</option><option>Price above cloud</option><=
+/select></div>
+        <div class=3D"filter-box"><h4>=E2=9A=A1 Momentum Indicators</h4><sm=
+all>RSI / Stochastic / ROC / CCI</small><select><option>RSI &lt; 30</option=
+><option>RSI &gt; 70</option><option>Stochastic K crosses D</option><option=
+>ROC &gt; 5%</option><option>CCI &lt; -100</option></select></div>
+        <div class=3D"filter-box"><h4>=F0=9F=8C=AA Volatility Indicators</h=
+4><small>ATR / Bollinger / Historical Volatility / Keltner</small><select><=
+option>ATR rising</option><option>Price touches lower band</option><option>=
+Volatility percentile &gt; 80%</option><option>Breakout above Keltner</opti=
+on></select></div>
+        <div class=3D"filter-box"><h4>=F0=9F=93=A6 Volume Indicators</h4><s=
+mall>Volume Spike / OBV / VWAP / A/D</small><select><option>Volume &gt; 2x =
+average</option><option>OBV rising</option><option>Price above VWAP</option=
+><option>Accumulation increasing</option></select></div>
+      </div>
+    </div>
+    <div class=3D"grid">
+      <div class=3D"panel col-5">
+        <div class=3D"panel-title"><h2>Pattern Scanner</h2><span>=E5=BD=A2=
+=E6=85=8B=E6=8E=83=E6=8F=8F</span></div>
+        <div class=3D"toolbar">
+          <button class=3D"chip active">Double Bottom</button>
+          <button class=3D"chip">Double Top</button>
+          <button class=3D"chip">Breakout</button>
+          <button class=3D"chip">Pullback</button>
+          <button class=3D"chip">Gap Up / Gap Down</button>
+          <button class=3D"chip">Higher High / Higher Low</button>
+          <button class=3D"chip">Lower High / Lower Low</button>
+        </div>
+        <div id=3D"patternExplain" class=3D"builder-output">Double Bottom=
+=EF=BC=9A=E5=8F=8D=E8=BD=89=E5=BD=A2=E6=85=8B=EF=BC=8C=E7=94=A8=E6=96=BC=E5=
+=B0=8B=E6=89=BE=E5=A4=9A=E6=AC=A1=E6=8E=A5=E8=BF=91=E4=BD=8E=E4=BD=8D=E5=BE=
+=8C=E5=8F=8D=E5=BD=88=E7=9A=84=E8=82=A1=E7=A5=A8=E3=80=82</div>
+      </div>
+      <div class=3D"panel col-7">
+        <div class=3D"panel-title"><h2>Technical Chart Preview</h2><span>=
+=E7=A4=BA=E6=84=8F=E5=9C=96</span></div>
+        <div id=3D"techChart" class=3D"fake-chart"><svg viewBox=3D"0 0 900 =
+260" preserveAspectRatio=3D"none">
+    <polyline fill=3D"none" stroke=3D"rgba(56,189,248,.95)" stroke-width=3D=
+"4" points=3D"0,210 80,190 160,205 240,150 320,168 400,120 480,140 560,85 6=
+40,105 720,60 800,74 900,38"></polyline>
+    <circle cx=3D"160" cy=3D"205" r=3D"9" fill=3D"rgba(34,197,94,.9)"></cir=
+cle>
+    <circle cx=3D"320" cy=3D"168" r=3D"9" fill=3D"rgba(34,197,94,.9)"></cir=
+cle>
+    <text x=3D"360" y=3D"170" fill=3D"white" font-size=3D"16">Double Bottom=
+</text>
+  </svg></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BACKTEST -->
+  <section id=3D"backtest" class=3D"page">
+    <div class=3D"grid">
+      <div class=3D"panel col-5">
+        <div class=3D"panel-title"><h2>Backtesting Requirement</h2><span>6.=
+1 =E6=A8=A1=E5=BC=8F</span></div>
+        <div class=3D"toolbar">
+          <button class=3D"chip active">Single Stock Backtest</button>
+          <button class=3D"chip">Watchlist Backtest</button>
+          <button class=3D"chip">Screener Result Backtest</button>
+          <button class=3D"chip">Index Universe Backtest</button>
+          <button class=3D"chip">Strategy Comparison</button>
+          <button class=3D"chip">Benchmark Comparison</button>
+        </div>
+      </div>
+      <div class=3D"panel col-7">
+        <div class=3D"panel-title"><h2>Backtest Parameters</h2><span>6.2 =
+=E5=8F=AF=E8=BC=B8=E5=85=A5=E5=8F=83=E6=95=B8</span></div>
+        <div class=3D"filter-grid">
+          <div class=3D"field"><label>Initial Capital</label><input value=
+=3D"$100,000"></div>
+          <div class=3D"field"><label>Date Range</label><input value=3D"201=
+4-01-01 =E2=86=92 2026-05-14"></div>
+          <div class=3D"field"><label>Market</label><select><option>US</opt=
+ion><option>HK</option></select></div>
+          <div class=3D"field"><label>Universe</label><select><option>Scree=
+ner Result</option><option>Single Stock</option><option>S&amp;P 500</option=
+></select></div>
+          <div class=3D"field"><label>Timeframe</label><select><option>Dail=
+y</option><option>Hourly</option><option>15-min delayed</option></select></=
+div>
+          <div class=3D"field"><label>Commission Model</label><select><opti=
+on>Percentage</option><option>Fixed</option><option>Per Share</option></sel=
+ect></div>
+          <div class=3D"field"><label>Slippage Model</label><select><option=
+>ATR</option><option>Fixed</option><option>Percentage</option></select></di=
+v>
+          <div class=3D"field"><label>Position Size</label><input value=3D"=
+10% portfolio"></div>
+          <div class=3D"field"><label>Stop Loss</label><input value=3D"8%">=
+</div>
+          <div class=3D"field"><label>Take Profit</label><input value=3D"18=
+% / trailing"></div>
+          <div class=3D"field"><label>Long / Short</label><select><option>L=
+ong Only</option><option>Short Only</option><option>Long + Short</option></=
+select></div>
+          <div class=3D"field"><label>Rebalance</label><select><option>Mont=
+hly</option><option>Weekly</option><option>Daily</option></select></div>
+        </div>
+      </div>
+      <div class=3D"panel col-12">
+        <div class=3D"panel-title"><h2>Order Types</h2><span>6.3 v2.0 =E8=
+=A6=81=E6=B1=82</span></div>
+        <div class=3D"toolbar">
+          <button class=3D"chip active">Market Order =E5=BF=85=E9=A0=88</bu=
+tton>
+          <button class=3D"chip active">Limit Order =E5=BF=85=E9=A0=88</but=
+ton>
+          <button class=3D"chip active">Stop Order =E5=BF=85=E9=A0=88</butt=
+on>
+          <button class=3D"chip active">Stop Limit =E5=BF=85=E9=A0=88</butt=
+on>
+          <button class=3D"chip active">Trailing Stop =E5=BF=85=E9=A0=88</b=
+utton>
+          <button class=3D"chip">Bracket Order =E5=BB=BA=E8=AD=B0</button>
+          <button class=3D"chip">OCO v2.1 / Enterprise</button>
+          <button class=3D"chip active">Short Sell =E5=BF=85=E9=A0=88=E6=94=
+=AF=E6=8F=B4</button>
+        </div>
+        <button class=3D"btn primary">Run Backtest</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PERFORMANCE -->
+  <section id=3D"performance" class=3D"page">
+    <div class=3D"grid">
+      <div class=3D"panel col-8">
+        <div class=3D"panel-title"><h2>7 + 8 Integrated Result Board</h2><s=
+pan>=E6=8B=96=E5=8B=95=E5=8D=A1=E7=89=87=E6=94=B9=E6=8E=92=E5=BA=8F =C2=B7 =
+=E9=9B=99=E6=93=8A=E5=8F=AF=E6=94=B9=E6=95=B8=E5=AD=97</span></div>
+        <div id=3D"metricGrid" class=3D"metric-grid">
+          <div class=3D"metric" draggable=3D"true" data-key=3D"return"><div=
+ class=3D"top">=F0=9F=93=88 Total Return <span>All</span></div><div id=3D"m=
+Return" class=3D"num good">+186.4%</div><div class=3D"sub">Double click to =
+edit</div></div>
+          <div class=3D"metric" draggable=3D"true" data-key=3D"profit"><div=
+ class=3D"top">=F0=9F=92=B0 Net Profit <span>USD</span></div><div id=3D"mPr=
+ofit" class=3D"num good">$186,400</div><div class=3D"sub">Auto from return<=
+/div></div>
+          <div class=3D"metric" draggable=3D"true" data-key=3D"dd"><div cla=
+ss=3D"top">=F0=9F=9B=A1 Max Drawdown <span>Risk</span></div><div id=3D"mDD"=
+ class=3D"num bad">-24.8%</div><div class=3D"sub">Lower is better</div></di=
+v>
+          <div class=3D"metric" draggable=3D"true" data-key=3D"sharpe"><div=
+ class=3D"top">=F0=9F=8F=86 Sharpe Ratio <span>Risk Adj.</span></div><div i=
+d=3D"mSharpe" class=3D"num info">1.18</div><div class=3D"sub">Risk adjusted=
+</div></div>
+          <div class=3D"metric" draggable=3D"true" data-key=3D"win"><div cl=
+ass=3D"top">=F0=9F=8E=AF Win Rate <span>Trades</span></div><div id=3D"mWin"=
+ class=3D"num">56.2%</div><div class=3D"sub">Total trades 428</div></div>
+          <div class=3D"metric" draggable=3D"true"><div class=3D"top">=E2=
+=9A=96 Profit Factor <span>P/L</span></div><div class=3D"num good">1.72</di=
+v><div class=3D"sub">Gross profit / loss</div></div>
+          <div class=3D"metric" draggable=3D"true"><div class=3D"top">=F0=
+=9F=93=89 Volatility <span>Annual</span></div><div class=3D"num warn">17.6%=
+</div><div class=3D"sub">Beta 0.84</div></div>
+          <div class=3D"metric" draggable=3D"true"><div class=3D"top">=E2=
+=8F=B1 Exposure Time <span>Capital</span></div><div class=3D"num">62%</div>=
+<div class=3D"sub">Turnover 3.8x</div></div>
+        </div>
+      </div>
+
+      <div class=3D"panel col-4">
+        <div class=3D"panel-title"><h2>Regime Performance</h2><span>8.2</sp=
+an></div>
+        <table>
+          <tbody><tr><th>Regime</th><th>Return</th><th>Max DD</th><th>Win</=
+th></tr>
+          <tr><td>Bull</td><td class=3D"good">+22%</td><td>-8%</td><td>58%<=
+/td></tr>
+          <tr><td>Bear</td><td class=3D"bad">-11%</td><td>-24%</td><td>36%<=
+/td></tr>
+          <tr><td>High Vol</td><td class=3D"bad">-6%</td><td>-18%</td><td>4=
+0%</td></tr>
+          <tr><td>Risk-On</td><td class=3D"good">+19%</td><td>-9%</td><td>6=
+1%</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class=3D"panel col-8">
+        <div class=3D"panel-title"><h2>Charts</h2><span>Equity =C2=B7 Drawd=
+own =C2=B7 Benchmark =C2=B7 Heatmap</span></div>
+        <div class=3D"toolbar">
+          <button class=3D"chip active">Equity Curve</button>
+          <button class=3D"chip">Drawdown</button>
+          <button class=3D"chip">Benchmark Overlay</button>
+          <button class=3D"chip">Monthly Heatmap</button>
+        </div>
+        <div id=3D"chartBox" class=3D"fake-chart"><svg viewBox=3D"0 0 900 2=
+60" preserveAspectRatio=3D"none"><polyline fill=3D"none" stroke=3D"rgba(56,=
+189,248,.95)" stroke-width=3D"4" points=3D"0,220 60,205 120,210 180,170 240=
+,180 300,130 360,142 420,110 480,125 540,80 600,96 660,62 720,75 780,38 840=
+,45 900,22"></polyline></svg></div>
+      </div>
+
+      <div class=3D"panel col-4">
+        <div class=3D"panel-title"><h2>Long / Short Split</h2><span>7.4</sp=
+an></div>
+        <table>
+          <tbody><tr><th>Metric</th><th>Long</th><th>Short</th></tr>
+          <tr><td>Trades</td><td>286</td><td>142</td></tr>
+          <tr><td>Win Rate</td><td class=3D"good">61%</td><td>46%</td></tr>
+          <tr><td>PnL</td><td class=3D"good">+$162k</td><td class=3D"good">=
++$24k</td></tr>
+          <tr><td>Max DD</td><td class=3D"bad">-16%</td><td class=3D"bad">-=
+12%</td></tr>
+        </tbody></table>
+      </div>
+
+      <div class=3D"panel col-12">
+        <div class=3D"panel-title"><h2>Full Performance Summary</h2><span>7=
+.1</span></div>
+        <div class=3D"table-wrap"><table id=3D"perfTable"><tbody><tr><th>=
+=E6=95=B8=E6=93=9A</th><th>=E6=95=B8=E5=80=BC</th><th>=E8=AA=AA=E6=98=8E</t=
+h></tr><tr><td>Total Return</td><td>+186.4%</td><td>=E5=8F=AF=E6=8E=A5 data=
+base / report engine / AI review</td></tr><tr><td>CAGR</td><td>9.1%</td><td=
+>=E5=8F=AF=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>N=
+et Profit</td><td>$186,400</td><td>=E5=8F=AF=E6=8E=A5 database / report eng=
+ine / AI review</td></tr><tr><td>Gross Profit</td><td>$284,000</td><td>=E5=
+=8F=AF=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>Gross=
+ Loss</td><td>-$97,600</td><td>=E5=8F=AF=E6=8E=A5 database / report engine =
+/ AI review</td></tr><tr><td>Profit Factor</td><td>1.72</td><td>=E5=8F=AF=
+=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>Win Rate</t=
+d><td>56.2%</td><td>=E5=8F=AF=E6=8E=A5 database / report engine / AI review=
+</td></tr><tr><td>Total Trades</td><td>428</td><td>=E5=8F=AF=E6=8E=A5 datab=
+ase / report engine / AI review</td></tr><tr><td>Average Win</td><td>$1,120=
+</td><td>=E5=8F=AF=E6=8E=A5 database / report engine / AI review</td></tr><=
+tr><td>Average Loss</td><td>-$835</td><td>=E5=8F=AF=E6=8E=A5 database / rep=
+ort engine / AI review</td></tr><tr><td>Payoff Ratio</td><td>1.34</td><td>=
+=E5=8F=AF=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>Ma=
+x Drawdown</td><td>-24.8%</td><td>=E5=8F=AF=E6=8E=A5 database / report engi=
+ne / AI review</td></tr><tr><td>Drawdown Duration</td><td>142 days</td><td>=
+=E5=8F=AF=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>Re=
+covery Time</td><td>87 days</td><td>=E5=8F=AF=E6=8E=A5 database / report en=
+gine / AI review</td></tr><tr><td>Sharpe Ratio</td><td>1.18</td><td>=E5=8F=
+=AF=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>Sortino =
+Ratio</td><td>1.64</td><td>=E5=8F=AF=E6=8E=A5 database / report engine / AI=
+ review</td></tr><tr><td>Calmar Ratio</td><td>0.37</td><td>=E5=8F=AF=E6=8E=
+=A5 database / report engine / AI review</td></tr><tr><td>Volatility</td><t=
+d>17.6%</td><td>=E5=8F=AF=E6=8E=A5 database / report engine / AI review</td=
+></tr><tr><td>Alpha</td><td>4.2%</td><td>=E5=8F=AF=E6=8E=A5 database / repo=
+rt engine / AI review</td></tr><tr><td>Beta</td><td>0.84</td><td>=E5=8F=AF=
+=E6=8E=A5 database / report engine / AI review</td></tr><tr><td>Exposure Ti=
+me</td><td>62%</td><td>=E5=8F=AF=E6=8E=A5 database / report engine / AI rev=
+iew</td></tr><tr><td>Turnover</td><td>3.8x</td><td>=E5=8F=AF=E6=8E=A5 datab=
+ase / report engine / AI review</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGIME -->
+  <section id=3D"regime" class=3D"page active">
+    <div class=3D"panel"><div class=3D"panel-title"><h2>Market Regime Requi=
+rement</h2><span>8.1 + 8.2</span></div>
+      <div class=3D"regime-grid">
+        <div class=3D"regime active"><b class=3D"good">Bull Trend</b><div c=
+lass=3D"logic">=E6=8C=87=E6=95=B8 &gt; 200MA=EF=BC=8Cbreadth =E5=BC=B7=E3=
+=80=82</div></div>
+        <div class=3D"regime"><b class=3D"bad">Bear Trend</b><div class=3D"=
+logic">=E6=8C=87=E6=95=B8 &lt; 200MA=EF=BC=8CVIX =E9=AB=98=E3=80=82</div></=
+div>
+        <div class=3D"regime"><b class=3D"warn">High Volatility</b><div cla=
+ss=3D"logic">VIX &gt; 25=EF=BC=8CATR =E4=B8=8A=E5=8D=87=E3=80=82</div></div=
+>
+        <div class=3D"regime"><b class=3D"info">Low Volatility</b><div clas=
+s=3D"logic">VIX =E4=BD=8E=EF=BC=8CADX =E4=BD=8E=E3=80=82</div></div>
+        <div class=3D"regime"><b class=3D"good">Risk-On</b><div class=3D"lo=
+gic">=E6=88=90=E9=95=B7=E8=82=A1=E3=80=81=E9=AB=98 beta =E8=B7=91=E8=B4=8F=
+=E3=80=82</div></div>
+        <div class=3D"regime"><b>Risk-Off</b><div class=3D"logic">=E9=98=B2=
+=E7=A6=A6=E8=82=A1=E3=80=81=E5=82=B5=E5=88=B8=E3=80=81=E9=BB=83=E9=87=91=E8=
+=B7=91=E8=B4=8F=E3=80=82</div></div>
+        <div class=3D"regime"><b class=3D"warn">Inflation Shock</b><div cla=
+ss=3D"logic">CPI / yield =E4=B8=8A=E5=8D=87=E3=80=82</div></div>
+        <div class=3D"regime"><b class=3D"purple">Rate Cut Cycle</b><div cl=
+ass=3D"logic">Fed rate =E9=A0=90=E6=9C=9F=E4=B8=8B=E8=B7=8C=E3=80=82</div><=
+/div>
+      </div>
+    </div>
+    <div class=3D"panel"><h2 id=3D"regimeAnswer">AI: =E6=AD=A4=E7=AD=96=E7=
+=95=A5=E4=B8=BB=E8=A6=81=E4=BE=9D=E8=B3=B4 Bull / Risk-On =E7=92=B0=E5=A2=
+=83=EF=BC=8C=E5=9C=A8 Bear / High Volatility regime =E8=A1=A8=E7=8F=BE=E8=
+=BC=83=E5=BC=B1=E3=80=82</h2></div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id=3D"events" class=3D"page">
+    <div class=3D"panel"><div class=3D"panel-title"><h2>Sentiment &amp; Eve=
+nt Analysis</h2><span>9.1 / 9.2</span></div>
+    <table>
+      <tbody><tr><th>=E5=8A=9F=E8=83=BD</th><th>=E7=8B=80=E6=85=8B</th><th>=
+=E7=94=A8=E9=80=94</th></tr>
+      <tr><td>News Sentiment</td><td>Neutral =E2=86=92 Positive</td><td>=E6=
+=AD=A3=E9=9D=A2 / =E8=B2=A0=E9=9D=A2 / =E4=B8=AD=E6=80=A7</td></tr>
+      <tr><td>Earnings Calendar</td><td>Next: 18 days</td><td>=E8=B2=A1=E5=
+=A0=B1=E6=97=A5=E6=9C=9F</td></tr>
+      <tr><td>Earnings Surprise</td><td>+6.2%</td><td>=E7=9B=88=E5=88=A9=E9=
+=A9=9A=E5=96=9C</td></tr>
+      <tr><td>Analyst Revision</td><td>3 Up / 1 Down</td><td>=E5=88=86=E6=
+=9E=90=E5=B8=AB=E4=B8=8A=E4=BF=AE / =E4=B8=8B=E4=BF=AE</td></tr>
+      <tr><td>Fed Event</td><td>FOMC in 28 days</td><td>=E5=88=A9=E7=8E=87=
+=E6=B1=BA=E8=AD=B0</td></tr>
+      <tr><td>CPI / NFP Event</td><td>CPI next week</td><td>=E5=AE=8F=E8=A7=
+=80=E4=BA=8B=E4=BB=B6</td></tr>
+      <tr><td>Insider Trading</td><td>No major sell</td><td>=E5=85=A7=E9=83=
+=A8=E4=BA=BA=E8=B2=B7=E8=B3=A3</td></tr>
+      <tr><td>Social Sentiment</td><td>High activity</td><td>=E7=A4=BE=E4=
+=BA=A4=E7=86=B1=E5=BA=A6</td></tr>
+    </tbody></table></div>
+  </section>
+
+  <!-- TRADES -->
+  <section id=3D"trades" class=3D"page">
+    <div class=3D"panel"><div class=3D"panel-title"><h2>Trade Log</h2><span=
+>7.3 =E6=AF=8F=E7=AD=86=E4=BA=A4=E6=98=93=E5=8F=AF=E6=9F=A5</span></div>
+    <div class=3D"table-wrap"><table>
+      <tbody><tr><th>Trade ID</th><th>Symbol</th><th>L/S</th><th>Entry Date=
+</th><th>Entry Price</th><th>Exit Date</th><th>Exit Price</th><th>Qty</th><=
+th>Commission</th><th>Slippage</th><th>Net PnL</th><th>Return</th><th>Holdi=
+ng Days</th><th>Exit Reason</th></tr>
+      <tr><td>#1021</td><td>NVDA</td><td>Long</td><td>2025-02-04</td><td>11=
+8.4</td><td>2025-03-18</td><td>142.9</td><td>80</td><td>$8.2</td><td>$12.1<=
+/td><td class=3D"good">+$1,939</td><td class=3D"good">+20.7%</td><td>42</td=
+><td>Take Profit</td></tr>
+      <tr><td>#1022</td><td>TSLA</td><td>Long</td><td>2025-04-11</td><td>17=
+1.2</td><td>2025-04-26</td><td>157.1</td><td>60</td><td>$6.1</td><td>$9.4</=
+td><td class=3D"bad">-$862</td><td class=3D"bad">-8.2%</td><td>15</td><td>S=
+top Loss</td></tr>
+      <tr><td>#1023</td><td>MSFT</td><td>Long</td><td>2025-06-03</td><td>42=
+1.0</td><td>2025-07-09</td><td>456.6</td><td>25</td><td>$4.4</td><td>$5.2</=
+td><td class=3D"good">+$880</td><td class=3D"good">+8.4%</td><td>36</td><td=
+>Trailing Stop</td></tr>
+    </tbody></table></div></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section id=3D"settings" class=3D"page">
+    <div class=3D"panel"><div class=3D"panel-title"><h2>Usage / Billing / A=
+dmin</h2><span>2.1 + 11</span></div>
+      <div class=3D"metric-grid">
+        <div class=3D"metric"><div class=3D"top">Token Used Today <span>AI<=
+/span></div><div class=3D"num">42,800</div><div class=3D"sub">Plan limit vi=
+sible</div></div>
+        <div class=3D"metric"><div class=3D"top">Backtests Used <span>Quota=
+</span></div><div class=3D"num">7 / 20</div><div class=3D"sub">Daily limit<=
+/div></div>
+        <div class=3D"metric"><div class=3D"top">Queue Position <span>Syste=
+m</span></div><div class=3D"num">#3</div><div class=3D"sub">Transparent run=
+time</div></div>
+        <div class=3D"metric"><div class=3D"top">Complexity Score <span>Cos=
+t</span></div><div class=3D"num">820</div><div class=3D"sub">1 Pro credit</=
+div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<aside class=3D"rightbar">
+  <div class=3D"ai-box">
+    <div class=3D"panel-title"><h2>AI Review Requirement</h2><span>10</span=
+></div>
+    <div class=3D"ai-grade">
+      <div><div style=3D"color:#94a3b8;font-size:12px">Strategy Grade</div>=
+<div id=3D"grade" class=3D"grade">B+</div></div>
+      <div style=3D"text-align:right"><div id=3D"confidence" class=3D"good"=
+ style=3D"font-weight:800">Confidence: Medium</div><div style=3D"font-size:=
+12px;color:#94a3b8;margin-top:6px">Next: Walk-forward validation</div></div=
+>
+    </div>
+    <div class=3D"review-item"><span class=3D"dot" style=3D"background:var(=
+--amber)"></span><div><h4>Overfitting Risk</h4><p>=E6=AA=A2=E6=9F=A5=E5=8F=
+=83=E6=95=B8=E6=98=AF=E5=90=A6=E5=A4=AA=E5=A4=9A=EF=BC=8C=E6=98=AF=E5=90=A6=
+=E9=9C=80=E8=A6=81 out-of-sample test=E3=80=82</p></div></div>
+    <div class=3D"review-item"><span class=3D"dot" style=3D"background:var(=
+--red)"></span><div><h4>Regime Dependency</h4><p>=E7=AD=96=E7=95=A5=E5=9C=
+=A8 Bear / High Volatility =E8=A1=A8=E7=8F=BE=E8=BC=83=E5=BC=B1=E3=80=82</p=
+></div></div>
+    <div class=3D"review-item"><span class=3D"dot" style=3D"background:var(=
+--blue)"></span><div><h4>Bias Check</h4><p>Survivorship bias=E3=80=81lookah=
+ead bias=E3=80=81cost sensitivity=E3=80=81liquidity risk=E3=80=82</p></div>=
+</div>
+  </div>
+
+  <div class=3D"ai-box">
+    <div class=3D"panel-title"><h2>Resource &amp; Cost</h2><span>11.1</span=
+></div>
+    <div class=3D"cost-grid">
+      <div class=3D"cost"><span>Token Used Today</span><b id=3D"tokens">42,=
+800</b></div>
+      <div class=3D"cost"><span>Backtests Used</span><b id=3D"btUsed">7 / 2=
+0</b></div>
+      <div class=3D"cost"><span>Queue Position</span><b id=3D"queue">#3</b>=
+</div>
+      <div class=3D"cost"><span>Runtime</span><b id=3D"runtime">2-4 min</b>=
+</div>
+      <div class=3D"cost"><span>Complexity Score</span><b id=3D"complexity"=
+>820</b></div>
+      <div class=3D"cost"><span>Plan Impact</span><b>1 Pro Credit</b></div>
+    </div>
+  </div>
+
+  <div class=3D"ai-box">
+    <div class=3D"panel-title"><h2>AI Chat</h2><span>=E5=8F=AF=E4=BA=92=E5=
+=8B=95</span></div>
+    <div id=3D"chat" class=3D"chat"><b>AI:</b> =E4=BD=A0=E5=8F=AF=E4=BB=A5=
+=E5=95=8F=EF=BC=9A=E9=80=99=E5=80=8B=E7=AD=96=E7=95=A5=E5=9C=A8=E7=86=8A=E5=
+=B8=82=E8=A1=A8=E7=8F=BE=E5=A6=82=E4=BD=95=EF=BC=9F=E6=9C=89=E6=B2=92=E6=9C=
+=89 overfitting=EF=BC=9FFundamental filter =E6=98=AF=E5=90=A6=E5=90=88=E7=
+=90=86=EF=BC=9F</div>
+    <textarea id=3D"msg" placeholder=3D"=E8=BC=B8=E5=85=A5=E5=95=8F=E9=A1=
+=8C..." style=3D"width:100%;background:#0b1220;color:white;border:1px solid=
+ #263348;border-radius:14px;padding:10px;min-height:68px"></textarea>
+    <button class=3D"btn primary" style=3D"width:100%;margin-top:8px">Send =
+Message to AI</button>
+  </div>
+
+  <div class=3D"ai-box">
+    <div class=3D"panel-title"><h2>Quick Actions</h2><span>=E5=AE=A2=E6=88=
+=B6=E6=93=8D=E4=BD=9C</span></div>
+    <div class=3D"quick-grid">
+      <button>=F0=9F=A7=A0 New Strategy</button>
+      <button>=F0=9F=A7=AA New Backtest</button>
+      <button>=F0=9F=8F=A6 Fundamental</button>
+      <button>=F0=9F=93=90 Technical</button>
+      <button>=F0=9F=93=84 Report</button>
+      <button>=F0=9F=8C=90 Regime</button>
+      <button>=F0=9F=93=A4 Export PDF</button>
+      <button>=F0=9F=93=8A Export CSV</button>
+    </div>
+  </div>
+</aside>
+</div>
+
+<div id=3D"modal" class=3D"modal">
+  <div class=3D"modal-card">
+    <h3>Edit Metric</h3>
+    <p style=3D"color:#94a3b8;font-size:13px">=E9=9B=99=E6=93=8A=E4=BB=BB=
+=E4=BD=95=E6=95=B8=E6=93=9A=E5=8D=A1=E7=89=87=E9=83=BD=E5=8F=AF=E4=BB=A5=E6=
+=94=B9=E6=95=B8=E5=AD=97=E3=80=82</p>
+    <input id=3D"metricEditInput" style=3D"width:100%;background:#0b1220;co=
+lor:white;border:1px solid #334155;border-radius:12px;padding:10px">
+    <button class=3D"btn primary" style=3D"margin-top:12px">Apply</button>
+    <button class=3D"btn">Cancel</button>
+  </div>
+</div>
+<div id=3D"toast" class=3D"toast"></div>
+
+
+
+</body></html>
+------MultipartBoundary--XWsQLmaHVmJIOlOqqC3yI5zjy0B6aRVmSWKaLaakpm----
+Content-Type: text/css
+Content-Transfer-Encoding: quoted-printable
+Content-Location: cid:css-4f8f73d0-985f-40eb-b4f7-4a04053c323a@mhtml.blink
+
+@charset "utf-8";
+
+:root { --bg: #060a12; --panel: #0d1320; --panel2: #101827; --card: #121a2a=
+; --card2: #0b1220; --line: #253044; --muted: #8ea0b8; --text: #e8eef8; --b=
+lue: #38bdf8; --green: #22c55e; --red: #ef4444; --amber: #f59e0b; --purple:=
+ #a78bfa; --cyan: #06b6d4; --pink: #ec4899; --shadow: 0 18px 50px rgba(0,0,=
+0,.35); }
+
+* { box-sizing: border-box; }
+
+body { margin: 0px; background: radial-gradient(circle at top left,rgba(56,=
+189,248,.13),transparent 30%),
+    radial-gradient(circle at 80% 5%,rgba(167,139,250,.12),transparent 24%)=
+,
+    var(--bg); color: var(--text); font-family: Inter, "Segoe UI", Arial, "=
+Noto Sans TC", sans-serif; }
+
+button, input, select, textarea { font-family: inherit; }
+
+.app { display: grid; grid-template-columns: 260px 1fr 360px; min-height: 1=
+00vh; }
+
+.sidebar, .rightbar { background: linear-gradient(rgb(8, 17, 31), rgb(7, 11=
+, 19)); padding: 18px; position: sticky; top: 0px; height: 100vh; overflow:=
+ auto; }
+
+.sidebar { border-right: 1px solid var(--line); }
+
+.rightbar { border-left: 1px solid var(--line); }
+
+.brand { display: flex; gap: 10px; align-items: center; margin-bottom: 20px=
+; }
+
+.logo { width: 42px; height: 42px; border-radius: 14px; background: linear-=
+gradient(135deg,var(--blue),var(--purple)); display: grid; place-items: cen=
+ter; font-weight: 900; color: rgb(0, 17, 31); }
+
+.brand h1 { font-size: 16px; margin: 0px; }
+
+.brand span { font-size: 12px; color: var(--muted); }
+
+.nav-title { font-size: 11px; color: var(--muted); letter-spacing: 0.12em; =
+margin: 20px 0px 8px; }
+
+.nav button { width: 100%; border: 1px solid transparent; background: trans=
+parent; color: rgb(203, 213, 225); padding: 10px 12px; border-radius: 12px;=
+ display: flex; justify-content: space-between; cursor: pointer; margin-bot=
+tom: 6px; text-align: left; align-items: center; }
+
+.nav button.active, .nav button:hover { background: rgb(16, 26, 43); border=
+-color: rgb(38, 51, 72); color: white; }
+
+.badge { padding: 2px 8px; border-radius: 999px; background: rgb(30, 41, 59=
+); color: rgb(147, 197, 253); font-size: 11px; }
+
+.main { padding: 18px; }
+
+.topbar { display: flex; gap: 12px; align-items: center; margin-bottom: 14p=
+x; }
+
+.search { flex: 1 1 0%; background: rgba(15, 23, 42, 0.8); border: 1px soli=
+d var(--line); border-radius: 16px; padding: 10px 14px; display: flex; gap:=
+ 8px; }
+
+.search input { width: 100%; background: transparent; border: 0px; outline:=
+ none; color: white; }
+
+.btn { border: 1px solid var(--line); background: rgb(16, 24, 39); color: r=
+gb(219, 234, 254); border-radius: 12px; padding: 9px 12px; cursor: pointer;=
+ }
+
+.btn.primary { background: linear-gradient(135deg, rgb(2, 132, 199), rgb(12=
+4, 58, 237)); border: 0px; color: white; }
+
+.btn.green { background: rgb(5, 46, 26); border-color: rgb(20, 83, 45); col=
+or: rgb(134, 239, 172); }
+
+.btn.amber { background: rgb(48, 33, 10); border-color: rgb(146, 64, 14); c=
+olor: rgb(252, 211, 77); }
+
+.btn.red { background: rgb(42, 11, 18); border-color: rgb(127, 29, 29); col=
+or: rgb(254, 202, 202); }
+
+.page { display: none; }
+
+.page.active { display: block; animation: 0.22s ease 0s 1 normal none runni=
+ng fade; }
+
+@keyframes fade {=20
+  0% { opacity: 0.4; transform: translateY(6px); }
+  100% { opacity: 1; transform: none; }
+}
+
+.panel { background: rgba(13, 19, 32, 0.94); border: 1px solid var(--line);=
+ border-radius: 20px; box-shadow: var(--shadow); padding: 16px; margin-bott=
+om: 14px; }
+
+.panel-title { display: flex; justify-content: space-between; align-items: =
+center; margin-bottom: 12px; gap: 10px; }
+
+.panel-title h2 { font-size: 15px; margin: 0px; }
+
+.panel-title span { font-size: 12px; color: var(--muted); }
+
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 14px; }
+
+.col-12 { grid-column: span 12; }
+
+.col-8 { grid-column: span 8; }
+
+.col-7 { grid-column: span 7; }
+
+.col-6 { grid-column: span 6; }
+
+.col-5 { grid-column: span 5; }
+
+.col-4 { grid-column: span 4; }
+
+.col-3 { grid-column: span 3; }
+
+.field label { display: block; font-size: 11px; color: var(--muted); margin=
+-bottom: 5px; }
+
+.field input, .field select, .field textarea { width: 100%; background: rgb=
+(11, 18, 32); border: 1px solid rgb(38, 51, 72); color: white; padding: 10p=
+x; border-radius: 12px; }
+
+.field textarea { min-height: 92px; resize: vertical; }
+
+.metric-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1=
+0px; }
+
+.metric { background: linear-gradient(rgb(17, 26, 44), rgb(13, 21, 37)); bo=
+rder: 1px solid rgb(38, 51, 72); border-radius: 16px; padding: 12px; cursor=
+: grab; transition: 0.18s; }
+
+.metric:hover { transform: translateY(-2px); border-color: rgb(75, 107, 153=
+); }
+
+.metric.dragging { opacity: 0.45; transform: scale(0.98); }
+
+.metric .top { display: flex; justify-content: space-between; color: var(--=
+muted); font-size: 11px; }
+
+.metric .num { font-size: 20px; font-weight: 900; margin: 8px 0px 2px; }
+
+.metric .sub { font-size: 11px; color: var(--muted); }
+
+.good { color: var(--green); }
+
+.bad { color: var(--red); }
+
+.warn { color: var(--amber); }
+
+.info { color: var(--blue); }
+
+.purple { color: var(--purple); }
+
+.card-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10p=
+x; }
+
+.feature-card { background: rgb(11, 18, 32); border: 1px solid rgb(38, 51, =
+72); border-radius: 16px; padding: 14px; cursor: pointer; transition: 0.18s=
+; }
+
+.feature-card:hover { border-color: rgb(96, 165, 250); transform: translate=
+Y(-2px); }
+
+.feature-card h3 { margin: 0px 0px 6px; font-size: 14px; }
+
+.feature-card p { margin: 0px; color: var(--muted); font-size: 12px; line-h=
+eight: 1.45; }
+
+.toolbar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+
+.chip { border: 1px solid rgb(51, 65, 85); background: rgb(11, 18, 32); col=
+or: rgb(203, 213, 225); border-radius: 999px; padding: 7px 10px; font-size:=
+ 12px; cursor: pointer; }
+
+.chip.active { background: rgb(30, 58, 138); border-color: rgb(96, 165, 250=
+); color: white; }
+
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+
+th, td { padding: 10px; border-bottom: 1px solid rgb(37, 48, 68); text-alig=
+n: left; white-space: nowrap; }
+
+th { color: rgb(147, 164, 186); background: rgb(11, 18, 32); }
+
+.table-wrap { overflow: auto; }
+
+.filter-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1=
+0px; }
+
+.filter-box { background: rgb(11, 18, 32); border: 1px solid rgb(38, 51, 72=
+); border-radius: 16px; padding: 12px; }
+
+.filter-box h4 { margin: 0px 0px 8px; font-size: 13px; }
+
+.filter-box small { color: var(--muted); display: block; margin-bottom: 8px=
+; }
+
+.slider { width: 100%; }
+
+.score-bar { height: 8px; background: rgb(30, 41, 59); border-radius: 99px;=
+ overflow: hidden; margin-top: 8px; }
+
+.score-bar span { display: block; height: 100%; background: linear-gradient=
+(90deg,var(--blue),var(--green)); }
+
+.builder-output { background: rgb(7, 17, 31); border: 1px solid rgb(38, 51,=
+ 72); border-radius: 16px; padding: 12px; white-space: pre-wrap; font-size:=
+ 13px; line-height: 1.55; color: rgb(219, 234, 254); }
+
+.fake-chart { height: 230px; border-radius: 16px; background: repeating-lin=
+ear-gradient(to right, transparent 0px, transparent 60px, rgba(148, 163, 18=
+4, 0.08) 61px), repeating-linear-gradient(transparent 0px, transparent 42px=
+, rgba(148, 163, 184, 0.08) 43px), rgb(8, 17, 31); border: 1px solid rgb(38=
+, 51, 72); position: relative; overflow: hidden; }
+
+.fake-chart svg { position: absolute; inset: 0px; width: 100%; height: 100%=
+; }
+
+.regime-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1=
+0px; }
+
+.regime { border: 1px solid rgb(38, 51, 72); background: rgb(11, 18, 32); b=
+order-radius: 16px; padding: 12px; cursor: pointer; }
+
+.regime.active { border-color: rgb(56, 189, 248); background: rgb(12, 35, 6=
+4); }
+
+.regime .logic { font-size: 11px; color: var(--muted); line-height: 1.4; ma=
+rgin-top: 6px; }
+
+.ai-box { background: rgba(13, 19, 32, 0.95); border: 1px solid var(--line)=
+; border-radius: 20px; padding: 14px; margin-bottom: 14px; }
+
+.ai-grade { display: flex; justify-content: space-between; align-items: cen=
+ter; padding: 14px; border-radius: 18px; background: linear-gradient(135deg=
+, rgba(56, 189, 248, 0.14), rgba(167, 139, 250, 0.14)); border: 1px solid r=
+gb(51, 65, 85); }
+
+.grade { font-size: 42px; font-weight: 900; color: rgb(147, 197, 253); }
+
+.review-item { display: flex; gap: 10px; padding: 10px 0px; border-bottom: =
+1px solid rgb(37, 48, 68); }
+
+.review-item h4 { margin: 0px 0px 4px; font-size: 13px; }
+
+.review-item p { font-size: 12px; color: var(--muted); margin: 0px; line-he=
+ight: 1.45; }
+
+.dot { width: 10px; height: 10px; border-radius: 999px; margin-top: 4px; ba=
+ckground: var(--blue); }
+
+.cost-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.cost { background: rgb(11, 18, 32); border: 1px solid rgb(38, 51, 72); bor=
+der-radius: 14px; padding: 10px; }
+
+.cost span { font-size: 11px; color: var(--muted); }
+
+.cost b { display: block; margin-top: 5px; }
+
+.chat { height: 170px; background: rgb(11, 18, 32); border: 1px solid rgb(3=
+8, 51, 72); border-radius: 14px; padding: 10px; color: rgb(203, 213, 225); =
+font-size: 12px; line-height: 1.45; overflow: auto; }
+
+.quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.quick-grid button { background: rgb(17, 24, 39); border: 1px solid rgb(51,=
+ 65, 85); color: rgb(219, 234, 254); border-radius: 12px; padding: 10px; cu=
+rsor: pointer; text-align: left; font-size: 12px; }
+
+.modal { display: none; position: fixed; inset: 0px; background: rgba(0, 0,=
+ 0, 0.65); z-index: 50; align-items: center; justify-content: center; }
+
+.modal.active { display: flex; }
+
+.modal-card { width: 420px; background: rgb(13, 19, 32); border: 1px solid =
+rgb(51, 65, 85); border-radius: 20px; padding: 18px; box-shadow: var(--shad=
+ow); }
+
+.toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-5=
+0%); background: rgb(16, 33, 58); border: 1px solid rgb(51, 65, 85); color:=
+ white; padding: 10px 16px; border-radius: 999px; display: none; z-index: 6=
+0; }
+
+@media (max-width: 1280px) {
+  .app { grid-template-columns: 230px 1fr; }
+  .rightbar { grid-column: 1 / -1; height: auto; position: relative; border=
+-left: 0px; border-top: 1px solid var(--line); }
+}
+
+@media (max-width: 900px) {
+  .app { display: block; }
+  .sidebar, .rightbar { height: auto; position: relative; }
+  .grid { display: block; }
+  .metric-grid, .filter-grid, .card-list, .regime-grid { grid-template-colu=
+mns: 1fr 1fr; }
+  .panel { margin-bottom: 14px; }
+}
+
+@media (max-width: 620px) {
+  .metric-grid, .filter-grid, .card-list, .regime-grid { grid-template-colu=
+mns: 1fr; }
+  .topbar { display: block; }
+  .search { margin-bottom: 10px; }
+}
+------MultipartBoundary--XWsQLmaHVmJIOlOqqC3yI5zjy0B6aRVmSWKaLaakpm------
