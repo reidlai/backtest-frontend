@@ -8,7 +8,7 @@
 
 **Input**: User description: "Implement Github CI workflow with SCA, Formatting, Linting, Unit Test (with mock data and no server dependency), Build Binary, Build Docker, SAST (Trivy) and then push to GHCR"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Automated Quality Gate on Code Push (Priority: P1)
 
@@ -89,7 +89,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 - What happens if unit tests produce flaky results due to timing? (Tests must use mock data only; any flakiness indicates a test quality issue, not an infrastructure issue)
 - What happens when two commits are pushed in rapid succession to the same branch? (The in-progress pipeline run for the earlier commit is automatically cancelled; only the run for the latest commit proceeds to completion)
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -98,7 +98,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 - **FR-003**: The pipeline MUST run a code formatting check and fail if any file does not conform to the project's formatting standard
 - **FR-004**: The pipeline MUST run static code analysis (linting) and fail if any lint violation is detected
 - **FR-005**: The pipeline MUST run unit tests in a fully isolated environment using only mock data, with no dependency on any running server, database, or external service; the stage MUST measure and report code coverage as part of the test output; coverage results MUST be retained as a pipeline artifact but MUST NOT gate or block the pipeline regardless of the coverage percentage
-- **FR-006**: The quality gate stages MUST execute sequentially in this order: SCA → Formatting → Linting → Unit Tests; if any stage fails, subsequent stages in the sequence MUST be skipped and the pipeline MUST halt before reaching build stages
+- **FR-006**: The quality gate stages MUST execute sequentially in this order: SCA → Format+Lint → Secrets Scan → Unit Tests; if any stage fails, subsequent stages in the sequence MUST be skipped and the pipeline MUST halt before reaching build stages; an optional SAST (Semgrep) stage MAY follow Unit Tests as an informational-only step and MUST NOT block the pipeline
 - **FR-007**: The pipeline MUST compile the application binary as an intermediate build product; the binary is used exclusively as input to the Docker image build step and is NOT retained as a separately downloadable pipeline artifact
 - **FR-008**: The pipeline MUST build a Docker container image only after the binary build succeeds
 - **FR-009**: After all quality gate and build stages pass, the pipeline MUST run Trivy against the built Docker image to scan it statically without starting the container; the scan MUST cover OS-level packages, bundled application dependencies, Dockerfile misconfigurations, and exposed secrets within the image layers; Trivy operates on the final image artifact only and is distinct from the SCA stage which scans source-level dependencies
@@ -119,7 +119,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 - **SAST Report**: The security findings report produced by Trivy's static scan of the built Docker image; covers vulnerabilities, misconfigurations, and secrets; determines whether publishing is permitted
 - **Published Image**: A Docker image pushed to GHCR, identified by digest, tagged with branch/version and commit SHA
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

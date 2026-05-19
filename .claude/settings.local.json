@@ -11,7 +11,20 @@
       "Bash(pnpm dev *)",
       "Bash(curl -s http://localhost:5173)",
       "Bash(pkill -f \"vite dev\")",
-      "Bash(sh *)"
+      "Bash(sh *)",
+      "Bash(pnpm build *)",
+      "Bash(docker --version)",
+      "Bash(yamllint --version)",
+      "Bash(docker build *)",
+      "Bash(pnpm --version)",
+      "Bash(python3 -c ' *)",
+      "Bash(pnpm dlx *)",
+      "Bash(pnpm prettier *)",
+      "Bash(pnpm eslint *)",
+      "Bash(echo \"Exit code: $?\")",
+      "Bash(pnpm vitest *)",
+      "Bash(git *)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh *)"
     ]
   }
 }

@@ -7,6 +7,7 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+/coverage
 
 # OS
 .DS_Store
@@ -30,3 +31,7 @@ project.inlang/cache/
 *storybook.log
 storybook-static
 /.claude/worktrees
+
+# SAST/threat modelling reports (generated; committed reports would bloat history)
+threat_modelling/reports/*.json
+threat_modelling/reports/*.sarif

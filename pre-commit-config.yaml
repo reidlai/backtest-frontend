@@ -1,0 +1,21 @@
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.0
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        entry: pnpm prettier --check
+        language: system
+        types_or: [javascript, typescript, css, markdown]
+        pass_filenames: true
+
+      - id: eslint
+        name: eslint
+        entry: pnpm eslint
+        language: system
+        types_or: [javascript, typescript]
+        pass_filenames: true
