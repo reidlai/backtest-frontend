@@ -17,8 +17,8 @@
 
 **Purpose**: Install required packages, configure dark mode and zh-TW locale, enable shadcn-svelte
 
-- [ ] T001 Initialize shadcn-svelte — run `pnpx shadcn-svelte@latest init` (Style: Default, Base color: Slate, CSS variables: Yes); generates `components.json` at project root and `src/lib/utils.ts` with `cn()` helper
-- [ ] T002 Add required shadcn-svelte atom components — run `pnpx shadcn-svelte@latest add button card dialog input label select separator sonner table tabs textarea tooltip badge progress`; populates `src/lib/components/ui/` (do not hand-edit these files)
+- [x] T001 Initialize shadcn-svelte — run `pnpx shadcn-svelte@latest init` (Style: Default, Base color: Slate, CSS variables: Yes); generates `components.json` at project root and `src/lib/utils.ts` with `cn()` helper
+- [x] T002 Add required shadcn-svelte atom components — run `pnpx shadcn-svelte@latest add button card dialog input label select separator sonner table tabs textarea tooltip badge progress`; populates `src/lib/components/ui/` (do not hand-edit these files)
 - [ ] T003 Install LayerChart and D3 — run `pnpm add layerchart d3 && pnpm add -D @types/d3`
 - [ ] T004 [P] Update `project.inlang/settings.json` — add `"zh-TW"` to the `locales` array: `"locales": ["en", "zh-TW"]`
 - [ ] T005 [P] Create `messages/zh-TW.json` — initial file with only the `"$schema"` key matching `messages/en.json` format; translations added incrementally per phase
