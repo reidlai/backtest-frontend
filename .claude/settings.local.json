@@ -10,7 +10,8 @@
       "Bash(grep -v \"^$\")",
       "Bash(pnpm dev *)",
       "Bash(curl -s http://localhost:5173)",
-      "Bash(pkill -f \"vite dev\")"
+      "Bash(pkill -f \"vite dev\")",
+      "Bash(sh *)"
     ]
   }
 }
