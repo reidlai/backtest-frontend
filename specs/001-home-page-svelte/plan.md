@@ -21,11 +21,11 @@ Implement `src/routes/+page.svelte` as the single-page application shell for the
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 The project constitution (`.specify/memory/constitution.md`) contains only the blank template — no project-specific principles have been ratified. **No active constitution gates apply.** Proceeding without constraint violations.
 
-*Post-Phase 1 re-check*: N/A — no active gates to re-evaluate.
+_Post-Phase 1 re-check_: N/A — no active gates to re-evaluate.
 
 ## Project Structure
 

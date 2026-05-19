@@ -19,6 +19,7 @@ pnpm install
 ### 2. Initialize shadcn-svelte
 
 Run the CLI initializer. When prompted, accept these values:
+
 - Style: **Default**
 - Base color: **Slate** (matches the dark theme palette)
 - CSS variables: **Yes**
@@ -50,16 +51,16 @@ Edit `project.inlang/settings.json` — add `"zh-TW"` to the `locales` array:
 
 ```json
 {
-  "$schema": "https://inlang.com/schema/project-settings",
-  "modules": [
-    "https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js",
-    "https://cdn.jsdelivr.net/npm/@inlang/plugin-m-function-matcher@2/dist/index.js"
-  ],
-  "plugin.inlang.messageFormat": {
-    "pathPattern": "./messages/{locale}.json"
-  },
-  "baseLocale": "en",
-  "locales": ["en", "zh-TW"]
+	"$schema": "https://inlang.com/schema/project-settings",
+	"modules": [
+		"https://cdn.jsdelivr.net/npm/@inlang/plugin-message-format@4/dist/index.js",
+		"https://cdn.jsdelivr.net/npm/@inlang/plugin-m-function-matcher@2/dist/index.js"
+	],
+	"plugin.inlang.messageFormat": {
+		"pathPattern": "./messages/{locale}.json"
+	},
+	"baseLocale": "en",
+	"locales": ["en", "zh-TW"]
 }
 ```
 
@@ -67,7 +68,7 @@ Create `messages/zh-TW.json` (parallel to `messages/en.json`):
 
 ```json
 {
-  "$schema": "https://inlang.com/schema/inlang-message-format"
+	"$schema": "https://inlang.com/schema/inlang-message-format"
 }
 ```
 
@@ -78,7 +79,7 @@ The Paraglide runtime (`src/lib/paraglide/`) is regenerated automatically when t
 Edit `src/app.html` — add `class="dark"` to the `<html>` element:
 
 ```html
-<html lang="%paraglide.lang%" dir="%paraglide.dir%" class="dark">
+<html lang="%paraglide.lang%" dir="%paraglide.dir%" class="dark"></html>
 ```
 
 This activates all Tailwind `dark:` utilities project-wide with no runtime toggle logic needed.
@@ -113,13 +114,13 @@ pnpm storybook
 
 ## Key Commands
 
-| Command | Purpose |
-|---------|---------|
-| `pnpm dev` | Start dev server at localhost:5173 |
-| `pnpm build` | Production build |
-| `pnpm check` | TypeScript + Svelte type checking |
-| `pnpm lint` | ESLint + Prettier check |
-| `pnpm format` | Auto-format with Prettier |
+| Command          | Purpose                                        |
+| ---------------- | ---------------------------------------------- |
+| `pnpm dev`       | Start dev server at localhost:5173             |
+| `pnpm build`     | Production build                               |
+| `pnpm check`     | TypeScript + Svelte type checking              |
+| `pnpm lint`      | ESLint + Prettier check                        |
+| `pnpm format`    | Auto-format with Prettier                      |
 | `pnpm storybook` | Storybook component explorer at localhost:6006 |
 
 ---
@@ -151,7 +152,7 @@ messages/
 
 - **Svelte 5 runes only**: All components use `$state`, `$derived`, `$effect`, `$props`. No legacy stores or `$:` reactive statements.
 - **Organisms stay mounted**: All 10 section organisms are mounted in the DOM at all times; visibility is toggled via `style:display`. This preserves `$state` across navigation (FR-005).
-- **Language switching**: Call `overrideLocale(locale)` from `$lib/paraglide/runtime`; this updates all `m.*` message functions without a page reload or URL change.
+- **Language switching**: Call `setLocale(locale)` from `$lib/paraglide/runtime`; this updates all `m.*` message functions without a page reload or URL change.
 - **Toast notifications**: Use `toast.success()` / `toast.info()` from `svelte-sonner` (installed via shadcn-svelte). `<Toaster />` is placed once in `+layout.svelte`.
 - **Dark theme**: `class="dark"` on `<html>` is the only dark mode mechanism. No JavaScript toggle.
 - **Export CSV/JSON**: Use `URL.createObjectURL(new Blob([content]))` + programmatic `<a>` click for browser downloads.

@@ -33,7 +33,7 @@ The strategy itself is a pure logical layer that takes data snapshots as inputs 
 
 1. **The Data Engine** — Feeds market data into the strategy. In a backtest, this reads from an immutable database or CSV stream in strict chronological order. In live production, this wraps a WebSocket or REST polling connection.
 2. **The Strategy FSM** — Holds the internal state of indicators and current positions. It receives data bars, evaluates signal rules, and emits transitions to the next state.
-3. **The Execution Engine** — Takes an abstract order intent from the strategy (e.g. *"I want to risk 2% on Asset X"*), calculates the exact share quantity based on current portfolio equity, applies simulated slippage and commission, and dispatches it to the broker or backtest sandbox.
+3. **The Execution Engine** — Takes an abstract order intent from the strategy (e.g. _"I want to risk 2% on Asset X"_), calculates the exact share quantity based on current portfolio equity, applies simulated slippage and commission, and dispatches it to the broker or backtest sandbox.
 
 The **Structured Strategy Object** (STRATEGY_DEFINITION.md §7) is loaded once at engine startup and serves as the immutable configuration contract for the entire run. Every parameter — universe definition, signal conditions, position sizing method, exit thresholds, commission model — is read from this object. Any parameter change must produce a new version so that results remain reproducible and auditable.
 
@@ -41,16 +41,16 @@ The **Structured Strategy Object** (STRATEGY_DEFINITION.md §7) is loaded once a
 
 The FSM architecture implements Stages 3 and 4 of the eight-stage backtesting pipeline defined in [CONCEPT.md](./CONCEPT.md). The table below shows where every stage is handled.
 
-| Stage | Description (CONCEPT.md) | Handled By |
-|---|---|---|
-| **1. Define the Strategy** | Translate trading idea into machine-readable rules | Structured Strategy Object — STRATEGY_DEFINITION.md §1–6 |
-| **2. Configure Parameters** | Date range, starting capital, market, timeframe, cost model | Structured Strategy Object fields (`backtest_period`, `initial_capital`, `data_resolution`, commission + slippage models) |
-| **3. Choose Order Types** | Market, Limit, Stop, Bracket, OCO, Short Sell | FSM §6 — Order Type Effects on State Transitions |
-| **4. Run the Engine** | Bar-by-bar simulation; fills with costs; portfolio value recorded | FSM §2–9 — Portfolio Execution Loop + Per-Asset State Machine |
-| **5. Evaluate Performance Metrics** | Return, risk, risk-adjusted, trade quality metrics | Engine output: metrics computed from the completed trade log and equity curve |
-| **6. Inspect the Trade Log** | Every round-trip recorded with exit reason | Engine output: each `PendingExit → Idle / Scanning` transition writes one trade record stamped with exit_reason |
-| **7. Benchmark and Regime Analysis** | Equity curve vs benchmark; per-regime performance breakdown | Engine output: regime tags (FSM §2.5) + equity curve versus passive benchmark |
-| **8. Iterate and Validate** | In-sample / out-of-sample; walk-forward validation | External process: re-run engine with modified strategy objects across different date ranges |
+| Stage                                | Description (CONCEPT.md)                                          | Handled By                                                                                                                |
+| ------------------------------------ | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| **1. Define the Strategy**           | Translate trading idea into machine-readable rules                | Structured Strategy Object — STRATEGY_DEFINITION.md §1–6                                                                  |
+| **2. Configure Parameters**          | Date range, starting capital, market, timeframe, cost model       | Structured Strategy Object fields (`backtest_period`, `initial_capital`, `data_resolution`, commission + slippage models) |
+| **3. Choose Order Types**            | Market, Limit, Stop, Bracket, OCO, Short Sell                     | FSM §6 — Order Type Effects on State Transitions                                                                          |
+| **4. Run the Engine**                | Bar-by-bar simulation; fills with costs; portfolio value recorded | FSM §2–9 — Portfolio Execution Loop + Per-Asset State Machine                                                             |
+| **5. Evaluate Performance Metrics**  | Return, risk, risk-adjusted, trade quality metrics                | Engine output: metrics computed from the completed trade log and equity curve                                             |
+| **6. Inspect the Trade Log**         | Every round-trip recorded with exit reason                        | Engine output: each `PendingExit → Idle / Scanning` transition writes one trade record stamped with exit_reason           |
+| **7. Benchmark and Regime Analysis** | Equity curve vs benchmark; per-regime performance breakdown       | Engine output: regime tags (FSM §2.5) + equity curve versus passive benchmark                                             |
+| **8. Iterate and Validate**          | In-sample / out-of-sample; walk-forward validation                | External process: re-run engine with modified strategy objects across different date ranges                               |
 
 ---
 
@@ -150,31 +150,31 @@ The transition matrix is the rulebook governing how states change. Events drive 
 
 ### 4.1 Entry Transitions
 
-| Current State | Event (Input) | Next State | Action / Side-Effect |
-|---|---|---|---|
-| **`Idle / Scanning`** | `MarketBarReceived` (Signal == False) | `Idle / Scanning` | Update rolling indicators and buffers. |
-| **`Idle / Scanning`** | `MarketBarReceived` (Signal == True, Long) | **`PendingEntry(Long)`** | Calculate long position size; dispatch entry order. |
-| **`Idle / Scanning`** | `MarketBarReceived` (Signal == True, Short) | **`PendingEntry(Short)`** | Calculate short position size; dispatch Short Sell order. |
-| **`PendingEntry`** | `OrderExecutionReport` (Filled) | **`PositionOpen(direction)`** | Record entry price; set stop-loss / take-profit / trailing-stop thresholds. |
-| **`PendingEntry`** | `OrderExecutionReport` (PartialFill) | `PendingEntry` | Update accumulated fill size; wait for order completion or timeout. |
-| **`PendingEntry`** | `OrderExecutionReport` (Rejected / Cancelled) | **`Idle / Scanning`** | Log error; clear order tracking ID. |
-| **`PendingEntry`** | `Timeout` | **`Idle / Scanning`** | Cancel outstanding order; log timeout; clear state. |
+| Current State         | Event (Input)                                 | Next State                    | Action / Side-Effect                                                        |
+| --------------------- | --------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------- |
+| **`Idle / Scanning`** | `MarketBarReceived` (Signal == False)         | `Idle / Scanning`             | Update rolling indicators and buffers.                                      |
+| **`Idle / Scanning`** | `MarketBarReceived` (Signal == True, Long)    | **`PendingEntry(Long)`**      | Calculate long position size; dispatch entry order.                         |
+| **`Idle / Scanning`** | `MarketBarReceived` (Signal == True, Short)   | **`PendingEntry(Short)`**     | Calculate short position size; dispatch Short Sell order.                   |
+| **`PendingEntry`**    | `OrderExecutionReport` (Filled)               | **`PositionOpen(direction)`** | Record entry price; set stop-loss / take-profit / trailing-stop thresholds. |
+| **`PendingEntry`**    | `OrderExecutionReport` (PartialFill)          | `PendingEntry`                | Update accumulated fill size; wait for order completion or timeout.         |
+| **`PendingEntry`**    | `OrderExecutionReport` (Rejected / Cancelled) | **`Idle / Scanning`**         | Log error; clear order tracking ID.                                         |
+| **`PendingEntry`**    | `Timeout`                                     | **`Idle / Scanning`**         | Cancel outstanding order; log timeout; clear state.                         |
 
 ### 4.2 Exit Transitions
 
 Each exit condition maps to a distinct event so that the exit reason is stamped precisely on the trade log (STRATEGY_DEFINITION.md §5.5).
 
-| Current State | Event (Input) | Next State | Action / Side-Effect |
-|---|---|---|---|
-| **`PositionOpen`** | `MarketBarReceived` (no exit condition met) | `PositionOpen` | Update trailing stop high-water mark; continue monitoring all exit conditions. |
-| **`PositionOpen`** | `MarketBarReceived` (Stop Loss hit) | **`PendingExit(exit_reason=StopLoss)`** | Dispatch close order; log exit_reason = **Stop Loss**. |
-| **`PositionOpen`** | `MarketBarReceived` (Trailing Stop hit) | **`PendingExit(exit_reason=TrailingStop)`** | Dispatch close order; log exit_reason = **Trailing Stop**. |
-| **`PositionOpen`** | `MarketBarReceived` (Take Profit hit) | **`PendingExit(exit_reason=TakeProfit)`** | Dispatch close order; log exit_reason = **Take Profit**. |
-| **`PositionOpen`** | `MarketBarReceived` (max holding days reached) | **`PendingExit(exit_reason=TimeBased)`** | Dispatch close order; log exit_reason = **Time-Based**. |
-| **`PositionOpen`** | `MarketBarReceived` (exit signal fired) | **`PendingExit(exit_reason=Signal)`** | Dispatch close order; log exit_reason = **Signal**. |
-| **`PositionOpen`** | `RebalanceEvent` (asset no longer ranked) | **`PendingExit(exit_reason=Signal)`** | Dispatch close order; log exit_reason = **Signal** (strategy deselected asset). |
-| **`PendingExit`** | `OrderExecutionReport` (Filled) | **`Idle / Scanning`** | Realise PnL; stamp exit reason in trade log; clear position memory. |
-| **`PendingExit`** | `Timeout` | `PendingExit` | Escalate to aggressive market-order override; restart timeout. |
+| Current State      | Event (Input)                                  | Next State                                  | Action / Side-Effect                                                            |
+| ------------------ | ---------------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------- |
+| **`PositionOpen`** | `MarketBarReceived` (no exit condition met)    | `PositionOpen`                              | Update trailing stop high-water mark; continue monitoring all exit conditions.  |
+| **`PositionOpen`** | `MarketBarReceived` (Stop Loss hit)            | **`PendingExit(exit_reason=StopLoss)`**     | Dispatch close order; log exit_reason = **Stop Loss**.                          |
+| **`PositionOpen`** | `MarketBarReceived` (Trailing Stop hit)        | **`PendingExit(exit_reason=TrailingStop)`** | Dispatch close order; log exit_reason = **Trailing Stop**.                      |
+| **`PositionOpen`** | `MarketBarReceived` (Take Profit hit)          | **`PendingExit(exit_reason=TakeProfit)`**   | Dispatch close order; log exit_reason = **Take Profit**.                        |
+| **`PositionOpen`** | `MarketBarReceived` (max holding days reached) | **`PendingExit(exit_reason=TimeBased)`**    | Dispatch close order; log exit_reason = **Time-Based**.                         |
+| **`PositionOpen`** | `MarketBarReceived` (exit signal fired)        | **`PendingExit(exit_reason=Signal)`**       | Dispatch close order; log exit_reason = **Signal**.                             |
+| **`PositionOpen`** | `RebalanceEvent` (asset no longer ranked)      | **`PendingExit(exit_reason=Signal)`**       | Dispatch close order; log exit_reason = **Signal** (strategy deselected asset). |
+| **`PendingExit`**  | `OrderExecutionReport` (Filled)                | **`Idle / Scanning`**                       | Realise PnL; stamp exit reason in trade log; clear position memory.             |
+| **`PendingExit`**  | `Timeout`                                      | `PendingExit`                               | Escalate to aggressive market-order override; restart timeout.                  |
 
 ---
 
@@ -184,25 +184,25 @@ The state machine structure is identical for long and short positions. The direc
 
 ### 5.1 Long Positions
 
-| Exit Condition | Trigger Rule |
-|---|---|
-| **Stop Loss** | `Close < Entry_Price × (1 − stop_pct)` or `Close < Entry_Price − N × ATR(14)` |
-| **Trailing Stop** | `Close < max(Close since entry) × (1 − trail_pct)` |
-| **Take Profit** | `Close > Entry_Price × (1 + target_pct)` or RSI-based signal condition |
-| **Time-Based** | `Holding_Days >= max_holding_days` |
-| **Signal** | Configurable exit indicator condition (e.g. `RSI(14) > 70`) |
+| Exit Condition    | Trigger Rule                                                                  |
+| ----------------- | ----------------------------------------------------------------------------- |
+| **Stop Loss**     | `Close < Entry_Price × (1 − stop_pct)` or `Close < Entry_Price − N × ATR(14)` |
+| **Trailing Stop** | `Close < max(Close since entry) × (1 − trail_pct)`                            |
+| **Take Profit**   | `Close > Entry_Price × (1 + target_pct)` or RSI-based signal condition        |
+| **Time-Based**    | `Holding_Days >= max_holding_days`                                            |
+| **Signal**        | Configurable exit indicator condition (e.g. `RSI(14) > 70`)                   |
 
 Entry order: `Market Buy` or `Limit Buy`. Exit order: `Market Sell` or `Limit Sell`.
 
 ### 5.2 Short Positions
 
-| Exit Condition | Trigger Rule |
-|---|---|
-| **Stop Loss** | `Close > Entry_Price × (1 + stop_pct)` or `Close > Entry_Price + N × ATR(14)` |
-| **Trailing Stop** | `Close > min(Close since entry) × (1 + trail_pct)` |
-| **Take Profit** | `Close < Entry_Price × (1 − target_pct)` or RSI-based signal condition |
-| **Time-Based** | `Holding_Days >= max_holding_days` |
-| **Signal** | Configurable exit indicator condition (e.g. `RSI(14) < 30`) |
+| Exit Condition    | Trigger Rule                                                                  |
+| ----------------- | ----------------------------------------------------------------------------- |
+| **Stop Loss**     | `Close > Entry_Price × (1 + stop_pct)` or `Close > Entry_Price + N × ATR(14)` |
+| **Trailing Stop** | `Close > min(Close since entry) × (1 + trail_pct)`                            |
+| **Take Profit**   | `Close < Entry_Price × (1 − target_pct)` or RSI-based signal condition        |
+| **Time-Based**    | `Holding_Days >= max_holding_days`                                            |
+| **Signal**        | Configurable exit indicator condition (e.g. `RSI(14) < 30`)                   |
 
 Entry order: `Short Sell` (borrow shares; sell to open). Exit order: `Buy to Cover` (buy shares; return to lender). Short positions held overnight incur a borrowing cost applied daily at the annualised rate specified in the strategy object (STRATEGY_DEFINITION.md §6.2).
 
@@ -224,22 +224,22 @@ The order type selected in STRATEGY_DEFINITION.md §3.1 changes how `PendingEntr
 
 ### 6.1 Entry Order Types
 
-| Order Type | Effect on `PendingEntry` Lifecycle |
-|---|---|
-| **Market Order** | Fills on the open of the next bar — 1-bar latency guaranteed. `PendingEntry` resolves in one tick. |
-| **Limit Order** | Fills only if the bar's low (long entry) or high (short entry) touches the limit price. `PendingEntry` may persist across multiple bars. If not filled within a timeout window, a `Timeout` event fires and the machine returns to `Idle / Scanning`. |
-| **Stop Order** | Activates when price crosses a threshold; immediately dispatches a market fill. `PendingEntry` resolves in the bar where the threshold is breached. |
-| **Stop Limit Order** | Activates when the stop threshold is crossed; then fills only at the specified limit. Combines the persistence risk of a Limit with the threshold trigger of a Stop — timeout handling is required. |
-| **Trailing Stop (Entry)** | The activation threshold advances in the strategy's favour as price moves. `PendingEntry` is not dispatched until the trailing stop level is breached. |
+| Order Type                | Effect on `PendingEntry` Lifecycle                                                                                                                                                                                                                    |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Market Order**          | Fills on the open of the next bar — 1-bar latency guaranteed. `PendingEntry` resolves in one tick.                                                                                                                                                    |
+| **Limit Order**           | Fills only if the bar's low (long entry) or high (short entry) touches the limit price. `PendingEntry` may persist across multiple bars. If not filled within a timeout window, a `Timeout` event fires and the machine returns to `Idle / Scanning`. |
+| **Stop Order**            | Activates when price crosses a threshold; immediately dispatches a market fill. `PendingEntry` resolves in the bar where the threshold is breached.                                                                                                   |
+| **Stop Limit Order**      | Activates when the stop threshold is crossed; then fills only at the specified limit. Combines the persistence risk of a Limit with the threshold trigger of a Stop — timeout handling is required.                                                   |
+| **Trailing Stop (Entry)** | The activation threshold advances in the strategy's favour as price moves. `PendingEntry` is not dispatched until the trailing stop level is breached.                                                                                                |
 
 ### 6.2 Exit Order Types
 
-| Order Type | Effect on `PositionOpen` / `PendingExit` |
-|---|---|
-| **Market Order** | Default exit. `PendingExit` resolves in one bar at the next open price. |
-| **Bracket Order** | At the `PendingEntry → PositionOpen` transition, the broker pre-registers a linked Stop Loss order and a Take Profit order as a single group. While `PositionOpen`, both legs are live simultaneously. Whichever fills first triggers the `PendingExit` fill event; the other leg is auto-cancelled by the broker. |
-| **OCO (One-Cancels-Other)** | Two exit orders are submitted when `PositionOpen` is entered. When one fills, the machine receives a fill event for that leg and the broker cancels the other. The `PendingExit` exit_reason is stamped from whichever leg filled. |
-| **Short Sell / Buy to Cover** | For short positions, the closing order is a Buy to Cover. The state machine mechanics are identical to a long exit — only the broker-side order direction differs. |
+| Order Type                    | Effect on `PositionOpen` / `PendingExit`                                                                                                                                                                                                                                                                           |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Market Order**              | Default exit. `PendingExit` resolves in one bar at the next open price.                                                                                                                                                                                                                                            |
+| **Bracket Order**             | At the `PendingEntry → PositionOpen` transition, the broker pre-registers a linked Stop Loss order and a Take Profit order as a single group. While `PositionOpen`, both legs are live simultaneously. Whichever fills first triggers the `PendingExit` fill event; the other leg is auto-cancelled by the broker. |
+| **OCO (One-Cancels-Other)**   | Two exit orders are submitted when `PositionOpen` is entered. When one fills, the machine receives a fill event for that leg and the broker cancels the other. The `PendingExit` exit_reason is stamped from whichever leg filled.                                                                                 |
+| **Short Sell / Buy to Cover** | For short positions, the closing order is a Buy to Cover. The state machine mechanics are identical to a long exit — only the broker-side order direction differs.                                                                                                                                                 |
 
 ---
 
@@ -311,10 +311,10 @@ pub trait Broker {
 
 ### Vectorized vs. Event-Driven Backtesting
 
-| Approach | Speed | Accuracy | Production-Ready |
-|---|---|---|---|
-| **Vectorized** (Pandas / NumPy) | Very fast | Low — cannot model trailing stops, partial fills, or multi-asset interactions correctly | No — code is not reusable for live execution |
-| **Event-Driven** (FSM bar-by-bar) | Slower | High — mimics real-time event streams; eliminates look-ahead bias by design | Yes — identical code path runs in both backtest and live |
+| Approach                          | Speed     | Accuracy                                                                                | Production-Ready                                         |
+| --------------------------------- | --------- | --------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| **Vectorized** (Pandas / NumPy)   | Very fast | Low — cannot model trailing stops, partial fills, or multi-asset interactions correctly | No — code is not reusable for live execution             |
+| **Event-Driven** (FSM bar-by-bar) | Slower    | High — mimics real-time event streams; eliminates look-ahead bias by design             | Yes — identical code path runs in both backtest and live |
 
 For any strategy that uses trailing stops, complex exit logic, or portfolio-level position constraints, event-driven is the only architecturally sound choice.
 
@@ -348,10 +348,10 @@ If a technical indicator continues generating an entry signal on every bar while
 
 CONCEPT.md identifies five pitfalls that cause backtests to overstate live performance. Four of them are directly addressed by the FSM architecture; the fifth is a validation-workflow concern that the engine alone cannot prevent.
 
-| Pitfall (CONCEPT.md) | Architectural Safeguard |
-|---|---|
-| **Look-Ahead Bias** | The Data Engine delivers exactly one bar at a time to the Strategy FSM in strict chronological order. No bar `t+N` data is accessible while processing bar `t`. Event-driven execution makes look-ahead bias structurally impossible — there is no array index to read ahead from. |
-| **Ignoring Market Friction** | The Execution Engine applies commission and slippage to every fill — entry, exit, and rebalance — before updating portfolio equity. No fill is recorded at a theoretical clean price. The cost model is read from the Structured Strategy Object and applied uniformly throughout the run. |
-| **Survivorship Bias** | The Liquidity Pre-Filter (§2.1) evaluates point-in-time data — the values observable on the signal date, not today's. Delisted, suspended, or index-removed assets remain present in the historical universe and can be selected and held through their delisting event. The filter must never source data retroactively. |
-| **Regime Dependency** | Regime tagging (§2.5) labels every trade with the active market regime at entry and during the holding period. Stage 7 analysis decomposes aggregate performance into per-regime returns, surfacing strategies that owe their entire return to a single favourable regime and would fail the moment conditions change. |
-| **Overfitting** | Not addressable by the engine architecture itself. Overfitting is prevented by the validation workflow (CONCEPT.md Stage 8): in-sample vs out-of-sample splits, parameter sensitivity analysis, and walk-forward validation. The engine supports this by accepting versioned strategy objects that can be re-run across different date ranges without modifying any core logic. |
+| Pitfall (CONCEPT.md)         | Architectural Safeguard                                                                                                                                                                                                                                                                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Look-Ahead Bias**          | The Data Engine delivers exactly one bar at a time to the Strategy FSM in strict chronological order. No bar `t+N` data is accessible while processing bar `t`. Event-driven execution makes look-ahead bias structurally impossible — there is no array index to read ahead from.                                                                                              |
+| **Ignoring Market Friction** | The Execution Engine applies commission and slippage to every fill — entry, exit, and rebalance — before updating portfolio equity. No fill is recorded at a theoretical clean price. The cost model is read from the Structured Strategy Object and applied uniformly throughout the run.                                                                                      |
+| **Survivorship Bias**        | The Liquidity Pre-Filter (§2.1) evaluates point-in-time data — the values observable on the signal date, not today's. Delisted, suspended, or index-removed assets remain present in the historical universe and can be selected and held through their delisting event. The filter must never source data retroactively.                                                       |
+| **Regime Dependency**        | Regime tagging (§2.5) labels every trade with the active market regime at entry and during the holding period. Stage 7 analysis decomposes aggregate performance into per-regime returns, surfacing strategies that owe their entire return to a single favourable regime and would fail the moment conditions change.                                                          |
+| **Overfitting**              | Not addressable by the engine architecture itself. Overfitting is prevented by the validation workflow (CONCEPT.md Stage 8): in-sample vs out-of-sample splits, parameter sensitivity analysis, and walk-forward validation. The engine supports this by accepting versioned strategy objects that can be re-run across different date ranges without modifying any core logic. |

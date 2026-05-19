@@ -26,14 +26,14 @@ Backtesting matters because it:
 
 ## WHEN Should You Run a Backtest?
 
-| Situation | Why Backtesting Is the Right Tool |
-|---|---|
-| Before deploying any new strategy | Baseline validation before any live capital commitment |
-| After changing strategy parameters | Confirms whether the change improves or degrades performance |
-| After a major market regime shift | Re-validates whether existing strategies remain relevant |
-| When comparing two or more strategies | Provides an objective, apples-to-apples scorecard |
-| When evaluating risk rule changes | Quantifies the impact of different stop-loss or position-size settings |
-| For regulatory or institutional review | Provides a documented, reproducible performance record |
+| Situation                              | Why Backtesting Is the Right Tool                                      |
+| -------------------------------------- | ---------------------------------------------------------------------- |
+| Before deploying any new strategy      | Baseline validation before any live capital commitment                 |
+| After changing strategy parameters     | Confirms whether the change improves or degrades performance           |
+| After a major market regime shift      | Re-validates whether existing strategies remain relevant               |
+| When comparing two or more strategies  | Provides an objective, apples-to-apples scorecard                      |
+| When evaluating risk rule changes      | Quantifies the impact of different stop-loss or position-size settings |
+| For regulatory or institutional review | Provides a documented, reproducible performance record                 |
 
 ---
 
@@ -55,18 +55,23 @@ Backtesting is not limited to a single stock or a single market. The scope — c
 The backtesting pipeline has eight stages. For detailed implementation guidance on defining each component, see [STRATEGY_DEFINITION.md](./STRATEGY_DEFINITION.md).
 
 ### 1. Define the Strategy
+
 Translate a trading idea into strict, unambiguous, machine-readable rules covering signal conditions, order execution, position sizing, and exit logic. A rule that requires human judgment cannot be backtested — it must be expressible as code.
 
 ### 2. Configure the Simulation Parameters
+
 Set the boundaries of the simulation: the historical date range, the starting capital, the market and timeframe, and the execution cost model (commission structure and slippage assumption). These inputs directly affect every output metric — a backtest with no slippage assumption is not realistic.
 
 ### 3. Choose Order Types and Execution Model
+
 Decide how simulated orders are filled. Market orders fill immediately at the bar price; limit orders only fill if the market reaches a target price; stop and trailing-stop orders protect against adverse moves; bracket orders combine entry, stop-loss, and take-profit in a single instruction. The choice of order type changes both the realism of the simulation and the strategy's measured performance.
 
 ### 4. Run the Engine
+
 The engine iterates through the historical data bar by bar, in strict chronological order. At each bar, it checks entry conditions, manages open positions against exit rules, applies commission and slippage on every fill, and records the resulting portfolio value. No future data is ever visible during this pass.
 
 ### 5. Evaluate Performance Metrics
+
 The engine produces a comprehensive report across four dimensions:
 
 - **Return metrics** — Total Return, CAGR, Net Profit, Gross Profit/Loss, Alpha vs benchmark
@@ -77,12 +82,15 @@ The engine produces a comprehensive report across four dimensions:
 For strategies that trade both long and short, all metrics should also be broken down by direction so that the long-side and short-side performance can be evaluated independently.
 
 ### 6. Inspect the Trade Log
+
 Every completed round-trip (entry to exit) is recorded as a single row. The log captures the symbol, direction (long/short), entry and exit dates and prices, quantity, commission, slippage, net P&L, percentage return, holding duration, and — critically — the **exit reason** (Take Profit, Stop Loss, Trailing Stop, Time-Based, or Signal). Exit reasons reveal whether a strategy's profits come from disciplined profit-taking or from stops being hit less often than expected.
 
 ### 7. Benchmark and Regime Analysis
+
 Plot the equity curve against a passive benchmark to confirm genuine alpha. Then break down performance by the **market regime** that was active during each trade — Bull, Bear, High Volatility, Low Volatility, Risk-On, Risk-Off, Inflation Shock, Rate Cut Cycle. A strategy that shows strong overall returns but collapses in Bear or High Volatility regimes is regime-dependent, not robust.
 
 ### 8. Iterate and Validate
+
 A single backtest run is not a conclusion. Test across multiple date ranges (in-sample vs out-of-sample). Vary parameters to check sensitivity. Run walk-forward validation to confirm the strategy adapts rather than fits. Only after surviving this process should a strategy be considered for live deployment.
 
 ---
@@ -92,16 +100,21 @@ A single backtest run is not a conclusion. Test across multiple date ranges (in-
 A strong backtest result does not guarantee future profits. The gap between simulation and live markets is caused by well-understood, avoidable traps.
 
 ### 1. Overfitting (Curve Fitting)
+
 Tuning a strategy's parameters until it perfectly explains the past is not skill — it is memorisation. An overfitted strategy has no predictive power for data it has never seen. The more parameters a strategy has, and the shorter the test period, the higher the overfitting risk.
 
 ### 2. Look-Ahead Bias
+
 A strategy inadvertently uses information that would not have been available at the time of the simulated trade. Common examples include using end-of-day closing prices to generate signals that would have needed intraday execution, or using annual earnings data on a date before the filing was publicly released.
 
 ### 3. Ignoring Market Friction
+
 Perfect simulation execution does not exist in real markets. Every trade incurs commissions and fees. Every large order moves the market against you (slippage). Thinly traded assets may not be fillable at the simulated price at all. A backtest without realistic cost assumptions will always overstate returns.
 
 ### 4. Survivorship Bias
+
 Testing a strategy on today's S&P 500 components means testing only on the companies that survived the entire period. Every company that was delisted, went bankrupt, or was removed from the index is absent from the data — and those are exactly the companies a bad strategy would have bought. This silently inflates simulated returns.
 
 ### 5. Regime Dependency
+
 A strategy may owe its entire historical return to a single favourable market regime. Without per-regime performance analysis, this dependency is invisible in the aggregate numbers. The strategy appears robust but will underperform or fail the moment the regime changes.

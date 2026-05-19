@@ -15,9 +15,11 @@ const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
+	{ ignores: ['src/lib/components/ui/**', 'src/stories/**'] },
 	js.configs.recommended,
 	ts.configs.recommended,
 	svelte.configs.recommended,
+	...storybook.configs['flat/recommended'],
 	prettier,
 	svelte.configs.prettier,
 	{

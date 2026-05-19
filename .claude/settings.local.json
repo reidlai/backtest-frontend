@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash *)",
+      "Bash(pnpm check *)",
+      "Bash(pnpm exec *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm format *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(pnpm dev *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(pkill -f \"vite dev\")"
+    ]
+  }
+}

@@ -5,7 +5,7 @@
 **Status**: Draft
 **Input**: User description: "Use prototype/ai_backtest_platform_prototype.mhtml as base to create src/routes/+page.svelte"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 — View Investment Research Dashboard (Priority: P1)
 
@@ -97,7 +97,7 @@ A user uses the persistent right sidebar to review AI-generated strategy analysi
 - **Empty state — Performance Result**: When no backtest has been run, the Performance Result section displays an explanatory placeholder message ("No backtest results yet") and a call-to-action button that navigates the user to the Backtest Engine section.
 - **Empty state — Trade Log**: When no backtest has been run, the Trade Log section displays an explanatory placeholder message and a call-to-action button navigating to the Backtest Engine section.
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -125,7 +125,7 @@ A user uses the persistent right sidebar to review AI-generated strategy analysi
 - **FR-022**: All interactive UI controls, tables, dialogs, and form elements MUST be composed from shadcn-svelte Atom components. Molecules MUST be purely presentational (no internal state). Organisms MUST encapsulate all state management for their respective section. The three-column page shell MUST be implemented as a SvelteKit layout (Template), with the full page composed as a SvelteKit page (Page).
 - **FR-023**: The page MUST support multilingual display for all user-visible strings. English and Traditional Chinese MUST both be fully supported in this feature. All labels, headings, placeholder text, button text, and descriptive content MUST be externalized (not hardcoded) to allow language switching. The active language selection MUST be stored as global session state so it persists uniformly across all ten sections for the lifetime of the browser session.
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Strategy**: A user-defined investment strategy composed of market scope, fundamental filters, technical filters, backtest period, position sizing rules, and risk management rules.
 - **Backtest Result**: All performance metrics computed from running a strategy over historical data, including return, drawdown, Sharpe ratio, win rate, regime breakdown, and trade-level detail.
@@ -135,7 +135,7 @@ A user uses the persistent right sidebar to review AI-generated strategy analysi
 - **AI Review**: A structured strategy assessment including an overall letter grade, confidence level, and specific risk findings (overfitting risk, regime dependency, bias checks).
 - **Resource Usage**: Session-level tracking of token consumption, backtest quota usage, queue position, and estimated compute cost.
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

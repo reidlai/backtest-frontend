@@ -12,26 +12,26 @@
 // ---------------------------------------------------------------------------
 
 export type SectionId =
-  | 'dashboard'
-  | 'strategy-builder'
-  | 'fundamental-screener'
-  | 'technical-screener'
-  | 'backtest-engine'
-  | 'performance-result'
-  | 'market-regime'
-  | 'sentiment-events'
-  | 'trade-log'
-  | 'settings-billing';
+	| 'dashboard'
+	| 'strategy-builder'
+	| 'fundamental-screener'
+	| 'technical-screener'
+	| 'backtest-engine'
+	| 'performance-result'
+	| 'market-regime'
+	| 'sentiment-events'
+	| 'trade-log'
+	| 'settings-billing';
 
 export type NavGroup = 'main' | 'result';
 
 export interface NavSection {
-  id: SectionId;
-  /** i18n message key — resolved via Paraglide m.* at render time */
-  labelKey: string;
-  /** Lucide icon component name */
-  icon: string;
-  group: NavGroup;
+	id: SectionId;
+	/** i18n message key — resolved via Paraglide m.* at render time */
+	labelKey: string;
+	/** Lucide icon component name */
+	icon: string;
+	group: NavGroup;
 }
 
 // ---------------------------------------------------------------------------
@@ -47,20 +47,20 @@ export type Locale = 'en' | 'zh-TW';
 export type MetricCategory = 'market' | 'risk' | 'rates' | 'usage';
 
 export interface MarketMetric {
-  id: string;
-  label: string;
-  value: string;
-  delta: string;
-  deltaPositive: boolean;
-  category: MetricCategory;
+	id: string;
+	label: string;
+	value: string;
+	delta: string;
+	deltaPositive: boolean;
+	category: MetricCategory;
 }
 
 export interface FunctionGatewayCard {
-  id: SectionId;
-  /** i18n message key */
-  titleKey: string;
-  descriptionKey: string;
-  icon: string;
+	id: SectionId;
+	/** i18n message key */
+	titleKey: string;
+	descriptionKey: string;
+	icon: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -68,12 +68,12 @@ export interface FunctionGatewayCard {
 // ---------------------------------------------------------------------------
 
 export interface Strategy {
-  market: string;
-  fundamentalFilter: string;
-  technicalFilter: string;
-  backtestPeriod: string;
-  positionSize: string;
-  riskRule: string;
+	market: string;
+	fundamentalFilter: string;
+	technicalFilter: string;
+	backtestPeriod: string;
+	positionSize: string;
+	riskRule: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -81,16 +81,16 @@ export interface Strategy {
 // ---------------------------------------------------------------------------
 
 export interface ScreenerResult {
-  symbol: string;
-  name: string;
-  peRatio: number;
-  evEbitda: number;
-  fcfYield: number;
-  roic: number;
-  revenueGrowth: number;
-  epsGrowth: number;
-  /** Composite factor ranking score 0–100 */
-  score: number;
+	symbol: string;
+	name: string;
+	peRatio: number;
+	evEbitda: number;
+	fcfYield: number;
+	roic: number;
+	revenueGrowth: number;
+	epsGrowth: number;
+	/** Composite factor ranking score 0–100 */
+	score: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -98,39 +98,39 @@ export interface ScreenerResult {
 // ---------------------------------------------------------------------------
 
 export type BacktestMode =
-  | 'Single Stock'
-  | 'Watchlist'
-  | 'Screener Result'
-  | 'Index Universe'
-  | 'Strategy Comparison'
-  | 'Benchmark Comparison';
+	| 'Single Stock'
+	| 'Watchlist'
+	| 'Screener Result'
+	| 'Index Universe'
+	| 'Strategy Comparison'
+	| 'Benchmark Comparison';
 
 export type OrderType =
-  | 'Market'
-  | 'Limit'
-  | 'Stop'
-  | 'Stop-Limit'
-  | 'Trailing Stop'
-  | 'Bracket'
-  | 'OCO'
-  | 'Short Sell';
+	| 'Market'
+	| 'Limit'
+	| 'Stop'
+	| 'Stop-Limit'
+	| 'Trailing Stop'
+	| 'Bracket'
+	| 'OCO'
+	| 'Short Sell';
 
 export interface BacktestParams {
-  mode: BacktestMode;
-  initialCapital: number;
-  startDate: string;
-  endDate: string;
-  market: string;
-  universe: string;
-  timeframe: string;
-  commissionModel: string;
-  slippageModel: string;
-  positionSize: string;
-  stopLoss: number;
-  takeProfit: number;
-  direction: 'Long' | 'Short' | 'Both';
-  rebalanceFrequency: string;
-  orderTypes: OrderType[];
+	mode: BacktestMode;
+	initialCapital: number;
+	startDate: string;
+	endDate: string;
+	market: string;
+	universe: string;
+	timeframe: string;
+	commissionModel: string;
+	slippageModel: string;
+	positionSize: string;
+	stopLoss: number;
+	takeProfit: number;
+	direction: 'Long' | 'Short' | 'Both';
+	rebalanceFrequency: string;
+	orderTypes: OrderType[];
 }
 
 // ---------------------------------------------------------------------------
@@ -138,47 +138,47 @@ export interface BacktestParams {
 // ---------------------------------------------------------------------------
 
 export interface TimeSeriesPoint {
-  date: string;
-  value: number;
+	date: string;
+	value: number;
 }
 
 export interface MonthlyReturn {
-  month: string;
-  value: number;
+	month: string;
+	value: number;
 }
 
 export interface BacktestResult {
-  totalReturn: number;
-  netProfit: number;
-  maxDrawdown: number;
-  sharpeRatio: number;
-  winRate: number;
-  profitFactor: number;
-  volatility: number;
-  exposureTime: number;
-  equityCurve: TimeSeriesPoint[];
-  drawdownSeries: TimeSeriesPoint[];
-  monthlyReturns: MonthlyReturn[];
-  benchmarkSeries: TimeSeriesPoint[];
+	totalReturn: number;
+	netProfit: number;
+	maxDrawdown: number;
+	sharpeRatio: number;
+	winRate: number;
+	profitFactor: number;
+	volatility: number;
+	exposureTime: number;
+	equityCurve: TimeSeriesPoint[];
+	drawdownSeries: TimeSeriesPoint[];
+	monthlyReturns: MonthlyReturn[];
+	benchmarkSeries: TimeSeriesPoint[];
 }
 
 export interface MetricTile {
-  id: string;
-  label: string;
-  value: string;
-  unit: string;
-  /** 0-based display order; mutable via drag-to-reorder */
-  order: number;
+	id: string;
+	label: string;
+	value: string;
+	unit: string;
+	/** 0-based display order; mutable via drag-to-reorder */
+	order: number;
 }
 
 export type ChartTab = 'equity-curve' | 'drawdown' | 'benchmark-overlay' | 'monthly-heatmap';
 
 export interface RegimeBreakdown {
-  regime: string;
-  returnPct: number;
-  maxDrawdown: number;
-  winRate: number;
-  tradeCount: number;
+	regime: string;
+	returnPct: number;
+	maxDrawdown: number;
+	winRate: number;
+	tradeCount: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -188,11 +188,11 @@ export interface RegimeBreakdown {
 export type RegimeStatus = 'active' | 'inactive' | 'warning';
 
 export interface MarketRegime {
-  id: string;
-  name: string;
-  status: RegimeStatus;
-  logicDescription: string;
-  indicators: string[];
+	id: string;
+	name: string;
+	status: RegimeStatus;
+	logicDescription: string;
+	indicators: string[];
 }
 
 // ---------------------------------------------------------------------------
@@ -203,15 +203,15 @@ export type SentimentEventType = 'news' | 'earnings' | 'fed' | 'macro' | 'inside
 export type Sentiment = 'positive' | 'negative' | 'neutral';
 
 export interface SentimentEvent {
-  id: string;
-  type: SentimentEventType;
-  /** Empty string for macro/global events without a specific symbol */
-  symbol: string;
-  date: string;
-  headline: string;
-  sentiment: Sentiment;
-  /** Score in range -1.0 to 1.0 */
-  score: number;
+	id: string;
+	type: SentimentEventType;
+	/** Empty string for macro/global events without a specific symbol */
+	symbol: string;
+	date: string;
+	headline: string;
+	sentiment: Sentiment;
+	/** Score in range -1.0 to 1.0 */
+	score: number;
 }
 
 // ---------------------------------------------------------------------------
@@ -221,20 +221,20 @@ export interface SentimentEvent {
 export type TradeDirection = 'Long' | 'Short';
 
 export interface TradeRecord {
-  tradeId: string;
-  symbol: string;
-  direction: TradeDirection;
-  entryDate: string;
-  entryPrice: number;
-  exitDate: string;
-  exitPrice: number;
-  quantity: number;
-  commission: number;
-  slippage: number;
-  netPnl: number;
-  returnPct: number;
-  holdingDays: number;
-  exitReason: string;
+	tradeId: string;
+	symbol: string;
+	direction: TradeDirection;
+	entryDate: string;
+	entryPrice: number;
+	exitDate: string;
+	exitPrice: number;
+	quantity: number;
+	commission: number;
+	slippage: number;
+	netPnl: number;
+	returnPct: number;
+	holdingDays: number;
+	exitReason: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -242,10 +242,10 @@ export interface TradeRecord {
 // ---------------------------------------------------------------------------
 
 export interface UsageMetric {
-  id: string;
-  label: string;
-  value: string;
-  description?: string;
+	id: string;
+	label: string;
+	value: string;
+	description?: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -257,34 +257,34 @@ export type FlagSeverity = 'high' | 'medium' | 'low';
 export type PlanImpact = 'low' | 'medium' | 'high';
 
 export interface RiskFlag {
-  id: string;
-  label: string;
-  severity: FlagSeverity;
-  description: string;
+	id: string;
+	label: string;
+	severity: FlagSeverity;
+	description: string;
 }
 
 export interface AIReview {
-  grade: string;
-  confidence: ConfidenceLevel;
-  riskFlags: RiskFlag[];
+	grade: string;
+	confidence: ConfidenceLevel;
+	riskFlags: RiskFlag[];
 }
 
 export interface ResourceUsage {
-  tokensUsed: number;
-  tokensTotal: number;
-  backtestsUsed: number;
-  backtestsTotal: number;
-  queuePosition: number;
-  estimatedRuntime: string;
-  complexityScore: number;
-  planImpact: PlanImpact;
+	tokensUsed: number;
+	tokensTotal: number;
+	backtestsUsed: number;
+	backtestsTotal: number;
+	queuePosition: number;
+	estimatedRuntime: string;
+	complexityScore: number;
+	planImpact: PlanImpact;
 }
 
 export interface ChatMessage {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: string;
+	id: string;
+	role: 'user' | 'assistant';
+	content: string;
+	timestamp: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -292,8 +292,8 @@ export interface ChatMessage {
 // ---------------------------------------------------------------------------
 
 export interface MetricEditPayload {
-  tileId: string;
-  newValue: string;
+	tileId: string;
+	newValue: string;
 }
 
 // ---------------------------------------------------------------------------
@@ -302,39 +302,39 @@ export interface MetricEditPayload {
 
 /** Props for MetricTile molecule */
 export interface MetricTileProps {
-  tile: MetricTile;
-  draggable?: boolean;
-  onDragStart?: (index: number) => void;
-  onDragOver?: (e: DragEvent) => void;
-  onDrop?: (index: number) => void;
-  onDoubleClick?: (tile: MetricTile) => void;
+	tile: MetricTile;
+	draggable?: boolean;
+	onDragStart?: (index: number) => void;
+	onDragOver?: (e: DragEvent) => void;
+	onDrop?: (index: number) => void;
+	onDoubleClick?: (tile: MetricTile) => void;
 }
 
 /** Props for RegimeCard molecule */
 export interface RegimeCardProps {
-  regime: MarketRegime;
+	regime: MarketRegime;
 }
 
 /** Props for NavItem molecule */
 export interface NavItemProps {
-  section: NavSection;
-  isActive: boolean;
-  onClick: () => void;
+	section: NavSection;
+	isActive: boolean;
+	onClick: () => void;
 }
 
 /** Props for FunctionGatewayCard molecule */
 export interface FunctionGatewayCardProps {
-  card: FunctionGatewayCard;
-  onClick: () => void;
+	card: FunctionGatewayCard;
+	onClick: () => void;
 }
 
 /** Props for RiskFlagItem molecule */
 export interface RiskFlagItemProps {
-  flag: RiskFlag;
+	flag: RiskFlag;
 }
 
 /** Props for ScreenerResultRow molecule */
 export interface ScreenerResultRowProps {
-  result: ScreenerResult;
-  onBacktest: (symbol: string) => void;
+	result: ScreenerResult;
+	onBacktest: (symbol: string) => void;
 }
