@@ -2,13 +2,10 @@ name: CI
 
 on:
   push:
-    branches:
-      - '**'
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+    branches: ['**']
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 concurrency:
   group: '${{ github.workflow }}-${{ github.ref }}'
@@ -22,24 +19,25 @@ permissions:
 
 jobs:
   ci-sca:
-    name: SCA (audit-ci)
+    name: ci-sca
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.32.1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run SCA
+      - name: SCA — dependency vulnerability scan
         run: pnpm dlx audit-ci --high --output-format json 2>&1 | tee sca-report.json; exit ${PIPESTATUS[0]}
 
       - name: Upload SCA report
@@ -51,31 +49,32 @@ jobs:
           retention-days: 30
 
   ci-format-lint:
-    name: Format + Lint
-    runs-on: ubuntu-latest
+    name: ci-format-lint
     needs: [ci-sca]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.32.1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Prettier check
+      - name: Formatting check
         run: pnpm prettier --check . 2>&1 | tee prettier-report.txt; exit ${PIPESTATUS[0]}
 
-      - name: Run ESLint
+      - name: Linting
         run: pnpm eslint . --format json --output-file eslint-report.json; exit $?
 
-      - name: Upload format + lint report
+      - name: Upload Format and Lint reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -86,32 +85,35 @@ jobs:
           retention-days: 30
 
   ci-secrets-scan:
-    name: Secrets Scan (Gitleaks)
-    runs-on: ubuntu-latest
+    name: ci-secrets-scan
     needs: [ci-format-lint]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - uses: gitleaks/gitleaks-action@v2
+      - name: Secrets scan
+        uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   ci-unit-tests:
-    name: Unit Tests (Vitest server)
-    runs-on: ubuntu-latest
+    name: ci-unit-tests
     needs: [ci-secrets-scan]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 10.32.1
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
           cache: pnpm
 
       - name: Install dependencies
@@ -129,32 +131,30 @@ jobs:
           retention-days: 30
 
   ci-sast-threatmodel:
-    name: SAST + Threat Model (Semgrep)
-    runs-on: ubuntu-latest
+    name: ci-sast-threatmodel
     needs: [ci-unit-tests]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Install Semgrep
         run: pip install semgrep
 
-      - name: Run Semgrep SAST
+      - name: Run Semgrep
         run: semgrep --config=auto --json --output=threat_modelling/reports/pr-threats.json . || true
 
-      - name: Create GitHub issues for HIGH/CRITICAL findings
-        if: always()
+      - name: Create issues for findings
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ -f threat_modelling/reports/pr-threats.json ]; then
-            jq -r '.results[] | select(.extra.severity == "ERROR" or .extra.severity == "WARNING") | [.check_id, .extra.message, .path, (.start.line | tostring)] | @tsv' \
-              threat_modelling/reports/pr-threats.json 2>/dev/null | \
-            while IFS=$'\t' read -r rule message file line; do
-              gh issue create \
-                --title "SAST: $rule" \
-                --label "security,sast" \
-                --body "**Rule**: $rule\n**Message**: $message\n**Location**: $file:$line" \
-                --repo "$GITHUB_REPOSITORY" || true
+            cat threat_modelling/reports/pr-threats.json | jq -c '.results[] | select(.extra.severity == "ERROR")' | while read -r result; do
+              RULE=$(echo "$result" | jq -r '.check_id')
+              MSG=$(echo "$result" | jq -r '.extra.message')
+              FILE=$(echo "$result" | jq -r '.path')
+              LINE=$(echo "$result" | jq -r '.start.line')
+              gh issue create --title "SAST: $RULE" --label "security,sast" --body "$MSG at $FILE:$LINE" || true
             done
           fi
 
@@ -167,21 +167,23 @@ jobs:
           retention-days: 30
 
   build:
-    name: Build Docker Image
-    runs-on: ubuntu-latest
+    name: build
     needs: [ci-sast-threatmodel]
+    runs-on: ubuntu-latest
     concurrency:
       group: '${{ github.workflow }}-${{ github.ref }}-build'
       cancel-in-progress: false
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     outputs:
-      image-name: ${{ steps.primary.outputs.tag }}
+      image-name: ${{ steps.meta.outputs.tags }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: docker/setup-buildx-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: Extract Docker metadata
+      - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -190,21 +192,17 @@ jobs:
             type=ref,event=branch
             type=sha,prefix=,format=short
 
-      - name: Set primary image tag
-        id: primary
-        run: echo "tag=$(echo '${{ steps.meta.outputs.tags }}' | head -1)" >> $GITHUB_OUTPUT
-
-      - name: Build Docker image
+      - name: Build and export
         uses: docker/build-push-action@v6
         with:
-          file: deploy/docker/Dockerfile
           context: .
+          file: deploy/docker/Dockerfile
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=docker,dest=/tmp/image.tar
 
-      - name: Upload image tarball
+      - name: Upload image artifact
         uses: actions/upload-artifact@v4
         with:
           name: docker-image
@@ -212,43 +210,43 @@ jobs:
           retention-days: 1
 
   sast:
-    name: Container Image Scan (Trivy)
-    runs-on: ubuntu-latest
+    name: sast
     needs: [build]
+    runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Download image tarball
+      - name: Download image artifact
         uses: actions/download-artifact@v4
         with:
           name: docker-image
           path: /tmp
 
-      - name: Load Docker image
+      - name: Load image
         run: docker load --input /tmp/image.tar
 
-      - name: Scan image — block on HIGH/CRITICAL
+      - name: Run Trivy vulnerability scanner (HIGH, CRITICAL)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: sarif
           output: trivy-report.sarif
-          exit-code: '1'
-          severity: HIGH,CRITICAL
+          exit-code: 1
+          severity: 'HIGH,CRITICAL'
           trivyignores: .trivyignore
 
-      - name: Scan image — warn on LOW/MEDIUM
+      - name: Run Trivy vulnerability scanner (LOW, MEDIUM)
         if: always()
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: table
-          exit-code: '0'
-          severity: LOW,MEDIUM
-          trivyignores: .trivyignore
+          exit-code: 0
+          severity: 'LOW,MEDIUM'
 
-      - name: Upload Trivy SARIF report
+      - name: Upload Trivy report
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -257,24 +255,25 @@ jobs:
           retention-days: 30
 
   push-to-ghcr:
-    name: Push to GHCR
+    name: push-to-ghcr
+    needs: [sast, build]
+    if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: [sast]
     concurrency:
       group: '${{ github.workflow }}-${{ github.ref }}-push'
       cancel-in-progress: false
-    if: (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')) && github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Log in to GHCR
+      - name: Login to GHCR
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract Docker metadata
+      - name: Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -285,25 +284,25 @@ jobs:
             type=sha,prefix=,format=short
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: Download image tarball
+      - name: Download image artifact
         uses: actions/download-artifact@v4
         with:
           name: docker-image
           path: /tmp
 
-      - name: Load Docker image
+      - name: Load image
         run: docker load --input /tmp/image.tar
 
-      - name: Re-tag image with final GHCR metadata
+      - name: Re-tag image
         run: |
           while IFS= read -r tag; do
             docker tag "${{ needs.build.outputs.image-name }}" "$tag"
           done <<< "${{ steps.meta.outputs.tags }}"
 
-      - name: Push all tags to GHCR
+      - name: Push image
         run: docker push --all-tags ghcr.io/${{ github.repository }}
 
-      - name: Write job summary
+      - name: Job Summary
         run: |
           echo "### Published Image" >> $GITHUB_STEP_SUMMARY
           echo "**Tags**: ${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY

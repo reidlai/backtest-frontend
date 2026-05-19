@@ -63,20 +63,20 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 
 _GATE: Constitution v2.0.0 applied. Original design had 13 CRITICAL violations; all resolved in tasks.md remediation (2026-05-19). Two rows marked N/A after constitution v2.0.0 MAJOR amendment (2026-05-19) removed ci-sast-threatmodel as a mandatory gate and threat_modelling/reports/ as a required directory._
 
-| Gate                                                                                     | Rule       | Status          | Resolution                                                                                 |
-| ---------------------------------------------------------------------------------------- | ---------- | --------------- | ------------------------------------------------------------------------------------------ |
-| Branch name `002-github-ci-workflow` matches `###-feature-name` format                   | Rule 1     | ✅              | —                                                                                          |
-| BDD acceptance criteria in spec before this plan                                         | Rule 6     | ✅              | spec.md has Given/When/Then scenarios; T016 creates `features/` file before implementation |
-| Docker image uses distroless base; non-root; HEALTHCHECK                                 | Rule 3     | ✅ (remediated) | T005 updated: `gcr.io/distroless/nodejs20-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
-| Docker assets in `deploy/docker/`                                                        | Rule 9     | ✅ (remediated) | T005 path changed from repo root to `deploy/docker/Dockerfile`                             |
-| Workflow file is `.github/workflows/ci.yaml`                                             | Rule 9     | ✅ (remediated) | T006 extension corrected from `.yml` to `.yaml`                                            |
-| `ci-secrets-scan` job present                                                            | Rule 7     | ✅ (remediated) | T009 added: Gitleaks-based secrets detection                                               |
-| `ci-sast-threatmodel` job present (blocking CI gate)                                     | Rule 7     | N/A (v2.0.0)   | Removed as mandatory gate in constitution v2.0.0; job retained as informational-only       |
-| `features/` directory exists with BDD files                                              | Rules 6, 9 | ✅ (remediated) | T016 creates `features/ci-quality-gates.feature`                                           |
-| `threat_modelling/reports/` directory exists                                             | Rules 7, 9 | N/A (v2.0.0)   | Removed as required directory in constitution v2.0.0; directory retained as optional       |
-| `pre-commit-config.yaml` exists                                                          | Rule 9     | ✅ (remediated) | T018 creates `pre-commit-config.yaml`                                                      |
-| Job names match enforcement mapping (4 required gates)                                   | Rule 7     | ✅ (remediated) | `ci-sca`, `ci-format-lint`, `ci-secrets-scan`, `ci-unit-tests`                             |
-| No secrets committed                                                                     | Rule 4     | ✅              | GITHUB_TOKEN used; no committed credentials                                                |
+| Gate                                                                   | Rule       | Status          | Resolution                                                                                 |
+| ---------------------------------------------------------------------- | ---------- | --------------- | ------------------------------------------------------------------------------------------ |
+| Branch name `002-github-ci-workflow` matches `###-feature-name` format | Rule 1     | ✅              | —                                                                                          |
+| BDD acceptance criteria in spec before this plan                       | Rule 6     | ✅              | spec.md has Given/When/Then scenarios; T016 creates `features/` file before implementation |
+| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T005 updated: `gcr.io/distroless/nodejs20-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
+| Docker assets in `deploy/docker/`                                      | Rule 9     | ✅ (remediated) | T005 path changed from repo root to `deploy/docker/Dockerfile`                             |
+| Workflow file is `.github/workflows/ci.yaml`                           | Rule 9     | ✅ (remediated) | T006 extension corrected from `.yml` to `.yaml`                                            |
+| `ci-secrets-scan` job present                                          | Rule 7     | ✅ (remediated) | T009 added: Gitleaks-based secrets detection                                               |
+| `ci-sast-threatmodel` job present (blocking CI gate)                   | Rule 7     | N/A (v2.0.0)    | Removed as mandatory gate in constitution v2.0.0; job retained as informational-only       |
+| `features/` directory exists with BDD files                            | Rules 6, 9 | ✅ (remediated) | T016 creates `features/ci-quality-gates.feature`                                           |
+| `threat_modelling/reports/` directory exists                           | Rules 7, 9 | N/A (v2.0.0)    | Removed as required directory in constitution v2.0.0; directory retained as optional       |
+| `pre-commit-config.yaml` exists                                        | Rule 9     | ✅ (remediated) | T018 creates `pre-commit-config.yaml`                                                      |
+| Job names match enforcement mapping (4 required gates)                 | Rule 7     | ✅ (remediated) | `ci-sca`, `ci-format-lint`, `ci-secrets-scan`, `ci-unit-tests`                             |
+| No secrets committed                                                   | Rule 4     | ✅              | GITHUB_TOKEN used; no committed credentials                                                |
 
 **Outstanding pre-existing repository violations** (require separate features, not blocking this feature):
 

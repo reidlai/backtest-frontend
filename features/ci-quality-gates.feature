@@ -1,82 +1,58 @@
 @smoke @ci
-Feature: CI Quality Gates
-  As a developer pushing code to the backtest-frontend repository
-  I want automated quality gates to enforce security and code standards
-  So that only verified, secure code is merged to main and published to GHCR
+Feature: GitHub CI Workflow Quality Gates
+  As a developer
+  I want my code to pass through sequential quality gates
+  So that I can ensure security, quality, and reproducibility before merging
 
-  @smoke @ci
   Scenario: SCA blocks on HIGH severity dependency vulnerability
-    Given a pull request is opened against the main branch
-    And the pnpm-lock.yaml contains a dependency with a HIGH severity CVE
+    Given a commit with a HIGH severity vulnerability in pnpm-lock.yaml
     When the ci-sca job runs
-    Then the job exits with a non-zero status code
-    And a sca-report.json artifact is uploaded to the run
-    And all downstream jobs are skipped
+    Then the pipeline fails
+    And the sca-report.json is uploaded
 
-  @smoke @ci
   Scenario: SCA warns on MEDIUM severity finding without blocking
-    Given a pull request is opened against the main branch
-    And the pnpm-lock.yaml contains a dependency with a MEDIUM severity CVE
+    Given a commit with only MEDIUM severity vulnerabilities in pnpm-lock.yaml
     When the ci-sca job runs
-    Then the job exits with status code 0
-    And a sca-report.json artifact is uploaded to the run
+    Then the pipeline passes
+    And the sca-report.json is uploaded
 
-  @smoke @ci
   Scenario: Formatting check fails on non-conformant file
-    Given a push is made to a feature branch
-    And a TypeScript file does not conform to Prettier formatting rules
+    Given a commit with a file that does not match Prettier standards
     When the ci-format-lint job runs
-    Then the job exits with a non-zero status code
-    And a format-lint-report artifact containing prettier-report.txt is uploaded
-    And all downstream jobs are skipped
+    Then the pipeline fails
+    And the format-lint-report is uploaded
 
-  @smoke @ci
   Scenario: Lint check fails on ESLint violation
-    Given a push is made to a feature branch
-    And a TypeScript file contains an ESLint rule violation
+    Given a commit with an ESLint violation
     When the ci-format-lint job runs
-    Then the job exits with a non-zero status code
-    And a format-lint-report artifact containing eslint-report.json is uploaded
-    And all downstream jobs are skipped
+    Then the pipeline fails
+    And the format-lint-report is uploaded
 
-  @smoke @ci
   Scenario: Unit test failure halts the pipeline
-    Given a push is made to a feature branch
-    And a server-side unit test is failing
+    Given a commit with a failing unit test in the server project
     When the ci-unit-tests job runs
-    Then the job exits with a non-zero status code
-    And a coverage-report artifact is uploaded to the run
-    And all downstream jobs are skipped
+    Then the pipeline fails
+    And the coverage-report is uploaded
 
-  @smoke @ci
   Scenario: Docker image built after all quality gates pass
-    Given a push is made to a feature branch
-    And all five quality gate jobs pass successfully
+    Given a commit that passes all quality gates
     When the build job runs
-    Then a docker-image tarball artifact is uploaded to the run
-    And the artifact retention period is 1 day
+    Then a Docker image is built using the distroless base
+    And the docker-image tarball is uploaded
 
-  @smoke @ci
   Scenario: Trivy SAST blocks on HIGH severity container finding
-    Given a docker-image artifact has been built and uploaded
-    And the Docker image contains a HIGH severity OS package vulnerability
+    Given a built Docker image with a HIGH severity vulnerability
     When the sast job runs
-    Then the job exits with a non-zero status code
-    And a trivy-sast-report SARIF artifact is uploaded to the run
-    And the push-to-ghcr job is skipped
+    Then the pipeline fails
+    And the trivy-sast-report is uploaded
 
-  @smoke @ci
   Scenario: GHCR image pushed on main branch push after all stages pass
-    Given all quality gate, build, and SAST jobs have passed
-    And the push event is on the main branch
+    Given a commit on the main branch that passes all stages
     When the push-to-ghcr job runs
-    Then the Docker image is tagged with the branch name and short commit SHA
-    And the image is pushed to ghcr.io under the repository namespace
+    Then the Docker image is pushed to GHCR
+    And the GHCR tags match the branch name and commit SHA
 
-  @smoke @ci
   Scenario: GHCR push skipped on feature branch push
-    Given all quality gate and build jobs have passed
-    And the push event is on a feature branch other than main
-    When the push-to-ghcr job evaluates its if condition
+    Given a commit on a feature branch that passes all stages
+    When the push-to-ghcr job evaluates its condition
     Then the push-to-ghcr job is skipped
-    And no image is published to GHCR
