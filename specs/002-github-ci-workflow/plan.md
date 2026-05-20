@@ -12,7 +12,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 
 ## Technical Context
 
-**Language/Version**: TypeScript 6.0.2, Node.js 20
+**Language/Version**: TypeScript 6.0.2, Node.js 22 LTS (upgraded from 20 — EOL 2026-04-30)
 
 **Framework**: SvelteKit 2.57.0, Vite 8
 
@@ -25,7 +25,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - Linting: ESLint 10 + eslint-plugin-svelte + typescript-eslint (already configured, `eslint .`)
 - Testing: Vitest 4 — `pnpm vitest run --project server --coverage` (Node.js env, no browser/external deps)
 - Build: `pnpm build` with `@sveltejs/adapter-node` → outputs `build/index.js`
-- Docker: multi-stage build (deps + builder → distroless `gcr.io/distroless/nodejs20-debian12` runner, non-root, HEALTHCHECK) — Constitution Rule 3
+- Docker: multi-stage build (deps + builder → distroless `gcr.io/distroless/nodejs22-debian12` runner, non-root, HEALTHCHECK) — Constitution Rule 3
 - Container image scan (SAST): `aquasecurity/trivy-action` — static image scan, no running container
 - Secrets Scan: Gitleaks (`gitleaks/gitleaks-action`) — Constitution Rule 4 + Rule 7
 - Registry: GHCR via `docker/login-action` + re-tag + `docker push` (promotes SAST-verified tarball, not a rebuild)
@@ -34,7 +34,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 
 **Testing**: Vitest 4 (`--project server` only in CI; no browser, no Playwright dependency)
 
-**Target Platform**: GitHub Actions (ubuntu-latest), Docker (distroless Node.js 20 Debian container)
+**Target Platform**: GitHub Actions (ubuntu-latest), Docker (distroless Node.js 22 LTS Debian container)
 
 **Project Type**: Web application frontend (SvelteKit SSR/SPA)
 
@@ -49,6 +49,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - GHCR push restricted to `main` branch and `v*.*.*` semver tags (FR-011)
 - Fork PRs: quality gates only; build, SAST, and push stages skipped (Assumption)
 - Build directory (`./build/`) is NOT retained as a downloadable CI artifact (FR-007)
+- The CI workflow MUST use a Node.js LTS version that has not reached End of Life; review and update `node-version:`, Dockerfile base images, and `package.json` engines at each Node.js LTS EOL boundary (Node.js 22 LTS EOL: 2027-04-30)
 - `.trivyignore` suppression file must be tracked in version control (FR-015)
 - Docker image MUST use distroless base, non-root user, explicit HEALTHCHECK (Constitution Rule 3)
 - Dockerfile MUST be located at `deploy/docker/Dockerfile` (Constitution Rule 9)
@@ -66,7 +67,7 @@ _GATE: Constitution v2.0.0 applied. Original design had 13 CRITICAL violations; 
 | ---------------------------------------------------------------------- | ---------- | --------------- | ------------------------------------------------------------------------------------------ |
 | Branch name `002-github-ci-workflow` matches `###-feature-name` format | Rule 1     | ✅              | —                                                                                          |
 | BDD acceptance criteria in spec before this plan                       | Rule 6     | ✅              | spec.md has Given/When/Then scenarios; T005 creates `features/` file before implementation |
-| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T008 updated: `gcr.io/distroless/nodejs20-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
+| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T008 updated: `gcr.io/distroless/nodejs22-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
 | Docker assets in `deploy/docker/`                                      | Rule 9     | ✅ (remediated) | T008 path changed from repo root to `deploy/docker/Dockerfile`                             |
 | Workflow file is `.github/workflows/ci.yaml`                           | Rule 9     | ✅ (remediated) | T009 extension corrected from `.yml` to `.yaml`                                            |
 | `ci-secrets-scan` job present                                          | Rule 7     | ✅ (remediated) | T012 added: Gitleaks-based secrets detection                                               |
@@ -197,7 +198,7 @@ Quality gates run unconditionally.
 
 Trivy scans the **built Docker image** (not source manifests). Covers:
 
-- OS packages (`gcr.io/distroless/nodejs20-debian12` base layers)
+- OS packages (`gcr.io/distroless/nodejs22-debian12` base layers)
 - Bundled application dependencies within image layers
 - Dockerfile misconfigurations
 - Accidentally committed secrets within image layers
@@ -206,7 +207,7 @@ This is distinct from the SCA stage which scans source-level declared dependenci
 
 ### Distroless Docker Design
 
-The runner stage uses `gcr.io/distroless/nodejs20-debian12`:
+The runner stage uses `gcr.io/distroless/nodejs22-debian12`:
 
 - No shell — HEALTHCHECK and CMD must use exec array form with the Node.js binary path `/nodejs/bin/node`
 - The distroless image's ENTRYPOINT is already `/nodejs/bin/node`, so CMD is the script path: `["/app/build/index.js"]`

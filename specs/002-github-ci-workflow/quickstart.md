@@ -132,6 +132,6 @@ All suppressed CVEs are reviewable via git history. The `.trivyignore` file is a
 | Lint job fails                      | ESLint violation                     | Run `pnpm eslint . --fix` or fix manually                                             |
 | Test job fails                      | Broken test or missing mock          | Run `pnpm vitest run --project server` locally to reproduce                           |
 | Docker build fails                  | Missing adapter-node, or build error | Verify `svelte.config.js` uses adapter-node; run `pnpm build` locally                 |
-| SAST fails                          | Trivy found HIGH/CRITICAL in image   | Update base image (`node:20-alpine`) or suppress with justification in `.trivyignore` |
+| SAST fails                          | Trivy found HIGH/CRITICAL in image   | Update base image (`node:22-alpine`) or suppress with justification in `.trivyignore` |
 | GHCR push fails with auth error     | GITHUB_TOKEN lacks package write     | Add `permissions: packages: write` to workflow                                        |
 | GHCR push skipped on feature branch | Expected behavior                    | Push only runs on `main` and semver tags (FR-011)                                     |
