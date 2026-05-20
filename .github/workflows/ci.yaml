@@ -152,7 +152,7 @@ jobs:
       cancel-in-progress: false
     if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     outputs:
-      image-name: ${{ steps.meta.outputs.tags }}
+      image-name: ${{ fromJSON(steps.meta.outputs.json).tags[0] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -205,7 +205,7 @@ jobs:
         run: docker load --input /tmp/image.tar
 
       - name: Run Trivy vulnerability scanner (HIGH, CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: sarif
@@ -216,7 +216,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner (LOW, MEDIUM)
         if: always()
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: table

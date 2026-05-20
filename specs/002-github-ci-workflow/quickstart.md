@@ -10,6 +10,7 @@
 - GHCR package write permission (granted via `GITHUB_TOKEN` — no additional secrets required)
 - GitHub branch protection rules configured on `main` (see Setup step 3)
 - Docker installed locally (for Dockerfile testing)
+- **Node.js 22 LTS** (`engines.node: >=22` enforced in `package.json`; use `nvm use 22` if on an older version)
 - `pnpm` installed locally
 
 ---
