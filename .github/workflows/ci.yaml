@@ -18,6 +18,7 @@ permissions:
   contents: read
   packages: write
   security-events: write
+  pull-requests: read
 
 jobs:
   ci-sca:
@@ -204,7 +205,7 @@ jobs:
         run: docker load --input /tmp/image.tar
 
       - name: Run Trivy vulnerability scanner (HIGH, CRITICAL)
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: sarif
@@ -215,7 +216,7 @@ jobs:
 
       - name: Run Trivy vulnerability scanner (LOW, MEDIUM)
         if: always()
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: table
