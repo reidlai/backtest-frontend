@@ -24,8 +24,9 @@ As a developer, when I push code changes to any branch or open a pull request, t
 2. **Given** a developer pushes code with formatting violations, **When** the formatting stage runs, **Then** the pipeline fails and shows which files and lines are incorrectly formatted
 3. **Given** a developer pushes code with linting errors, **When** the linting stage runs, **Then** the pipeline fails and reports each lint violation with rule name and location
 4. **Given** a developer pushes code with a failing unit test, **When** the unit test stage runs, **Then** the pipeline fails and shows the test name, failure reason, and stack trace
-5. **Given** a developer pushes code that passes all quality checks, **When** all quality stages complete, **Then** the pipeline reports success and GitHub unblocks the merge button for the associated pull request
-6. **Given** a developer attempts to merge a pull request with a failing or in-progress pipeline, **When** GitHub evaluates branch protection rules, **Then** the merge is blocked until the pipeline passes
+5. **Given** a developer pushes a commit containing a hardcoded secret or credential, **When** the secrets scan stage runs, **Then** the pipeline fails and blocks the merge; no waiver is permitted
+6. **Given** a developer pushes code that passes all quality checks, **When** all quality stages complete, **Then** the pipeline reports success and GitHub unblocks the merge button for the associated pull request
+7. **Given** a developer attempts to merge a pull request with a failing or in-progress pipeline, **When** GitHub evaluates branch protection rules, **Then** the merge is blocked until the pipeline passes
 
 ---
 
@@ -98,7 +99,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 - **FR-003**: The pipeline MUST run a code formatting check and fail if any file does not conform to the project's formatting standard
 - **FR-004**: The pipeline MUST run static code analysis (linting) and fail if any lint violation is detected
 - **FR-005**: The pipeline MUST run unit tests in a fully isolated environment using only mock data, with no dependency on any running server, database, or external service; the stage MUST measure and report code coverage as part of the test output; coverage results MUST be retained as a pipeline artifact but MUST NOT gate or block the pipeline regardless of the coverage percentage
-- **FR-006**: The quality gate stages MUST execute sequentially in this order: SCA → Format+Lint → Secrets Scan → Unit Tests; if any stage fails, subsequent stages in the sequence MUST be skipped and the pipeline MUST halt before reaching build stages; an optional SAST (Semgrep) stage MAY follow Unit Tests as an informational-only step and MUST NOT block the pipeline
+- **FR-006**: The quality gate stages MUST execute sequentially in this order: SCA → Format+Lint → Secrets Scan → Unit Tests; if any stage fails, subsequent stages in the sequence MUST be skipped and the pipeline MUST halt before reaching build stages; an optional SAST (Semgrep) stage MAY follow Unit Tests as an informational-only step and MUST NOT block the pipeline _(implementation decision: optional Semgrep step not included — constitution v2.0.0 does not require it and it adds pipeline latency without proportional benefit at current maturity)_
 - **FR-007**: The pipeline MUST compile the application binary as an intermediate build product; the binary is used exclusively as input to the Docker image build step and is NOT retained as a separately downloadable pipeline artifact
 - **FR-008**: The pipeline MUST build a Docker container image only after the binary build succeeds
 - **FR-009**: After all quality gate and build stages pass, the pipeline MUST run Trivy against the built Docker image to scan it statically without starting the container; the scan MUST cover OS-level packages, bundled application dependencies, Dockerfile misconfigurations, and exposed secrets within the image layers; Trivy operates on the final image artifact only and is distinct from the SCA stage which scans source-level dependencies
@@ -128,7 +129,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 - **SC-003**: 100% of images published to GHCR have passed all quality gates and SAST with no High or Critical severity findings
 - **SC-004**: Developers receive actionable failure details within the GitHub CI interface (PR status checks and job logs) identifying the exact file, line, and issue for every failure; no external notification channels are required
 - **SC-005**: Unit test execution completes without requiring any network call to external services, confirmed by test isolation enforcement
-- **SC-006**: All pipeline stage reports (SCA, test results including coverage, Trivy SAST) are retained and accessible for a minimum of 30 days per run
+- **SC-006**: All pipeline stage reports (SCA, secrets scan, test results including coverage, Trivy SAST) are retained and accessible for a minimum of 30 days per run
 - **SC-007**: Published images are traceable to their source commit with 100% accuracy via image tags
 - **SC-008**: The pipeline correctly blocks GHCR publishing on feature branches, permitting publication only from main branch and release tags
 

@@ -8,7 +8,7 @@
 
 ## Summary
 
-Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend project that enforces four sequential blocking quality gates (`ci-sca` → `ci-format-lint` → `ci-secrets-scan` → `ci-unit-tests`) followed by an informational-only SAST step (`ci-sast-threatmodel`), builds a distroless Docker image from `deploy/docker/Dockerfile`, runs Trivy image scan against the built image, and publishes verified images to GHCR on main branch pushes and semantic version tags. Key prerequisites: swap `adapter-auto` for `@sveltejs/adapter-node`; move Docker assets to `deploy/docker/`; create BDD feature file before implementation (Constitution v2.0.0).
+Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend project that enforces four sequential blocking quality gates (`ci-sca` → `ci-format-lint` → `ci-secrets-scan` → `ci-unit-tests`), builds a distroless Docker image from `deploy/docker/Dockerfile`, runs Trivy image scan against the built image, and publishes verified images to GHCR on main branch pushes and semantic version tags. Key prerequisites: swap `adapter-auto` for `@sveltejs/adapter-node`; move Docker assets to `deploy/docker/`; create BDD feature file before implementation (Constitution v2.0.0).
 
 ## Technical Context
 
@@ -27,7 +27,6 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - Build: `pnpm build` with `@sveltejs/adapter-node` → outputs `build/index.js`
 - Docker: multi-stage build (deps + builder → distroless `gcr.io/distroless/nodejs20-debian12` runner, non-root, HEALTHCHECK) — Constitution Rule 3
 - Container image scan (SAST): `aquasecurity/trivy-action` — static image scan, no running container
-- Code SAST/Threat Modelling: Semgrep (`semgrep/semgrep-action`) → `./threat_modelling/reports/pr-threats.json` — Constitution Rule 7
 - Secrets Scan: Gitleaks (`gitleaks/gitleaks-action`) — Constitution Rule 4 + Rule 7
 - Registry: GHCR via `docker/login-action` + re-tag + `docker push` (promotes SAST-verified tarball, not a rebuild)
 
@@ -57,24 +56,24 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - Workflow file MUST be `.github/workflows/ci.yaml` (Constitution Rule 9)
 - CI job names MUST match constitution enforcement mapping (Constitution Rule 7)
 
-**Scale/Scope**: Single frontend repository, single workflow file (`.github/workflows/ci.yaml`), 19 implementation tasks
+**Scale/Scope**: Single frontend repository, single workflow file (`.github/workflows/ci.yaml`), 17 implementation tasks
 
 ## Constitution Check
 
-_GATE: Constitution v2.0.0 applied. Original design had 13 CRITICAL violations; all resolved in tasks.md remediation (2026-05-19). Two rows marked N/A after constitution v2.0.0 MAJOR amendment (2026-05-19) removed ci-sast-threatmodel as a mandatory gate and threat_modelling/reports/ as a required directory._
+_GATE: Constitution v2.0.0 applied. Original design had 13 CRITICAL violations; all resolved in tasks.md remediation (2026-05-19). Two rows marked N/A — constitution v2.0.0 MAJOR amendment (2026-05-19) removed ci-sast-threatmodel as a mandatory gate and threat_modelling/reports/ as a required directory; both subsequently removed from implementation in analysis remediation (2026-05-20)._
 
 | Gate                                                                   | Rule       | Status          | Resolution                                                                                 |
 | ---------------------------------------------------------------------- | ---------- | --------------- | ------------------------------------------------------------------------------------------ |
 | Branch name `002-github-ci-workflow` matches `###-feature-name` format | Rule 1     | ✅              | —                                                                                          |
-| BDD acceptance criteria in spec before this plan                       | Rule 6     | ✅              | spec.md has Given/When/Then scenarios; T016 creates `features/` file before implementation |
-| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T005 updated: `gcr.io/distroless/nodejs20-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
-| Docker assets in `deploy/docker/`                                      | Rule 9     | ✅ (remediated) | T005 path changed from repo root to `deploy/docker/Dockerfile`                             |
-| Workflow file is `.github/workflows/ci.yaml`                           | Rule 9     | ✅ (remediated) | T006 extension corrected from `.yml` to `.yaml`                                            |
-| `ci-secrets-scan` job present                                          | Rule 7     | ✅ (remediated) | T009 added: Gitleaks-based secrets detection                                               |
-| `ci-sast-threatmodel` job present (blocking CI gate)                   | Rule 7     | N/A (v2.0.0)    | Removed as mandatory gate in constitution v2.0.0; job retained as informational-only       |
-| `features/` directory exists with BDD files                            | Rules 6, 9 | ✅ (remediated) | T016 creates `features/ci-quality-gates.feature`                                           |
-| `threat_modelling/reports/` directory exists                           | Rules 7, 9 | N/A (v2.0.0)    | Removed as required directory in constitution v2.0.0; directory retained as optional       |
-| `pre-commit-config.yaml` exists                                        | Rule 9     | ✅ (remediated) | T018 creates `pre-commit-config.yaml`                                                      |
+| BDD acceptance criteria in spec before this plan                       | Rule 6     | ✅              | spec.md has Given/When/Then scenarios; T005 creates `features/` file before implementation |
+| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T008 updated: `gcr.io/distroless/nodejs20-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
+| Docker assets in `deploy/docker/`                                      | Rule 9     | ✅ (remediated) | T008 path changed from repo root to `deploy/docker/Dockerfile`                             |
+| Workflow file is `.github/workflows/ci.yaml`                           | Rule 9     | ✅ (remediated) | T009 extension corrected from `.yml` to `.yaml`                                            |
+| `ci-secrets-scan` job present                                          | Rule 7     | ✅ (remediated) | T012 added: Gitleaks-based secrets detection                                               |
+| `ci-sast-threatmodel` job present (blocking CI gate)                   | Rule 7     | N/A (v2.0.0)    | Not required by constitution v2.0.0; job removed from implementation (2026-05-20)          |
+| `features/` directory exists with BDD files                            | Rules 6, 9 | ✅ (remediated) | T005 creates `features/ci-quality-gates.feature`                                           |
+| `threat_modelling/reports/` directory exists                           | Rules 7, 9 | N/A (v2.0.0)    | Not required by constitution v2.0.0; directory removed from implementation (2026-05-20)    |
+| `pre-commit-config.yaml` exists                                        | Rule 9     | ✅ (remediated) | T007 creates `pre-commit-config.yaml`                                                      |
 | Job names match enforcement mapping (4 required gates)                 | Rule 7     | ✅ (remediated) | `ci-sca`, `ci-format-lint`, `ci-secrets-scan`, `ci-unit-tests`                             |
 | No secrets committed                                                   | Rule 4     | ✅              | GITHUB_TOKEN used; no committed credentials                                                |
 
@@ -114,10 +113,6 @@ deploy/
 features/
 └── ci-quality-gates.feature  # NEW: BDD scenarios US1–US4 (Constitution Rules 6, 8)
 
-threat_modelling/
-└── reports/
-    └── .gitkeep           # NEW: Output directory for ci-sast-threatmodel (Constitution Rules 7, 9)
-
 .dockerignore              # NEW: Excludes node_modules, .svelte-kit, specs, etc.
 .trivyignore               # NEW: Empty CVE suppression file (tracked in VCS)
 pre-commit-config.yaml     # NEW: Pre-commit hooks — secrets, format, lint (Constitution Rule 9)
@@ -125,7 +120,7 @@ svelte.config.js           # MODIFIED: adapter-auto → adapter-node
 package.json               # MODIFIED: add @sveltejs/adapter-node as devDependency
 ```
 
-**Structure Decision**: Single `ci.yaml` workflow. Docker assets in `deploy/docker/` per Rule 9. BDD feature file in `features/` per Rules 6 and 9. SAST output directory `threat_modelling/reports/` per Rules 7 and 9. No application source directory changes beyond the adapter swap.
+**Structure Decision**: Single `ci.yaml` workflow. Docker assets in `deploy/docker/` per Rule 9. BDD feature file in `features/` per Rules 6 and 9. No application source directory changes beyond the adapter swap.
 
 ## Complexity Tracking
 
@@ -138,8 +133,7 @@ All 13 CRITICAL violations from `/speckit-analyze` (2026-05-19) resolved via tas
 ### Job Dependency Chain
 
 ```
-ci-sca → ci-format-lint → ci-secrets-scan → ci-unit-tests → ci-sast-threatmodel
-       → build → sast → push-to-ghcr
+ci-sca → ci-format-lint → ci-secrets-scan → ci-unit-tests → build → sast → push-to-ghcr
 ```
 
 Job names match the Constitution Rule 7 enforcement mapping exactly. Each job `needs` the previous; GitHub Actions skips all downstream jobs when any dependency fails — no explicit `if: success()` required.
@@ -148,13 +142,12 @@ Job names match the Constitution Rule 7 enforcement mapping exactly. Each job `n
 
 This feature implements two distinct security gates with non-overlapping scopes:
 
-| Job                   | Stage           | Tool     | Scope                                                                         | Output                                     |
-| --------------------- | --------------- | -------- | ----------------------------------------------------------------------------- | ------------------------------------------ |
-| `ci-sca`              | CI gate         | audit-ci | Source-level declared dependencies (pnpm-lock.yaml)                           | `sca-report.json`                          |
-| `ci-sast-threatmodel` | CI gate         | Semgrep  | Source code static analysis + threat modelling                                | `threat_modelling/reports/pr-threats.json` |
-| `sast`                | Post-build gate | Trivy    | Built Docker image (OS packages, bundled deps, misconfigs, secrets in layers) | `trivy-report.sarif`                       |
+| Job      | Stage           | Tool     | Scope                                                                         | Output              |
+| -------- | --------------- | -------- | ----------------------------------------------------------------------------- | ------------------- |
+| `ci-sca` | CI gate         | audit-ci | Source-level declared dependencies (pnpm-lock.yaml)                           | `sca-report.json`   |
+| `sast`   | Post-build gate | Trivy    | Built Docker image (OS packages, bundled deps, misconfigs, secrets in layers) | `trivy-report.sarif` |
 
-`ci-sast-threatmodel` is a code-level SAST gate mandated by Constitution Rule 7. `sast` (Trivy) is the spec's container image CVE gate, conceptually equivalent to Constitution's `build-and-scan-image`. These are NOT the same tool or purpose.
+`sast` (Trivy) is the spec's container image CVE gate, conceptually equivalent to Constitution's `build-and-scan-image`. `ci-sca` covers source-level dependencies. These are NOT the same tool or purpose.
 
 ### SCA Tool: audit-ci
 
@@ -209,7 +202,7 @@ Trivy scans the **built Docker image** (not source manifests). Covers:
 - Dockerfile misconfigurations
 - Accidentally committed secrets within image layers
 
-This is distinct from the SCA stage (source `pnpm-lock.yaml`) and `ci-sast-threatmodel` (source code). `.trivyignore` at repo root is passed to Trivy for explicit CVE suppression.
+This is distinct from the SCA stage which scans source-level declared dependencies (`pnpm-lock.yaml`). `.trivyignore` at repo root is passed to Trivy for explicit CVE suppression.
 
 ### Distroless Docker Design
 
@@ -222,14 +215,14 @@ The runner stage uses `gcr.io/distroless/nodejs20-debian12`:
 
 ### Image Provenance: Tarball Promotion (SC-007)
 
-T011 (build job) saves the Docker image as a tarball (`/tmp/image.tar`, 1-day artifact). T012 (sast) loads and scans it. T013 (push) loads the same tarball, re-tags it with final GHCR metadata, and pushes. This guarantees the published image digest matches the scanned digest — satisfying SC-007's 100% traceability requirement.
+T015 (build job) saves the Docker image as a tarball (`/tmp/image.tar`, 1-day artifact). T016 (sast) loads and scans it. T017 (push-to-ghcr) loads the same tarball, re-tags it with final GHCR metadata, and pushes. This guarantees the published image digest matches the scanned digest — satisfying SC-007's 100% traceability requirement.
 
 ### Artifact Retention (FR-012 + Constitution Rule 7)
 
 | Stage         | Job                   | Artifact Name             | Content                                      | Retention |
 | ------------- | --------------------- | ------------------------- | -------------------------------------------- | --------- |
-| SCA           | `ci-sca`              | `sca-report`              | `sca-report.json` (audit-ci JSON)            | 30 days   |
-| Format + Lint | `ci-format-lint`      | `format-lint-report`      | `prettier-report.txt` + `eslint-report.json` | 30 days   |
-| Unit Tests    | `ci-unit-tests`       | `coverage-report`         | `coverage/` directory (v8 coverage)          | 30 days   |
-| Code SAST     | `ci-sast-threatmodel` | `sast-threatmodel-report` | `threat_modelling/reports/pr-threats.json`   | 30 days   |
-| Image Scan    | `sast`                | `trivy-sast-report`       | `trivy-report.sarif`                         | 30 days   |
+| SCA           | `ci-sca`              | `sca-report`          | `sca-report.json` (audit-ci JSON)            | 30 days   |
+| Format + Lint | `ci-format-lint`      | `format-lint-report`  | `prettier-report.txt` + `eslint-report.json` | 30 days   |
+| Secrets Scan  | `ci-secrets-scan`     | `secrets-scan-report` | `gitleaks.report.json`                       | 30 days   |
+| Unit Tests    | `ci-unit-tests`       | `coverage-report`     | `coverage/` directory (v8 coverage)          | 30 days   |
+| Image Scan    | `sast`                | `trivy-sast-report`   | `trivy-report.sarif`                         | 30 days   |

@@ -34,6 +34,13 @@ Feature: GitHub CI Workflow Quality Gates
     Then the pipeline fails
     And the coverage-report is uploaded
 
+  Scenario: Secrets scan blocks on committed secret
+    Given a commit containing a hardcoded credential or API key
+    When the ci-secrets-scan job runs
+    Then the pipeline fails
+    And the secrets-scan-report is uploaded
+    And no waiver can override the failure
+
   Scenario: Docker image built after all quality gates pass
     Given a commit that passes all quality gates
     When the build job runs

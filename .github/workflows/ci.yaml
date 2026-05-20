@@ -14,7 +14,6 @@ concurrency:
 permissions:
   contents: read
   packages: write
-  issues: write
   security-events: write
 
 jobs:
@@ -98,6 +97,15 @@ jobs:
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_ENABLE_UPLOAD_ARTIFACT: true
+
+      - name: Upload secrets scan report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: secrets-scan-report
+          path: gitleaks.report.json
+          retention-days: 30
 
   ci-unit-tests:
     name: ci-unit-tests
@@ -130,45 +138,9 @@ jobs:
           path: coverage/
           retention-days: 30
 
-  ci-sast-threatmodel:
-    name: ci-sast-threatmodel
-    needs: [ci-unit-tests]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Semgrep
-        run: pip install semgrep
-
-      - name: Run Semgrep
-        run: semgrep --config=auto --json --output=threat_modelling/reports/pr-threats.json . || true
-
-      - name: Create issues for findings
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if [ -f threat_modelling/reports/pr-threats.json ]; then
-            cat threat_modelling/reports/pr-threats.json | jq -c '.results[] | select(.extra.severity == "ERROR")' | while read -r result; do
-              RULE=$(echo "$result" | jq -r '.check_id')
-              MSG=$(echo "$result" | jq -r '.extra.message')
-              FILE=$(echo "$result" | jq -r '.path')
-              LINE=$(echo "$result" | jq -r '.start.line')
-              gh issue create --title "SAST: $RULE" --label "security,sast" --body "$MSG at $FILE:$LINE" || true
-            done
-          fi
-
-      - name: Upload SAST report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: sast-threatmodel-report
-          path: threat_modelling/reports/
-          retention-days: 30
-
   build:
     name: build
-    needs: [ci-sast-threatmodel]
+    needs: [ci-unit-tests]
     runs-on: ubuntu-latest
     concurrency:
       group: '${{ github.workflow }}-${{ github.ref }}-build'
