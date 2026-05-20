@@ -32,7 +32,9 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('engines:', d.get\\('engines',{}\\)\\); print\\('node:', d.get\\('dependencies',{}\\).get\\('node',''\\)\\)\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('engines',{}\\)\\)\\)\")",
       "Bash(echo \"EXIT:$?\")",
-      "Bash(gh release *)"
+      "Bash(gh release *)",
+      "Bash(trivy --version)",
+      "Bash(docker run *)"
     ]
   }
 }

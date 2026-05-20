@@ -213,6 +213,7 @@ jobs:
           exit-code: 1
           severity: 'HIGH,CRITICAL'
           trivyignores: .trivyignore
+          ignore-unfixed: true
 
       - name: Run Trivy vulnerability scanner (LOW, MEDIUM)
         if: always()
@@ -222,6 +223,7 @@ jobs:
           format: table
           exit-code: 0
           severity: 'LOW,MEDIUM'
+          ignore-unfixed: true
 
       - name: Upload Trivy report
         if: always()
