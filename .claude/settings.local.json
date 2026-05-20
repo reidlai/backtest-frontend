@@ -31,7 +31,8 @@
       "Bash(yamllint /Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('engines:', d.get\\('engines',{}\\)\\); print\\('node:', d.get\\('dependencies',{}\\).get\\('node',''\\)\\)\")",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('engines',{}\\)\\)\\)\")",
-      "Bash(echo \"EXIT:$?\")"
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(gh release *)"
     ]
   }
 }
