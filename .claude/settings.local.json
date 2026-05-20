@@ -24,7 +24,11 @@
       "Bash(echo \"Exit code: $?\")",
       "Bash(pnpm vitest *)",
       "Bash(git *)",
-      "Bash(.specify/scripts/bash/check-prerequisites.sh *)"
+      "Bash(.specify/scripts/bash/check-prerequisites.sh *)",
+      "Bash(grep \"^  [a-z].*:$\" /Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml)",
+      "Bash(echo \"ESLint exit: $?\")",
+      "Bash(python3 -c \"import json,sys; h=json.load\\(sys.stdin\\); print\\('HEALTHCHECK OK' if h else 'MISSING'\\)\")",
+      "Bash(yamllint /Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml)"
     ]
   }
 }
