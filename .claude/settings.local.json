@@ -34,7 +34,28 @@
       "Bash(echo \"EXIT:$?\")",
       "Bash(gh release *)",
       "Bash(trivy --version)",
-      "Bash(docker run *)"
+      "Bash(docker run *)",
+      "Bash(gh run *)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(j['name'], j['conclusion'], j.get\\('steps',[{}]\\)[-1].get\\('name',''\\)\\) for j in data['jobs']]\")",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(j['name'], j['databaseId'], j['conclusion']\\) for j in data['jobs']]\")",
+      "Bash(echo \"Exit: $?\")",
+      "Bash(echo \"Trivy exit: $?\")",
+      "Bash(docker save *)",
+      "Bash(docker load *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(gh api *)",
+      "Bash(node_modules/@sveltejs/kit/package.json)",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\('version:', p.get\\('version'\\), 'cookie dep:', p.get\\('dependencies',{}\\).get\\('cookie','not found'\\)\\)\")",
+      "Bash(pnpm info *)",
+      "Bash(python3 -c \"import json,sys; vs=json.load\\(sys.stdin\\); print\\([v for v in vs if v.startswith\\('0.'\\)][-5:]\\)\")",
+      "Bash(pnpm install *)",
+      "Bash(gh auth *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('engines:', d.get\\('engines',{}\\)\\); print\\('devDeps relevant:', {k:v for k,v in d.get\\('devDependencies',{}\\).items\\(\\) if 'node' in k.lower\\(\\) or 'adapter' in k.lower\\(\\)}\\)\")",
+      "Bash(command -v volta)",
+      "Bash(volta --version)",
+      "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('/Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml'\\)\\)\")",
+      "Bash(node -e \"const yaml = require\\('js-yaml'\\); yaml.load\\(require\\('fs'\\).readFileSync\\('/Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml','utf8'\\)\\); console.log\\('YAML_VALID'\\)\")",
+      "Bash(npx js-yaml *)"
     ]
   }
 }

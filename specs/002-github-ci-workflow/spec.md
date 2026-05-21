@@ -78,6 +78,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 2. **Given** the pipeline runs on a feature branch (not main, not a release tag), **When** all stages pass, **Then** the image is built and tested but NOT pushed to GHCR
 3. **Given** any upstream stage fails, **When** the pipeline reaches the push stage, **Then** the push step is skipped and no image is published
 4. **Given** the GHCR push succeeds, **When** the pipeline completes, **Then** the exact image digest and tags are reported in the pipeline summary
+5. **Given** a verified image is published to GHCR, **When** it is deployed to GCP Cloud Run with the `PORT` environment variable set, **Then** the service starts within 60 seconds, binds to the specified port, and responds to HTTP health checks at `/health`
 
 ---
 
@@ -111,6 +112,7 @@ As a release engineer or deployment system, when all pipeline stages including S
 - **FR-015**: The SAST stage MUST support a committed suppression file (`.trivyignore`) that allows specific CVE IDs to be explicitly acknowledged and excluded from blocking the pipeline; the suppression file MUST be tracked in version control
 - **FR-016**: The repository MUST be configured with GitHub branch protection rules that designate the CI pipeline as a required status check on the main branch; pull requests MUST be blocked from merging until all required pipeline stages report a passing status
 - **FR-017**: The pipeline MUST be configured to automatically cancel any in-progress run for a given branch when a newer commit is pushed to that same branch; build and push stages that are already in progress when the cancellation signal arrives MAY complete to avoid partial image pushes
+- **FR-018**: The Docker image produced by the pipeline MUST be deployable on GCP Cloud Run without modification; the application MUST bind to the port specified by the `PORT` environment variable (injected by GCP Cloud Run at runtime), MUST start and pass HTTP health checks within 60 seconds, and MUST NOT depend on persistent local filesystem storage between requests
 
 ### Key Entities
 

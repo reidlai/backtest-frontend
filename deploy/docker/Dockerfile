@@ -1,5 +1,5 @@
 # distroless-base: extracted only to patch its dpkg metadata in os-patches
-FROM gcr.io/distroless/nodejs22-debian12 AS distroless-base
+FROM gcr.io/distroless/nodejs24-debian12 AS distroless-base
 
 # OS security patch stage — fetches fixed Debian packages, patches the distroless
 # dpkg metadata, and exports updated library files.
@@ -27,14 +27,14 @@ RUN STATUS=/distroless-dpkg/status && \
     cp /usr/lib/$LIBDIR/libc.so.6 /patches/usr/lib/$LIBDIR/
 
 # Stage 1: Dependencies
-FROM node:22-alpine AS deps
+FROM node:24-alpine AS deps
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 # Stage 2: Builder
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY --from=deps /app/node_modules ./node_modules
@@ -42,7 +42,7 @@ COPY . .
 RUN pnpm build
 
 # Stage 3: Runner
-FROM gcr.io/distroless/nodejs22-debian12 AS runner
+FROM gcr.io/distroless/nodejs24-debian12 AS runner
 WORKDIR /app
 
 # Apply OS security patches: updated library .so files and patched dpkg metadata.

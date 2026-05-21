@@ -12,7 +12,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 
 ## Technical Context
 
-**Language/Version**: TypeScript 6.0.2, Node.js 22 LTS (upgraded from 20 — EOL 2026-04-30)
+**Language/Version**: TypeScript 6.0.2, Node.js 24 LTS (upgraded from 22 — EOL 2027-04-30)
 
 **Framework**: SvelteKit 2.57.0, Vite 8
 
@@ -25,7 +25,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - Linting: ESLint 10 + eslint-plugin-svelte + typescript-eslint (already configured, `eslint .`)
 - Testing: Vitest 4 — `pnpm vitest run --project server --coverage` (Node.js env, no browser/external deps)
 - Build: `pnpm build` with `@sveltejs/adapter-node` → outputs `build/index.js`
-- Docker: multi-stage build (deps + builder → distroless `gcr.io/distroless/nodejs22-debian12` runner, non-root, HEALTHCHECK) — Constitution Rule 3
+- Docker: multi-stage build (deps + builder → distroless `gcr.io/distroless/nodejs24-debian12` runner, non-root, HEALTHCHECK) — Constitution Rule 3
 - Container image scan (SAST): `aquasecurity/trivy-action` — static image scan, no running container
 - Secrets Scan: Gitleaks (`gitleaks/gitleaks-action`) — Constitution Rule 4 + Rule 7
 - Registry: GHCR via `docker/login-action` + re-tag + `docker push` (promotes SAST-verified tarball, not a rebuild)
@@ -49,7 +49,7 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - GHCR push restricted to `main` branch and `v*.*.*` semver tags (FR-011)
 - Fork PRs: quality gates only; build, SAST, and push stages skipped (Assumption)
 - Build directory (`./build/`) is NOT retained as a downloadable CI artifact (FR-007)
-- The CI workflow MUST use a Node.js LTS version that has not reached End of Life; review and update `node-version:`, Dockerfile base images, and `package.json` engines at each Node.js LTS EOL boundary (Node.js 22 LTS EOL: 2027-04-30)
+- The CI workflow MUST use a Node.js LTS version that has not reached End of Life; review and update `node-version:`, Dockerfile base images, and `package.json` engines at each Node.js LTS EOL boundary (Node.js 24 LTS EOL: 2029-04-30)
 - `.trivyignore` suppression file must be tracked in version control (FR-015)
 - Docker image MUST use distroless base, non-root user, explicit HEALTHCHECK (Constitution Rule 3)
 - Dockerfile MUST be located at `deploy/docker/Dockerfile` (Constitution Rule 9)
@@ -207,7 +207,7 @@ This is distinct from the SCA stage which scans source-level declared dependenci
 
 ### Distroless Docker Design
 
-The runner stage uses `gcr.io/distroless/nodejs22-debian12`:
+The runner stage uses `gcr.io/distroless/nodejs24-debian12`:
 
 - No shell — HEALTHCHECK and CMD must use exec array form with the Node.js binary path `/nodejs/bin/node`
 - The distroless image's ENTRYPOINT is already `/nodejs/bin/node`, so CMD is the script path: `["/app/build/index.js"]`
