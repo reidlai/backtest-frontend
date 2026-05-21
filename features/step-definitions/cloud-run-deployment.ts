@@ -2,7 +2,7 @@
 // Requires: pnpm add -D @cucumber/cucumber
 // Run with: CLOUD_RUN_URL=https://... pnpm cucumber-js features/cloud-run-deployment.feature
 
-import { Given, When, Then, Before } from '@cucumber/cucumber';
+import { Given, When, Then } from '@cucumber/cucumber';
 import { strict as assert } from 'node:assert';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
@@ -19,6 +19,7 @@ interface CloudRunWorld {
 }
 
 declare module '@cucumber/cucumber' {
+	// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 	interface World extends CloudRunWorld {}
 }
 
