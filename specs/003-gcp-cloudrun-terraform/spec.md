@@ -111,7 +111,7 @@ An operator tears down all GCP resources provisioned by OpenTofu cleanly, leavin
 - **SC-002**: Updating the deployed image tag and re-applying OpenTofu completes with zero downtime (no dropped requests during revision rollout).
 - **SC-003**: Running `tofu plan` on an already-provisioned, unchanged environment produces zero planned changes, confirming idempotency.
 - **SC-004**: All provisioned GCP resources are cleanly removed after `tofu destroy` with no orphaned resources remaining.
-- **SC-005**: The OpenTofu configuration passes `tofu validate` and `tofu fmt` checks with no errors or formatting warnings.
+- **SC-005**: All HCL files pass `tofu validate` and `tofu fmt -check` with no errors or formatting warnings; all repo files (including `.ts` and `.md`) pass `pnpm prettier --check .` with no formatting warnings.
 
 ## Assumptions
 

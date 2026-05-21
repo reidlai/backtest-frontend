@@ -25,10 +25,10 @@ tofu apply
 
 ## Outputs
 
-| Output | Description |
-|--------|-------------|
+| Output        | Description                          |
+| ------------- | ------------------------------------ |
 | `bucket_name` | Name of the created GCS state bucket |
-| `bucket_url` | `gs://` URL for reference |
+| `bucket_url`  | `gs://` URL for reference            |
 
 ## Teardown (two-step sequence)
 

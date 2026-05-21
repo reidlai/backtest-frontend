@@ -105,6 +105,7 @@
 - [x] T027 [P] Run `tofu validate` on both `deploy/gcp/terraform/` and `deploy/gcp/terraform/bootstrap/` — confirm zero errors after all implementation tasks complete (SC-005)
 - [x] T028 [P] Verify `.gitignore` additions cover all OpenTofu/IaC artefacts: `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `terraform.tfvars`, `backend.hcl` — confirm no state or credentials can be accidentally committed (Constitution Rule 4)
 - [x] T029 Update `specs/003-gcp-cloudrun-terraform/quickstart.md` — add OpenTofu installation instructions (e.g., `brew install opentofu` on macOS, or official install script for Linux); replace all `terraform` CLI references with `tofu`; confirm all file paths and command sequences match the final implemented structure
+- [x] T030 [P] Run `pnpm prettier --write .` on all newly generated files (`.ts` step definitions, `.md` documentation) and verify `pnpm prettier --check .` passes with zero warnings — ensures `ci-format-lint` CI gate passes for non-HCL files (SC-005)
 
 ---
 

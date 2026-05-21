@@ -65,7 +65,9 @@
       "Bash(terraform version *)",
       "Bash(terraform init *)",
       "Bash(terraform validate *)",
-      "Bash(terraform fmt *)"
+      "Bash(terraform fmt *)",
+      "Bash(gh issue *)",
+      "Bash(nvm use *)"
     ]
   }
 }

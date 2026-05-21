@@ -16,7 +16,7 @@ Provision a GCP Cloud Run service for `ghcr.io/reidlai/backtest-frontend:main` u
 
 **Storage**: GCS bucket (OpenTofu remote state, versioning enabled); Cloud Run is stateless
 
-**Testing**: `tofu validate`, `tofu fmt -check`; Cucumber/Gherkin smoke tests in `features/cloud-run-deployment.feature` (@smoke @infrastructure tags)
+**Testing**: `tofu validate`, `tofu fmt -check` (HCL); `pnpm prettier --check .` (all repo files including `.ts`/`.md`); Cucumber/Gherkin smoke tests in `features/cloud-run-deployment.feature` (@smoke @infrastructure tags)
 
 **Target Platform**: GCP Cloud Run v2 (`run.googleapis.com`), single region (default: `us-central1`)
 
