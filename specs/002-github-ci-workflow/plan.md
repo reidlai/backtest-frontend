@@ -67,7 +67,7 @@ _GATE: Constitution v2.0.0 applied. Original design had 13 CRITICAL violations; 
 | ---------------------------------------------------------------------- | ---------- | --------------- | ------------------------------------------------------------------------------------------ |
 | Branch name `002-github-ci-workflow` matches `###-feature-name` format | Rule 1     | ✅              | —                                                                                          |
 | BDD acceptance criteria in spec before this plan                       | Rule 6     | ✅              | spec.md has Given/When/Then scenarios; T005 creates `features/` file before implementation |
-| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T008 updated: `gcr.io/distroless/nodejs22-debian12`, `USER nonroot:nonroot`, HEALTHCHECK   |
+| Docker image uses distroless base; non-root; HEALTHCHECK               | Rule 3     | ✅ (remediated) | T008 updated: `gcr.io/distroless/nodejs24-debian12`, `USER nonroot:nonroot`, HEALTHCHECK; upgraded from nodejs22 to nodejs24 in Phase 8 (T020)   |
 | Docker assets in `deploy/docker/`                                      | Rule 9     | ✅ (remediated) | T008 path changed from repo root to `deploy/docker/Dockerfile`                             |
 | Workflow file is `.github/workflows/ci.yaml`                           | Rule 9     | ✅ (remediated) | T009 extension corrected from `.yml` to `.yaml`                                            |
 | `ci-secrets-scan` job present                                          | Rule 7     | ✅ (remediated) | T012 added: Gitleaks-based secrets detection                                               |
