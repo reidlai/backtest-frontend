@@ -1,4 +1,4 @@
-# Data Model: GCP Cloud Run Terraform Deployment
+# Data Model: GCP Cloud Run OpenTofu Deployment
 
 **Branch**: `003-gcp-cloudrun-terraform` | **Date**: 2026-05-21
 
@@ -36,7 +36,7 @@ main/
 | -------------- | -------- | --------------- | -------- | ----------- |
 | `project_id`   | `string` | —               | Yes      | GCP project ID |
 | `region`       | `string` | `"us-central1"` | No       | GCS bucket location |
-| `bucket_name`  | `string` | —               | Yes      | Name for the Terraform state bucket |
+| `bucket_name`  | `string` | —               | Yes      | Name for the OpenTofu state bucket |
 
 ### Outputs (bootstrap/)
 
@@ -117,22 +117,22 @@ main/
 ```
 [Not Provisioned]
       │
-      ▼ bootstrap: terraform apply
+      ▼ bootstrap: tofu apply
 [GCS State Bucket Created]
       │
-      ▼ main: terraform init -backend-config=backend.hcl
+      ▼ main: tofu init -backend-config=backend.hcl
 [Remote State Initialized]
       │
-      ▼ main: terraform apply
+      ▼ main: tofu apply
 [Cloud Run Service Running] ──► (accessible via service_url output)
       │
-      ▼ main: terraform apply (image_tag changed)
+      ▼ main: tofu apply (image_tag changed)
 [Cloud Run New Revision Deployed] ──► (zero-downtime traffic shift)
       │
-      ▼ main: terraform destroy
+      ▼ main: tofu destroy
 [Cloud Run Service Removed]
       │
-      ▼ bootstrap: terraform destroy (optional, manual)
+      ▼ bootstrap: tofu destroy (optional, manual)
 [GCS State Bucket Removed]
 [Not Provisioned]
 ```

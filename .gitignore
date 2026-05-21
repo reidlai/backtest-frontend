@@ -32,7 +32,7 @@ project.inlang/cache/
 storybook-static
 /.claude/worktrees
 
-# Terraform
+# OpenTofu
 deploy/gcp/terraform/backend.hcl
 deploy/gcp/terraform/terraform.tfvars
 deploy/gcp/terraform/bootstrap/terraform.tfvars

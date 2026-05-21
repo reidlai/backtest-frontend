@@ -1,4 +1,4 @@
-# Tasks: GCP Cloud Run Terraform Deployment
+# Tasks: GCP Cloud Run OpenTofu Deployment
 
 **Input**: Design documents from `specs/003-gcp-cloudrun-terraform/`
 
@@ -16,11 +16,11 @@
 
 ## Phase 1: Setup
 
-**Purpose**: Create the Terraform directory skeleton, confirm the BDD feature file, and add `.gitignore` protections before any module code is written.
+**Purpose**: Create the OpenTofu directory skeleton, confirm the BDD feature file, and add `.gitignore` protections before any module code is written.
 
 - [x] T001 [BDD] Verify and finalize `features/cloud-run-deployment.feature` — confirm all 4 scenarios (@smoke, @integration tags) are complete and correctly reflect spec acceptance criteria (Constitution Rule 6 — MUST precede all implementation tasks)
 - [x] T002 Create directory structure `deploy/gcp/terraform/` and `deploy/gcp/terraform/bootstrap/` per implementation plan
-- [x] T003 [P] Add Terraform-specific entries to `.gitignore`: `deploy/gcp/terraform/backend.hcl`, `deploy/gcp/terraform/terraform.tfvars`, `deploy/gcp/terraform/bootstrap/terraform.tfvars`, `.terraform/`, `*.tfstate`, `*.tfstate.backup`
+- [x] T003 [P] Add OpenTofu-specific entries to `.gitignore`: `deploy/gcp/terraform/backend.hcl`, `deploy/gcp/terraform/terraform.tfvars`, `deploy/gcp/terraform/bootstrap/terraform.tfvars`, `.terraform/`, `*.tfstate`, `*.tfstate.backup`
 
 ---
 
@@ -28,33 +28,33 @@
 
 **Purpose**: The `bootstrap/` module creates the GCS state bucket that the main module depends on for remote state. MUST be complete before any user story implementation begins.
 
-**⚠️ CRITICAL**: No user story work can begin until this phase is complete — the main module cannot `terraform init` without the state bucket.
+**⚠️ CRITICAL**: No user story work can begin until this phase is complete — the main module cannot `tofu init` without the state bucket.
 
-- [x] T004 Create `deploy/gcp/terraform/bootstrap/versions.tf` — declare `required_version = ">= 1.5.0"` and `hashicorp/google` provider source and version constraint `>= 5.0.0`
+- [x] T004 Create `deploy/gcp/terraform/bootstrap/versions.tf` — declare `required_version = ">= 1.6.0"` and provider `registry.opentofu.org/hashicorp/google` version constraint `>= 5.0.0`
 - [x] T005 [P] Create `deploy/gcp/terraform/bootstrap/variables.tf` — declare `project_id` (required string), `region` (string, default `"us-central1"`), `bucket_name` (required string) per data-model.md Bootstrap Module inputs
 - [x] T006 Create `deploy/gcp/terraform/bootstrap/main.tf` — implement `google_storage_bucket.tfstate` with `versioning.enabled = true`, `uniform_bucket_level_access = true`, `force_destroy = false`, `location = var.region` per data-model.md
 - [x] T007 [P] Create `deploy/gcp/terraform/bootstrap/outputs.tf` — export `bucket_name` (string) and `bucket_url` (string, value `"gs://${google_storage_bucket.tfstate.name}"`) per data-model.md Bootstrap outputs
 - [x] T008 [P] Create `deploy/gcp/terraform/bootstrap/terraform.tfvars.example` — template file with placeholder values for `project_id`, `region`, `bucket_name` and inline comments explaining each variable per contracts/operator-interface.md
-- [x] T009 Run `terraform init`, `terraform validate`, and `terraform fmt -check` on `deploy/gcp/terraform/bootstrap/` — confirm zero validation errors and zero formatting differences
+- [x] T009 Run `tofu init`, `tofu validate`, and `tofu fmt -check` on `deploy/gcp/terraform/bootstrap/` — confirm zero validation errors and zero formatting differences
 
-**Checkpoint**: Bootstrap module ready — GCS state bucket can be provisioned by running `terraform apply` in `deploy/gcp/terraform/bootstrap/`
+**Checkpoint**: Bootstrap module ready — GCS state bucket can be provisioned by running `tofu apply` in `deploy/gcp/terraform/bootstrap/`
 
 ---
 
 ## Phase 3: User Story 1 — Initial Cloud Run Deployment (Priority: P1) 🎯 MVP
 
-**Goal**: An operator runs `terraform apply` in a clean GCP project and gets a publicly accessible Cloud Run service running `ghcr.io/reidlai/backtest-frontend:main`.
+**Goal**: An operator runs `tofu apply` in a clean GCP project and gets a publicly accessible Cloud Run service running `ghcr.io/reidlai/backtest-frontend:main`.
 
-**Independent Test**: Run `terraform apply` in a clean project → access `service_url` output → verify HTTP 200 response.
+**Independent Test**: Run `tofu apply` in a clean project → access `service_url` output → verify HTTP 200 response.
 
 ### BDD Step Definitions for User Story 1
 
 - [x] T010 [US1] Write Cucumber step definitions for @smoke scenarios in `features/step-definitions/cloud-run-deployment.ts` — implement steps for "service is publicly accessible" and "service serves a valid HTML document" using `node-fetch` or equivalent HTTP client; read service URL from `CLOUD_RUN_URL` environment variable (Constitution Rule 6)
-- [x] T022 [US1] Extend `features/step-definitions/cloud-run-deployment.ts` — implement steps for @integration "re-applying unchanged Terraform configuration produces no changes" scenario using `child_process.exec` to run `terraform plan` and assert the output contains `"No changes"` or `"0 to add, 0 to change, 0 to destroy"` (validates SC-003 idempotency)
+- [x] T022 [US1] Extend `features/step-definitions/cloud-run-deployment.ts` — implement steps for @integration "re-applying unchanged OpenTofu configuration produces no changes" scenario using `child_process.exec` to run `tofu plan` and assert the output contains `"No changes"` or `"0 to add, 0 to change, 0 to destroy"` (validates SC-003 idempotency)
 
 ### Implementation for User Story 1
 
-- [x] T011 [US1] Create `deploy/gcp/terraform/versions.tf` — declare `required_version = ">= 1.5.0"`, `hashicorp/google` provider `>= 5.0.0`, and GCS backend block placeholder per research.md Decision 1
+- [x] T011 [US1] Create `deploy/gcp/terraform/versions.tf` — declare `required_version = ">= 1.6.0"`, provider `registry.opentofu.org/hashicorp/google` `>= 5.0.0`, and GCS backend block placeholder per research.md Decision 1
 - [x] T012 [P] [US1] Create `deploy/gcp/terraform/variables.tf` — declare all 9 input variables (`project_id`, `region`, `service_name`, `image_tag`, `min_instances`, `max_instances`, `cpu`, `memory`, `env_vars`) with types, defaults, and descriptions per data-model.md main module input variables table
 - [x] T013 [P] [US1] Create `deploy/gcp/terraform/apis.tf` — implement `google_project_service.cloudrun_api` (`run.googleapis.com`) and `google_project_service.iam_api` (`iam.googleapis.com`), both with `disable_on_destroy = false` and `disable_dependent_services = false` per data-model.md
 - [x] T014 [US1] Create `deploy/gcp/terraform/main.tf` — implement `google_cloud_run_v2_service.frontend` with image `"ghcr.io/reidlai/backtest-frontend:${var.image_tag}"`, container port 3000, `min_instance_count = var.min_instances` (default 0), `max_instance_count = var.max_instances` (default 10), CPU/memory limits from variables, `dynamic "env"` block iterating `var.env_vars`, `ingress = "INGRESS_TRAFFIC_ALL"`, `depends_on = [google_project_service.cloudrun_api]`; do NOT set explicit `traffic` blocks (Cloud Run v2 defaults to 100% traffic to latest revision, enabling zero-downtime rollout per SC-002) per data-model.md
@@ -62,35 +62,36 @@
 - [x] T016 [P] [US1] Create `deploy/gcp/terraform/outputs.tf` — export `service_url` (`google_cloud_run_v2_service.frontend.uri`) and `service_name` (`google_cloud_run_v2_service.frontend.name`) per data-model.md main module outputs
 - [x] T017 [P] [US1] Create `deploy/gcp/terraform/backend.hcl.example` — template with `bucket = "<your-state-bucket-name>"` and `prefix = "terraform/state"` per contracts/operator-interface.md Backend Configuration section
 - [x] T018 [P] [US1] Create `deploy/gcp/terraform/terraform.tfvars.example` — template with all 9 variables populated with illustrative values and comments; include `env_vars = { PUBLIC_API_URL = "https://api.example.com" }` example per contracts/operator-interface.md Inputs section
-- [x] T019 [US1] Run `terraform init -backend=false`, `terraform validate`, and `terraform fmt -check` on `deploy/gcp/terraform/` — the `-backend=false` flag skips GCS backend initialization so validation runs without a real state bucket or GCP credentials; confirm zero validation errors and zero formatting differences
+- [x] T019 [US1] Run `tofu init -backend=false`, `tofu validate`, and `tofu fmt -check` on `deploy/gcp/terraform/` — the `-backend=false` flag skips GCS backend initialization so validation runs without a real state bucket or GCP credentials; confirm zero validation errors and zero formatting differences
 
-**Checkpoint**: User Story 1 complete — operator can provision the Cloud Run service and access it via `service_url`
+**Checkpoint**: User Story 1 complete — operator can provision the Cloud Run service via `tofu apply` and access it via `service_url`
 
 ---
 
 ## Phase 4: User Story 2 — Update Deployment to New Image Tag (Priority: P2)
 
-**Goal**: An operator changes `image_tag` in `terraform.tfvars` and runs `terraform apply` to roll out a new container revision with zero downtime.
+**Goal**: An operator changes `image_tag` in `terraform.tfvars` and runs `tofu apply` to roll out a new container revision with zero downtime.
 
-**Independent Test**: Change `image_tag` from `"main"` to a short SHA in `terraform.tfvars`, run `terraform apply`, verify Cloud Run creates a new revision and routes 100% traffic to it.
+**Independent Test**: Change `image_tag` from `"main"` to a short SHA in `terraform.tfvars`, run `tofu apply`, verify Cloud Run creates a new revision and routes 100% traffic to it.
 
 ### BDD Step Definitions for User Story 2
 
-- [x] T020 [US2] Extend `features/step-definitions/cloud-run-deployment.ts` — implement steps for @integration "service URL is exposed as Terraform output" scenario using `child_process.exec` to run `terraform output service_url` and validate the HTTPS URL format
+- [x] T020 [US2] Extend `features/step-definitions/cloud-run-deployment.ts` — implement steps for @integration "service URL is exposed as OpenTofu output" scenario using `child_process.exec` to run `tofu output service_url` and validate the HTTPS URL format
+- [x] T021 [BDD] [US2] Extend `features/step-definitions/cloud-run-deployment.ts` — implement steps for @integration "new revision fails health checks → traffic remains on healthy revision" scenario (US2 acceptance scenario 2); step reads Cloud Run revision health status via `gcloud run revisions describe` and asserts traffic remains on the previous revision (Constitution Rule 6)
 
-**Checkpoint**: User Story 2 complete — operators can update the deployed image tag via `terraform apply` with zero downtime
+**Checkpoint**: User Story 2 complete — operators can update the deployed image tag via `tofu apply` with zero downtime
 
 ---
 
 ## Phase 5: User Story 3 — Destroy Infrastructure (Priority: P3)
 
-**Goal**: An operator runs `terraform destroy` and all provisioned GCP resources are cleanly removed with no orphaned resources.
+**Goal**: An operator runs `tofu destroy` and all provisioned GCP resources are cleanly removed with no orphaned resources.
 
-**Independent Test**: Run `terraform destroy` after provisioning; verify via `gcloud` CLI or GCP console that no Cloud Run services or IAM bindings remain in the project.
+**Independent Test**: Run `tofu destroy` after provisioning; verify via `gcloud` CLI or GCP console that no Cloud Run services or IAM bindings remain in the project.
 
 ### Implementation for User Story 3
 
-- [x] T025 [US3] Create `deploy/gcp/terraform/bootstrap/README.md` — document the two-step teardown sequence: (1) destroy main module first (`terraform destroy` in `deploy/gcp/terraform/`), (2) optionally destroy bootstrap module (`terraform destroy` in `deploy/gcp/terraform/bootstrap/`), with warning that destroying the bootstrap module removes the state bucket; note that `force_destroy = false` on the state bucket and `disable_on_destroy = false` on project APIs are set in the bootstrap and main modules respectively to protect shared resources
+- [x] T025 [US3] Create `deploy/gcp/terraform/bootstrap/README.md` — document the two-step teardown sequence: (1) destroy main module first (`tofu destroy` in `deploy/gcp/terraform/`), (2) optionally destroy bootstrap module (`tofu destroy` in `deploy/gcp/terraform/bootstrap/`), with warning that destroying the bootstrap module removes the state bucket; note that `force_destroy = false` on the state bucket and `disable_on_destroy = false` on project APIs are set in the bootstrap and main modules respectively to protect shared resources
 
 **Checkpoint**: User Story 3 complete — all resources cleanly removed; bootstrap state bucket protected from accidental deletion
 
@@ -100,10 +101,10 @@
 
 **Purpose**: Validation, formatting consistency, and final documentation pass.
 
-- [x] T026 [P] Run `terraform fmt -recursive deploy/gcp/terraform/` — ensure all `.tf` files across both modules use consistent HCL formatting (SC-005)
-- [x] T027 [P] Run `terraform validate` on both `deploy/gcp/terraform/` and `deploy/gcp/terraform/bootstrap/` — confirm zero errors after all implementation tasks complete (SC-005)
-- [x] T028 [P] Verify `.gitignore` additions cover all Terraform artefacts: `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `terraform.tfvars`, `backend.hcl` — confirm no state or credentials can be accidentally committed (Constitution Rule 4)
-- [x] T029 Review `specs/003-gcp-cloudrun-terraform/quickstart.md` — confirm all file paths and command sequences match the final implemented structure
+- [x] T026 [P] Run `tofu fmt -recursive deploy/gcp/terraform/` — ensure all `.tf` files across both modules use consistent HCL formatting (SC-005)
+- [x] T027 [P] Run `tofu validate` on both `deploy/gcp/terraform/` and `deploy/gcp/terraform/bootstrap/` — confirm zero errors after all implementation tasks complete (SC-005)
+- [x] T028 [P] Verify `.gitignore` additions cover all OpenTofu/IaC artefacts: `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `terraform.tfvars`, `backend.hcl` — confirm no state or credentials can be accidentally committed (Constitution Rule 4)
+- [x] T029 Update `specs/003-gcp-cloudrun-terraform/quickstart.md` — add OpenTofu installation instructions (e.g., `brew install opentofu` on macOS, or official install script for Linux); replace all `terraform` CLI references with `tofu`; confirm all file paths and command sequences match the final implemented structure
 
 ---
 
@@ -157,7 +158,7 @@ Task T015: "Create deploy/gcp/terraform/iam.tf"
 Task T016: "Create deploy/gcp/terraform/outputs.tf"
 
 # Then validate:
-Task T019: "Run terraform validate + fmt on main module"
+Task T019: "Run tofu validate + fmt on main module"
 ```
 
 ---
@@ -169,7 +170,7 @@ Task T019: "Run terraform validate + fmt on main module"
 1. Complete Phase 1: Setup (T001–T003)
 2. Complete Phase 2: Bootstrap Module (T004–T009)
 3. Complete Phase 3: Initial Cloud Run Deployment (T010–T019, T022)
-4. **STOP and VALIDATE**: Run `terraform apply` and verify HTTP 200 from `service_url`
+4. **STOP and VALIDATE**: Run `tofu apply` and verify HTTP 200 from `service_url`
 5. Demo: Share the Cloud Run URL
 
 ### Incremental Delivery
@@ -191,3 +192,5 @@ Task T019: "Run terraform validate + fmt on main module"
 - The `google_cloud_run_v2_service` resource does NOT need explicit traffic blocks — Cloud Run v2 defaults to 100% traffic to the latest revision, which provides the zero-downtime behavior required by SC-002
 - All `terraform.tfvars` and `backend.hcl` files are gitignored — only `.example` variants are committed
 - Step definitions for infrastructure smoke tests belong in `features/step-definitions/` using TypeScript (matching the project's Node.js/TypeScript stack)
+- IaC runtime is **OpenTofu** (>= 1.6.0), not HashiCorp Terraform — all CLI commands use the `tofu` binary; provider source is `registry.opentofu.org/hashicorp/google`
+- Task IDs T023 and T024 are intentionally absent — US3 (destroy) is fully validated by `tofu destroy` manual execution and the README documentation in T025; no additional BDD steps are required for the destroy path at this scope

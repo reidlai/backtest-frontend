@@ -1,14 +1,14 @@
-# Research: GCP Cloud Run Terraform Deployment
+# Research: GCP Cloud Run OpenTofu Deployment
 
 **Branch**: `003-gcp-cloudrun-terraform` | **Date**: 2026-05-21
 
-## Decision 1: Terraform & Google Provider Version Constraints
+## Decision 1: OpenTofu & Google Provider Version Constraints
 
-**Decision**: Terraform `>= 1.5.0`, `hashicorp/google` provider `>= 5.0.0`
+**Decision**: OpenTofu `>= 1.6.0`, `registry.opentofu.org/hashicorp/google` provider `>= 5.0.0`
 
-**Rationale**: Terraform 1.5.0 introduced `check` blocks for post-apply assertions, enabling in-plan verification of Cloud Run health. Google provider 5.x is the current major version with full `google_cloud_run_v2_service` GA support and breaking changes from 4.x that make 5.x the stable target for new projects.
+**Rationale**: OpenTofu 1.6.0 is the first stable release of the OpenTofu fork (branched from Terraform 1.5.x). It maintains full HCL compatibility including `check` blocks for post-apply assertions. Google provider 5.x is the current major version with full `google_cloud_run_v2_service` GA support; the provider binary is the same regardless of whether it is sourced from Terraform or OpenTofu registry.
 
-**Alternatives considered**: Terraform 1.3.x — lacks `check` blocks; Google provider 4.x — Cloud Run v2 resources were in beta, now deprecated in favour of v2 GA resources in provider 5.x.
+**Alternatives considered**: Terraform (HashiCorp) — BSL-licensed since 1.6.0, incompatible with open-source redistribution requirements; OpenTofu 1.7.x — available but 1.6.0 is the minimum stable version satisfying all feature requirements.
 
 ---
 
@@ -24,9 +24,9 @@
 
 ## Decision 3: GCS Backend Configuration Approach
 
-**Decision**: Use a `backend.hcl` file (gitignored) alongside the main module. Operators pass it via `terraform init -backend-config=backend.hcl`. The bootstrap module outputs the bucket name for reference.
+**Decision**: Use a `backend.hcl` file (gitignored) alongside the main module. Operators pass it via `tofu init -backend-config=backend.hcl`. The bootstrap module outputs the bucket name for reference.
 
-**Rationale**: Terraform backend blocks cannot reference input variables — bucket name must be hardcoded or passed at `terraform init` time. The `-backend-config` file approach avoids hardcoding the bucket name in source while allowing operators to configure per-environment state isolation cleanly. The `backend.hcl` file is gitignored and generated from a committed `backend.hcl.example` template.
+**Rationale**: OpenTofu backend blocks cannot reference input variables — bucket name must be hardcoded or passed at `tofu init` time. The `-backend-config` file approach avoids hardcoding the bucket name in source while allowing operators to configure per-environment state isolation cleanly. The `backend.hcl` file is gitignored and generated from a committed `backend.hcl.example` template.
 
 **Alternatives considered**: Hardcoding bucket name in `backend {}` block — inflexible, violates DRY for multi-environment use; Partial config via environment variables — less discoverable, harder to document.
 
@@ -42,7 +42,7 @@
 
 ---
 
-## Decision 5: Terraform File Layout (Flat vs Modules)
+## Decision 5: OpenTofu File Layout (Flat vs Modules)
 
 **Decision**: Flat file layout with logical separation by concern: `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`, `apis.tf`, `iam.tf`. A separate `bootstrap/` subdirectory acts as a standalone module.
 
@@ -56,7 +56,7 @@
 
 **Decision**: Add `features/cloud-run-deployment.feature` tagged `@smoke @infrastructure` covering public accessibility and HTML response validation.
 
-**Rationale**: Constitution Rule 6 requires Cucumber/Gherkin feature files in `./features/` for all behavioral tests. Infrastructure smoke tests verify that `terraform apply` produced a correctly functioning service, complementing `terraform validate` and `terraform fmt` which only check configuration syntax/style.
+**Rationale**: Constitution Rule 6 requires Cucumber/Gherkin feature files in `./features/` for all behavioral tests. Infrastructure smoke tests verify that `tofu apply` produced a correctly functioning service, complementing `tofu validate` and `tofu fmt` which only check configuration syntax/style.
 
 **Alternatives considered**: Shell-based health check script — not BDD compliant, not tagged for CI gate integration; No post-deploy tests — violates constitution Rule 7 (`cd-smoke-tests` gate).
 
@@ -64,8 +64,8 @@
 
 ## Decision 7: Bootstrap Module State
 
-**Decision**: Bootstrap module uses **local state** (default Terraform behavior, no `backend {}` block). Main module uses GCS remote state.
+**Decision**: Bootstrap module uses **local state** (default OpenTofu behavior, no `backend {}` block). Main module uses GCS remote state.
 
 **Rationale**: The bootstrap module creates the GCS bucket that the main module depends on for remote state. If bootstrap itself used GCS remote state, there would be a chicken-and-egg dependency. Local state for bootstrap is acceptable because bootstrap is run once by a single operator and the GCS bucket resource is not sensitive or frequently changing.
 
-**Alternatives considered**: Shared remote state for bootstrap — circular dependency problem; Terraform Cloud — out of scope for this project.
+**Alternatives considered**: Shared remote state for bootstrap — circular dependency problem; OpenTofu Cloud — out of scope for this project.

@@ -36,5 +36,5 @@
 - State backend: bootstrap module included to provision GCS bucket.
 - Scaling: scale-to-zero (min=0) with configurable max.
 - Observability: built-in Cloud Logging only; no monitoring resources in scope.
-- CI/CD: manual `terraform apply` only; no GitHub Actions automation in scope.
+- CI/CD: manual `tofu apply` only; no GitHub Actions automation in scope.
 - Spec is ready for `/speckit-plan`.

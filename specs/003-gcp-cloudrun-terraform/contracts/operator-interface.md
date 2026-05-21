@@ -1,16 +1,16 @@
-# Operator Interface Contract: GCP Cloud Run Terraform Deployment
+# Operator Interface Contract: GCP Cloud Run OpenTofu Deployment
 
 **Branch**: `003-gcp-cloudrun-terraform` | **Date**: 2026-05-21
 
 ## Overview
 
-This document defines the operator-facing interface contract for the Terraform modules in `deploy/gcp/terraform/`. It specifies the commands, inputs, and expected outputs an operator must interact with to provision, update, and destroy the Cloud Run deployment.
+This document defines the operator-facing interface contract for the OpenTofu modules in `deploy/gcp/terraform/`. It specifies the commands, inputs, and expected outputs an operator must interact with to provision, update, and destroy the Cloud Run deployment.
 
 ---
 
 ## Module: bootstrap/ (one-time setup)
 
-**Purpose**: Provision the GCS bucket used as the Terraform remote state backend for the main module. Run once per environment before initializing the main module.
+**Purpose**: Provision the GCS bucket used as the OpenTofu remote state backend for the main module. Run once per environment before initializing the main module.
 
 ### Preconditions
 
@@ -31,9 +31,9 @@ bucket_name = "my-gcp-project-id-backtest-tfstate"
 
 ```bash
 cd deploy/gcp/terraform/bootstrap
-terraform init
-terraform plan
-terraform apply
+tofu init
+tofu plan
+tofu apply
 ```
 
 ### Outputs
@@ -90,23 +90,23 @@ env_vars = {
 
 ```bash
 cd deploy/gcp/terraform
-terraform init -backend-config=backend.hcl
-terraform plan
-terraform apply
+tofu init -backend-config=backend.hcl
+tofu plan
+tofu apply
 ```
 
 **Update image tag (rolling update):**
 
 ```bash
 # Edit terraform.tfvars: set image_tag = "abc1234"
-terraform plan
-terraform apply
+tofu plan
+tofu apply
 ```
 
 **Destroy:**
 
 ```bash
-terraform destroy
+tofu destroy
 ```
 
 ### Outputs
@@ -118,10 +118,10 @@ terraform destroy
 
 ### Postconditions
 
-After a successful `terraform apply`:
+After a successful `tofu apply`:
 - `service_url` responds with HTTP 200
 - Cloud Run service revision is active and serving 100% of traffic
-- `terraform plan` returns zero planned changes (idempotency)
+- `tofu plan` returns zero planned changes (idempotency)
 
 ---
 
@@ -130,7 +130,7 @@ After a successful `terraform apply`:
 The following files MUST be added to `.gitignore` to prevent secrets/state leakage:
 
 ```gitignore
-# Terraform
+# OpenTofu
 deploy/gcp/terraform/backend.hcl
 deploy/gcp/terraform/terraform.tfvars
 deploy/gcp/terraform/bootstrap/terraform.tfvars
@@ -146,10 +146,10 @@ deploy/gcp/terraform/bootstrap/*.tfstate.backup
 
 ## Error Handling Reference
 
-| Scenario | Terraform Behavior | Operator Action |
+| Scenario | OpenTofu Behavior | Operator Action |
 | -------- | ----------------- | --------------- |
 | Insufficient GCP permissions | `apply` fails with `403 Permission Denied` | Grant required IAM roles and retry |
 | Cloud Run API not enabled | `apply` enables it automatically (FR-010) | No action required |
 | GHCR image tag not found | Cloud Run revision fails to start; previous revision stays active | Push correct image tag to GHCR and re-apply |
 | GCS state bucket missing | `init` fails with bucket not found | Run bootstrap module first |
-| Concurrent `terraform apply` | GCS backend state lock prevents concurrent runs | Wait for first apply to complete; lock released automatically |
+| Concurrent `tofu apply` | GCS backend state lock prevents concurrent runs | Wait for first apply to complete; lock released automatically |

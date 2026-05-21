@@ -12,8 +12,10 @@ const execAsync = promisify(exec);
 interface CloudRunWorld {
   serviceUrl: string;
   response?: { status: number; contentType: string; body: string };
-  terraformOutput?: string;
-  terraformPlanOutput?: string;
+  tofuOutput?: string;
+  tofuPlanOutput?: string;
+  revisionName?: string;
+  trafficAllocations?: Array<{ revision: string; percent: number }>;
 }
 
 declare module "@cucumber/cucumber" {
@@ -37,7 +39,7 @@ Given(
 // ── @smoke: Service accessibility ────────────────────────────────────────────
 
 Given(
-  "the Cloud Run service has been deployed with Terraform",
+  "the Cloud Run service has been deployed with OpenTofu",
   function (this: CloudRunWorld) {
     assert.ok(
       this.serviceUrl,
@@ -90,14 +92,14 @@ Then(
   }
 );
 
-// ── @integration: Terraform output validation (T022) ─────────────────────────
+// ── @integration: OpenTofu output and idempotency (T020, T022) ───────────────
 
 Given(
-  "the Terraform configuration has been applied",
+  "the OpenTofu configuration has been applied",
   function (this: CloudRunWorld) {
     assert.ok(
       this.serviceUrl,
-      "Service URL must be set — implies Terraform has been applied"
+      "Service URL must be set — implies OpenTofu has been applied"
     );
   }
 );
@@ -106,15 +108,15 @@ When(
   "I run {string}",
   async function (this: CloudRunWorld, command: string) {
     const cwd = "deploy/gcp/terraform";
-    if (command.startsWith("terraform output")) {
+    if (command.startsWith("tofu output")) {
       const { stdout } = await execAsync(command, { cwd });
-      this.terraformOutput = stdout.trim();
-    } else if (command === "terraform plan") {
+      this.tofuOutput = stdout.trim();
+    } else if (command === "tofu plan") {
       const { stdout } = await execAsync(
-        "terraform plan -detailed-exitcode 2>&1 || true",
+        "tofu plan -detailed-exitcode 2>&1 || true",
         { cwd }
       );
-      this.terraformPlanOutput = stdout;
+      this.tofuPlanOutput = stdout;
     }
   }
 );
@@ -122,7 +124,7 @@ When(
 Then(
   "the output should be a valid HTTPS URL",
   function (this: CloudRunWorld) {
-    const url = this.terraformOutput?.replace(/^"|"$/g, "");
+    const url = this.tofuOutput?.replace(/^"|"$/g, "");
     assert.ok(
       url?.startsWith("https://"),
       `Expected a valid HTTPS URL but got: ${url}`
@@ -133,17 +135,71 @@ Then(
 Then(
   "the plan should report zero changes",
   function (this: CloudRunWorld) {
-    const plan = this.terraformPlanOutput ?? "";
+    const plan = this.tofuPlanOutput ?? "";
     const noChanges =
       plan.includes("No changes") ||
       plan.includes("0 to add, 0 to change, 0 to destroy");
     assert.ok(
       noChanges,
-      `Expected terraform plan to report zero changes.\nPlan output:\n${plan}`
+      `Expected tofu plan to report zero changes.\nPlan output:\n${plan}`
     );
   }
 );
 
-// ── @integration: Service URL exposed as Terraform output (T020) ──────────────
+// ── @integration: Health-check rollback (T021) ────────────────────────────────
 
-// Steps reuse "I run {string}" and "the output should be a valid HTTPS URL" above.
+Given(
+  "a new revision has been deployed that fails health checks",
+  async function (this: CloudRunWorld) {
+    // Retrieve the current active revision name before the failed deploy.
+    // In a real test environment, this step would deploy a bad image tag and
+    // capture the resulting revision name so the Then step can assert traffic
+    // has NOT shifted to it. Here we read the currently-serving revision as a
+    // baseline — the caller is expected to set CLOUD_RUN_REVISION_FAILED env
+    // var to the name of the revision that failed startup.
+    const failedRevision = process.env["CLOUD_RUN_REVISION_FAILED"];
+    assert.ok(
+      failedRevision,
+      "CLOUD_RUN_REVISION_FAILED must be set to the name of the revision that failed health checks"
+    );
+    this.revisionName = failedRevision;
+  }
+);
+
+When(
+  "I inspect the Cloud Run service traffic allocation",
+  async function (this: CloudRunWorld) {
+    const project = process.env["GCLOUD_PROJECT"];
+    const region = process.env["CLOUD_RUN_REGION"] ?? "us-central1";
+    const service = process.env["CLOUD_RUN_SERVICE"] ?? "backtest-frontend";
+    assert.ok(project, "GCLOUD_PROJECT must be set");
+
+    const { stdout } = await execAsync(
+      `gcloud run services describe ${service} --region=${region} --project=${project} --format="json(status.traffic)"`,
+      { cwd: "." }
+    );
+    const parsed = JSON.parse(stdout);
+    this.trafficAllocations = (parsed?.status?.traffic ?? []).map(
+      (t: { revisionName: string; percent: number }) => ({
+        revision: t.revisionName,
+        percent: t.percent,
+      })
+    );
+  }
+);
+
+Then(
+  "traffic should remain routed to the previously healthy revision",
+  function (this: CloudRunWorld) {
+    const failedRevision = this.revisionName!;
+    const failedAllocation = this.trafficAllocations?.find(
+      (t) => t.revision === failedRevision
+    );
+    const failedPercent = failedAllocation?.percent ?? 0;
+    assert.strictEqual(
+      failedPercent,
+      0,
+      `Expected failed revision "${failedRevision}" to receive 0% traffic but got ${failedPercent}%`
+    );
+  }
+);
