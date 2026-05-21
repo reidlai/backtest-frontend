@@ -1,0 +1,12 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is gitignored — never commit it.
+
+# GCP project ID where the state bucket will be created.
+project_id = "my-gcp-project-id"
+
+# GCS bucket location (must match the region used for Cloud Run).
+region = "us-central1"
+
+# State bucket name — must be globally unique across GCP.
+# Recommended pattern: {project_id}-backtest-tfstate
+bucket_name = "my-gcp-project-id-backtest-tfstate"
