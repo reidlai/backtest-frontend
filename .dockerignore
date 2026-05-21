@@ -1,0 +1,10 @@
+node_modules
+.svelte-kit
+specs
+.specify
+.storybook
+src/stories
+.git
+*.md
+coverage
+playwright-report

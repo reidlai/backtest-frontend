@@ -40,7 +40,20 @@
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-[Gates determined based on constitution file]
+Verify each applicable gate against `.specify/memory/constitution.md` before proceeding:
+
+| Gate                                                                 | Rule    | Check                                                                             | Status        |
+| -------------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------- | ------------- |
+| Branch name follows `###-feature-name` format                        | Rule 1  | Branch matches `[0-9]{3}-[a-z_]+`                                                 | ✅ / ❌       |
+| BDD acceptance criteria defined in spec before this plan             | Rule 6  | spec.md has Given/When/Then scenarios                                             | ✅ / ❌       |
+| Docker image uses distroless base (if feature touches Docker)        | Rule 3  | Dockerfile FROM uses distroless; non-root; HEALTHCHECK present                    | ✅ / N/A / ❌ |
+| CI gates covered by tasks (SCA, lint, secrets scan, unit tests)      | Rule 7  | Tasks include `ci-sca`, `ci-format-lint`, `ci-secrets-scan`, `ci-unit-tests` jobs | ✅ / N/A / ❌ |
+| Required directory structure included                                | Rule 9  | `deploy/docker/`, `features/` present or planned                                  | ✅ / N/A / ❌ |
+| UI components follow Atomic Design + Storybook (if frontend feature) | Rule 12 | Storybook verification tasks precede backend implementation                       | ✅ / N/A / ❌ |
+| Virtual module structure respected (if adding new module)            | Rule 11 | `frontend/typescript/` or `backend/go/` layout used                               | ✅ / N/A / ❌ |
+| No secrets or credentials in planned artifacts                       | Rule 4  | All secrets via env vars / runtime secret store                                   | ✅ / ❌       |
+
+**Violations**: List any violations that require a waiver or spec amendment before proceeding.
 
 ## Project Structure
 

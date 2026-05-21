@@ -10,6 +10,18 @@ description: 'Task list template for feature implementation'
 
 **Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
+**BDD-First (Constitution Rule 6 — MANDATORY)**: BDD feature file tasks MUST appear in
+Phase 1 or 2 and MUST precede any implementation tasks for the behaviors they describe.
+Feature files live in `./features/` and MUST be tagged (@smoke, @integration, @api).
+
+**Constitution-mandated task types** — include these when the feature scope requires them:
+
+- `[BDD]` BDD feature file in `features/` — MUST precede implementation (Rule 6)
+- `[DOCKER]` Distroless Dockerfile in `deploy/docker/` — non-root, HEALTHCHECK required (Rule 3)
+- `[SECRETS]` Secrets detection job in `.github/workflows/ci.yaml` (Rule 4/7)
+- `[STORYBOOK]` Storybook story for new UI component — MUST precede backend tasks (Rule 12)
+- `[ZOD]` Zod schema for new data contract — precedes OpenAPI/client generation (Rule 12)
+
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
 ## Format: `[ID] [P?] [Story] Description`
@@ -46,11 +58,13 @@ description: 'Task list template for feature implementation'
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Project initialization and basic structure
+**Purpose**: Project initialization, basic structure, and BDD feature files (Rule 6: BDD
+tasks MUST appear before any implementation tasks for the behaviors they describe)
 
 - [ ] T001 Create project structure per implementation plan
 - [ ] T002 Initialize [language] project with [framework] dependencies
 - [ ] T003 [P] Configure linting and formatting tools
+- [ ] T004 [BDD] Create BDD feature file for [story 1] in `features/[story1].feature` — tag with @smoke and @[domain] (Constitution Rule 6 — MUST precede implementation)
 
 ---
 
@@ -178,6 +192,7 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Within Each User Story
 
+- BDD feature files ([BDD] tasks) MUST be written BEFORE any implementation task for that story (Constitution Rule 6)
 - Tests (if included) MUST be written and FAIL before implementation
 - Models before services
 - Services before endpoints
@@ -244,6 +259,9 @@ With multiple developers:
 
 - [P] tasks = different files, no dependencies
 - [Story] label maps task to specific user story for traceability
+- [BDD] tasks (Constitution Rule 6) MUST precede implementation of the behavior they describe — this is non-negotiable
+- [DOCKER] tasks MUST produce a distroless base image with non-root user and HEALTHCHECK (Constitution Rule 3)
+- [STORYBOOK] tasks MUST precede backend implementation tasks for the same feature (Constitution Rule 12)
 - Each user story should be independently completable and testable
 - Verify tests fail before implementing
 - Commit after each task or logical group

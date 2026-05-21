@@ -1,17 +1,13 @@
 {
 	"version": "0.8.12.dev0",
 	"integration_state_schema": 1,
-	"installed_integrations": ["agy", "claude"],
+	"installed_integrations": ["claude"],
 	"integration_settings": {
-		"agy": {
-			"script": "sh",
-			"invoke_separator": "-"
-		},
 		"claude": {
 			"script": "sh",
 			"invoke_separator": "-"
 		}
 	},
-	"integration": "agy",
-	"default_integration": "agy"
+	"integration": "claude",
+	"default_integration": "claude"
 }
