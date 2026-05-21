@@ -32,3 +32,11 @@ project.inlang/cache/
 storybook-static
 /.claude/worktrees
 
+# Terraform
+deploy/gcp/terraform/backend.hcl
+deploy/gcp/terraform/terraform.tfvars
+deploy/gcp/terraform/bootstrap/terraform.tfvars
+deploy/gcp/terraform/**/.terraform/
+deploy/gcp/terraform/**/*.tfstate
+deploy/gcp/terraform/**/*.tfstate.backup
+

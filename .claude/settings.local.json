@@ -59,7 +59,13 @@
       "Bash(sort -u -t@ -k2)",
       "WebFetch(domain:github.com)",
       "Bash(awk -F'@' '{print $2}')",
-      "Bash(.specify/extensions/git/scripts/bash/create-new-feature.sh *)"
+      "Bash(.specify/extensions/git/scripts/bash/create-new-feature.sh *)",
+      "Bash(.specify/scripts/bash/setup-plan.sh *)",
+      "Bash(.specify/scripts/bash/setup-tasks.sh *)",
+      "Bash(terraform version *)",
+      "Bash(terraform init *)",
+      "Bash(terraform validate *)",
+      "Bash(terraform fmt *)"
     ]
   }
 }

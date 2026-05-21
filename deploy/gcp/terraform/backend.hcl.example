@@ -1,0 +1,6 @@
+# Copy this file to backend.hcl and fill in your values.
+# backend.hcl is gitignored — never commit it.
+# Use the bucket_name output from the bootstrap module.
+
+bucket = "<your-state-bucket-name>"
+prefix = "terraform/state"

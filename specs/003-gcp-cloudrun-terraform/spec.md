@@ -82,10 +82,10 @@ An operator tears down all GCP resources provisioned by Terraform cleanly, leavi
 - **FR-001**: The Terraform configuration MUST provision a GCP Cloud Run service in a configurable region.
 - **FR-002**: The Cloud Run service MUST deploy the container image `ghcr.io/reidlai/backtest-frontend` with a configurable image tag (defaulting to `main`).
 - **FR-003**: The Cloud Run service MUST be publicly accessible (unauthenticated access allowed) via its generated service URL.
-- **FR-004**: The Terraform configuration MUST support configurable minimum and maximum instance counts; minimum instances MUST default to 0 (scale-to-zero) and maximum instances MUST default to a sensible upper bound (e.g., 10).
+- **FR-004**: The Terraform configuration MUST support configurable minimum and maximum instance counts; minimum instances MUST default to 0 (scale-to-zero) and maximum instances MUST default to 10.
 - **FR-005**: The Terraform configuration MUST accept a configurable GCP project ID and region as input variables.
 - **FR-006**: The Terraform configuration MUST manage all necessary IAM bindings to allow public invocation of the Cloud Run service.
-- **FR-007**: The Terraform configuration MUST store state remotely (e.g., GCS bucket) to enable team collaboration and CI/CD integration.
+- **FR-007**: The Terraform configuration MUST store state remotely (e.g., GCS bucket) to enable team collaboration and reproducible infrastructure management.
 - **FR-008**: The Terraform configuration MUST allow container resource limits (CPU, memory) to be configurable via input variables.
 - **FR-009**: The Terraform configuration MUST expose the Cloud Run service URL as an output value after provisioning.
 - **FR-010**: The Terraform configuration MUST enable the required GCP APIs (Cloud Run, IAM) if not already enabled in the target project.

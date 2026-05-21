@@ -1,0 +1,29 @@
+# Copy this file to terraform.tfvars and fill in your values.
+# terraform.tfvars is gitignored — never commit it.
+
+# Required: GCP project ID
+project_id = "my-gcp-project-id"
+
+# GCP region for the Cloud Run service
+region = "us-central1"
+
+# Cloud Run service name (used as the resource identifier)
+service_name = "backtest-frontend"
+
+# Docker image tag from ghcr.io/reidlai/backtest-frontend
+# Use "main" for the latest main branch build, or a short SHA for a pinned version
+image_tag = "main"
+
+# Scaling configuration (scale-to-zero by default)
+min_instances = 0
+max_instances = 10
+
+# Container resource limits
+cpu    = "1"
+memory = "512Mi"
+
+# Non-sensitive environment variables injected into the container at runtime
+# Remove the block entirely if no env vars are needed
+env_vars = {
+  # PUBLIC_API_URL = "https://api.example.com"
+}
