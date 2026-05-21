@@ -55,7 +55,10 @@
       "Bash(volta --version)",
       "Bash(python3 -c \"import yaml; yaml.safe_load\\(open\\('/Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml'\\)\\)\")",
       "Bash(node -e \"const yaml = require\\('js-yaml'\\); yaml.load\\(require\\('fs'\\).readFileSync\\('/Users/reidlai/GitLocal/backtest-frontend/.github/workflows/ci.yaml','utf8'\\)\\); console.log\\('YAML_VALID'\\)\")",
-      "Bash(npx js-yaml *)"
+      "Bash(npx js-yaml *)",
+      "Bash(sort -u -t@ -k2)",
+      "WebFetch(domain:github.com)",
+      "Bash(awk -F'@' '{print $2}')"
     ]
   }
 }

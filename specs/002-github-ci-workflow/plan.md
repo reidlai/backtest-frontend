@@ -27,14 +27,14 @@ Implement a multi-stage GitHub Actions CI pipeline for the SvelteKit frontend pr
 - Build: `pnpm build` with `@sveltejs/adapter-node` → outputs `build/index.js`
 - Docker: multi-stage build (deps + builder → distroless `gcr.io/distroless/nodejs24-debian12` runner, non-root, HEALTHCHECK) — Constitution Rule 3
 - Container image scan (SAST): `aquasecurity/trivy-action` — static image scan, no running container
-- Secrets Scan: Gitleaks (`gitleaks/gitleaks-action`) — Constitution Rule 4 + Rule 7
+- Secrets Scan: Gitleaks CLI v8.30.1 (direct install via curl + sha256 checksum verification; Go binary, no Node.js dependency) — Constitution Rule 4 + Rule 7
 - Registry: GHCR via `docker/login-action` + re-tag + `docker push` (promotes SAST-verified tarball, not a rebuild)
 
 **Storage**: N/A
 
 **Testing**: Vitest 4 (`--project server` only in CI; no browser, no Playwright dependency)
 
-**Target Platform**: GitHub Actions (ubuntu-latest), Docker (distroless Node.js 22 LTS Debian container)
+**Target Platform**: GitHub Actions (ubuntu-latest), Docker (distroless Node.js 24 LTS Debian container)
 
 **Project Type**: Web application frontend (SvelteKit SSR/SPA)
 
