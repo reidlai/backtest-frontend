@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/reidlai/GitLocal/backtest-frontend/**)",
+      "Bash(bash .specify/scripts/bash/check-prerequisites.sh --paths-only)",
+      "Bash(bash .specify/scripts/bash/check-prerequisites.sh --json --paths-only)",
+      "Bash(cat .specify/feature.json)"
+    ]
+  }
+}
