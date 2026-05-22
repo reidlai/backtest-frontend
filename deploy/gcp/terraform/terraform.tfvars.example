@@ -27,3 +27,11 @@ memory = "512Mi"
 env_vars = {
   # PUBLIC_API_URL = "https://api.example.com"
 }
+
+# Artifact Registry remote repository name (proxies ghcr.io)
+artifact_registry_repo = "ghcr-proxy"
+
+# GitHub Personal Access Token with read:packages scope
+# Used by Artifact Registry to authenticate to ghcr.io for private image pulls
+# This value is stored in GCP Secret Manager by Terraform — never commit it
+github_token = "<your-github-pat-with-read-packages-scope>"

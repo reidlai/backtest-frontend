@@ -67,7 +67,11 @@
       "Bash(terraform validate *)",
       "Bash(terraform fmt *)",
       "Bash(gh issue *)",
-      "Bash(nvm use *)"
+      "Bash(nvm use *)",
+      "Bash(tofu init *)",
+      "Bash(tofu validate *)",
+      "Bash(tofu fmt *)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }

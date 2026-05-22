@@ -12,7 +12,7 @@
 
 ### Session 2026-05-21
 
-- Q: Does the frontend application require runtime environment variables or secrets injected into the Cloud Run service? → A: Non-sensitive env vars only — plain Cloud Run environment variables (e.g., `PUBLIC_API_URL`), no Secret Manager required.
+- Q: Does the frontend application require runtime environment variables or secrets injected into the Cloud Run service? → A: Non-sensitive env vars only — plain Cloud Run environment variables (e.g., `PUBLIC_API_URL`), no Secret Manager required for application runtime configuration. Note: Secret Manager IS used for infrastructure authentication (GitHub PAT for the Artifact Registry remote repository GHCR proxy) — this is an infrastructure-layer concern, not an application runtime concern.
 - Q: Should the OpenTofu configuration include a bootstrap configuration to create the GCS state bucket, or assume the bucket already exists? → A: Include bootstrap — a separate `bootstrap/` OpenTofu module provisions the GCS state bucket before the main configuration is applied.
 - Q: Should the Cloud Run service scale down to zero instances when idle, or maintain at least one instance always running? → A: Scale to zero (min: 0) — cost-optimal default; cold starts are acceptable.
 - Q: Should the OpenTofu configuration include Cloud Monitoring alert policies or log-based metrics, or rely on Cloud Run's built-in logging? → A: Built-in only — rely on Cloud Run's automatic Cloud Logging integration; no additional monitoring resources in scope.
@@ -30,7 +30,7 @@ A developer or operator runs OpenTofu for the first time to provision the GCP Cl
 
 **Acceptance Scenarios**:
 
-1. **Given** a GCP project with the required APIs enabled and valid credentials, **When** the operator runs `tofu apply`, **Then** a Cloud Run service is created and the `ghcr.io/reidlai/backtest-frontend:main` image is deployed and accessible via the service URL.
+1. **Given** a GCP project with the required APIs enabled and valid credentials, **When** the operator runs `tofu apply`, **Then** a Cloud Run service is created and the `backtest-frontend:main` image (pulled via Artifact Registry remote proxy from GHCR) is deployed and accessible via the service URL.
 2. **Given** the Cloud Run service is provisioned, **When** the operator accesses the public URL, **Then** the frontend application responds with an HTTP 200 status.
 3. **Given** insufficient GCP permissions, **When** the operator runs `tofu apply`, **Then** OpenTofu reports a clear permission error and no partial resources are created.
 
@@ -74,24 +74,27 @@ An operator tears down all GCP resources provisioned by OpenTofu cleanly, leavin
 - How does Cloud Run behave if the container fails to start (bad image, missing env vars)?
 - What happens if resource quotas are exceeded in the target GCP project?
 - What happens if a required environment variable is missing from the `.tfvars` file?
+- What happens if the Artifact Registry remote repository cannot reach GHCR (expired GitHub token, rate limit, or GHCR outage)? Cold-starts for new revisions would fail; existing cached image layers remain available in AR.
 
 ## Requirements _(mandatory)_
 
 ### Functional Requirements
 
 - **FR-001**: The OpenTofu configuration MUST provision a GCP Cloud Run service in a configurable region.
-- **FR-002**: The Cloud Run service MUST deploy the container image `ghcr.io/reidlai/backtest-frontend` with a configurable image tag (defaulting to `main`).
+- **FR-002**: The Cloud Run service MUST pull the container image via a Google Artifact Registry remote repository that proxies `ghcr.io/reidlai/backtest-frontend`, with a configurable image tag (defaulting to `main`). The Cloud Run service MUST NOT reference `ghcr.io` directly.
 - **FR-003**: The Cloud Run service MUST be publicly accessible (unauthenticated access allowed) via its generated service URL.
 - **FR-004**: The OpenTofu configuration MUST support configurable minimum and maximum instance counts; minimum instances MUST default to 0 (scale-to-zero) and maximum instances MUST default to 10.
 - **FR-005**: The OpenTofu configuration MUST accept a configurable GCP project ID and region as input variables.
-- **FR-006**: The OpenTofu configuration MUST manage all necessary IAM bindings to allow public invocation of the Cloud Run service.
+- **FR-006**: The OpenTofu configuration MUST manage all necessary IAM bindings: (1) `allUsers` → `roles/run.invoker` for public Cloud Run invocation; (2) the default Compute Engine service account → `roles/artifactregistry.reader` on the Artifact Registry remote repository to allow Cloud Run to pull images; (3) the Artifact Registry service agent → `roles/secretmanager.secretAccessor` on the GitHub token secret to allow AR to authenticate to GHCR.
 - **FR-007**: The OpenTofu configuration MUST store state remotely (e.g., GCS bucket) to enable team collaboration and reproducible infrastructure management.
 - **FR-008**: The OpenTofu configuration MUST allow container resource limits (CPU, memory) to be configurable via input variables.
 - **FR-009**: The OpenTofu configuration MUST expose the Cloud Run service URL as an output value after provisioning.
-- **FR-010**: The OpenTofu configuration MUST enable the required GCP APIs (Cloud Run, IAM) if not already enabled in the target project.
+- **FR-010**: The OpenTofu configuration MUST enable the required GCP APIs if not already enabled: `run.googleapis.com`, `iam.googleapis.com`, `artifactregistry.googleapis.com`, and `secretmanager.googleapis.com`.
 - **FR-011**: The OpenTofu configuration MUST support defining non-sensitive environment variables (e.g., `PUBLIC_API_URL`) as input variables that are injected into the Cloud Run service at provision time.
 - **FR-012**: A separate `bootstrap/` OpenTofu module MUST be provided that provisions the GCS bucket used for remote state storage, and MUST be applied once before the main OpenTofu configuration.
 - **FR-013**: The `bootstrap/` module MUST enable versioning on the GCS state bucket to allow state recovery from prior versions.
+- **FR-014**: The OpenTofu configuration MUST provision a Google Artifact Registry repository in `REMOTE_REPOSITORY` mode that proxies `ghcr.io`, authenticated via the GitHub token stored in Secret Manager, so that Cloud Run can pull private GHCR images without direct GHCR credentials.
+- **FR-015**: The OpenTofu configuration MUST accept a sensitive input variable `github_token` (a GitHub PAT with `read:packages` scope) and store it as a GCP Secret Manager secret version. The token MUST be marked `sensitive = true` in Terraform and MUST NOT be committed to source control.
 
 ### Key Entities
 
@@ -102,6 +105,8 @@ An operator tears down all GCP resources provisioned by OpenTofu cleanly, leavin
 - **Bootstrap Module**: A one-time OpenTofu module (`bootstrap/`) that provisions the GCS state bucket before the main configuration can be applied.
 - **IAM Binding**: The policy granting unauthenticated (public) invocation rights on the Cloud Run service.
 - **Environment Variable**: A non-sensitive runtime configuration value passed to the container via plain Cloud Run environment variables (not Secret Manager).
+- **Artifact Registry Remote Repository**: A GCP Artifact Registry repository in `REMOTE_REPOSITORY` mode configured to proxy and cache Docker images from `ghcr.io`; Cloud Run uses the AR URL exclusively for image pulls. Key attributes: repository ID, region, upstream URI (`https://ghcr.io`), upstream credentials reference.
+- **GitHub Personal Access Token (PAT)**: A GitHub token with `read:packages` scope used to authenticate the Artifact Registry remote repository to GHCR; stored as a GCP Secret Manager secret version; supplied to Terraform as a sensitive input variable; never committed to source control.
 
 ## Success Criteria _(mandatory)_
 
@@ -115,13 +120,13 @@ An operator tears down all GCP resources provisioned by OpenTofu cleanly, leavin
 
 ## Assumptions
 
-- The `ghcr.io/reidlai/backtest-frontend` package is set to public visibility in GitHub Packages, so GCP Cloud Run can pull it without additional authentication.
+- The `ghcr.io/reidlai/backtest-frontend` package is a private GitHub package. Cloud Run does NOT pull from GHCR directly; an Artifact Registry remote repository is provisioned to proxy and cache GHCR images, authenticated with a GitHub PAT stored in GCP Secret Manager.
 - The operator has Owner or Editor permissions (or a custom role with the minimum required permissions) on the target GCP project.
 - The GCS bucket for OpenTofu remote state is provisioned by the `bootstrap/` module; operators run bootstrap once before applying the main configuration.
 - The Cloud Run service listens on port 3000 (matching the existing `Dockerfile` and `entrypoint.sh` in `deploy/docker/`).
 - Only a single Cloud Run service is required (no multi-region setup for this feature).
 - Environment-specific configuration (e.g., staging vs. production) is managed via OpenTofu variable files (`.tfvars`) rather than separate module instances.
-- The CI pipeline (`ci.yaml`) already pushes the `main`-tagged image to GHCR after all checks pass; the OpenTofu configuration consumes this image without modifying the CI pipeline.
+- The CI pipeline (`ci.yaml`) already pushes the `main`-tagged image to GHCR after all checks pass; the OpenTofu configuration accesses this image via the Artifact Registry remote repository (pull-through proxy) without modifying the CI pipeline.
 - All runtime environment variables are non-sensitive; Secret Manager integration is out of scope for this feature.
 - Cloud Monitoring alert policies, dashboards, and log-based metrics are out of scope; Cloud Run's automatic Cloud Logging integration is sufficient for this feature.
 - Automated CI/CD execution of `tofu apply` is out of scope; all infrastructure changes are applied manually by an operator with local GCP credentials.

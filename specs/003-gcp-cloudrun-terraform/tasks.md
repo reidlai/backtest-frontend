@@ -52,6 +52,18 @@
 - [x] T010 [US1] Write Cucumber step definitions for @smoke scenarios in `features/step-definitions/cloud-run-deployment.ts` — implement steps for "service is publicly accessible" and "service serves a valid HTML document" using `node-fetch` or equivalent HTTP client; read service URL from `CLOUD_RUN_URL` environment variable (Constitution Rule 6)
 - [x] T022 [US1] Extend `features/step-definitions/cloud-run-deployment.ts` — implement steps for @integration "re-applying unchanged OpenTofu configuration produces no changes" scenario using `child_process.exec` to run `tofu plan` and assert the output contains `"No changes"` or `"0 to add, 0 to change, 0 to destroy"` (validates SC-003 idempotency)
 
+### GHCR Access via Artifact Registry (Prerequisite for User Story 1)
+
+These tasks add the Artifact Registry remote repository and Secret Manager infrastructure required so Cloud Run can pull private GHCR images. MUST be complete before T014 (main.tf) and T019 (validation).
+
+- [x] T031 [US1] Update `deploy/gcp/terraform/apis.tf` — add `google_project_service.artifactregistry_api` (`artifactregistry.googleapis.com`) and `google_project_service.secretmanager_api` (`secretmanager.googleapis.com`), both with `disable_on_destroy = false` and `disable_dependent_services = false`
+- [x] T032 [US1] Create `deploy/gcp/terraform/secrets.tf` — implement `google_secret_manager_secret.github_token` with `secret_id = "ar-github-token"` and `replication { auto {} }`; implement `google_secret_manager_secret_version.github_token` with `secret_data = var.github_token`; depends on `google_project_service.secretmanager_api`
+- [x] T033 [US1] Create `deploy/gcp/terraform/ar.tf` — implement `google_artifact_registry_repository.ghcr_proxy` with `mode = "REMOTE_REPOSITORY"`, `format = "DOCKER"`, `custom_repository { uri = "https://ghcr.io" }`, and `upstream_credentials { username_password_credentials { username = "reidlai", password_secret_version = google_secret_manager_secret_version.github_token.name } }`; depends on `google_project_service.artifactregistry_api` and `google_secret_manager_secret_version.github_token`
+- [x] T034 [US1] Update `deploy/gcp/terraform/iam.tf` — add `data "google_project" "project"` data source; add `google_artifact_registry_repository_iam_member.cloud_run_ar_reader` (`roles/artifactregistry.reader` for `${data.google_project.project.number}-compute@developer.gserviceaccount.com`); add `google_secret_manager_secret_iam_member.ar_secret_accessor` (`roles/secretmanager.secretAccessor` for `service-${data.google_project.project.number}@gcp-sa-artifactregistry.iam.gserviceaccount.com`)
+- [x] T035 [P] [US1] Update `deploy/gcp/terraform/variables.tf` — add `github_token` variable (`type = string`, `sensitive = true`, description referencing `read:packages` scope) and `artifact_registry_repo` variable (`type = string`, `default = "ghcr-proxy"`)
+- [x] T036 [US1] Update `deploy/gcp/terraform/main.tf` image reference from `"ghcr.io/reidlai/backtest-frontend:${var.image_tag}"` to `"${var.region}-docker.pkg.dev/${var.project_id}/${var.artifact_registry_repo}/reidlai/backtest-frontend:${var.image_tag}"`; add `google_artifact_registry_repository.ghcr_proxy` to the `depends_on` list
+- [x] T037 [P] [US1] Update `deploy/gcp/terraform/terraform.tfvars.example` — add `artifact_registry_repo = "ghcr-proxy"` and `github_token = "<your-github-pat-with-read-packages-scope>"` entries with explanatory comments
+
 ### Implementation for User Story 1
 
 - [x] T011 [US1] Create `deploy/gcp/terraform/versions.tf` — declare `required_version = ">= 1.6.0"`, provider `registry.opentofu.org/hashicorp/google` `>= 5.0.0`, and GCS backend block placeholder per research.md Decision 1
@@ -105,6 +117,8 @@
 - [x] T027 [P] Run `tofu validate` on both `deploy/gcp/terraform/` and `deploy/gcp/terraform/bootstrap/` — confirm zero errors after all implementation tasks complete (SC-005)
 - [x] T028 [P] Verify `.gitignore` additions cover all OpenTofu/IaC artefacts: `*.tfstate`, `*.tfstate.backup`, `.terraform/`, `terraform.tfvars`, `backend.hcl` — confirm no state or credentials can be accidentally committed (Constitution Rule 4)
 - [x] T029 Update `specs/003-gcp-cloudrun-terraform/quickstart.md` — add OpenTofu installation instructions (e.g., `brew install opentofu` on macOS, or official install script for Linux); replace all `terraform` CLI references with `tofu`; confirm all file paths and command sequences match the final implemented structure
+- [x] T039 Update `specs/003-gcp-cloudrun-terraform/quickstart.md` (post-AR remediation) — add GitHub PAT to Prerequisites; expand Step 2 terraform.tfvars comment to include `github_token` and `artifact_registry_repo`; add AR troubleshooting row
+- [x] T038 Write `README.md` at project root — backtesting concept overview, tech stack table, GCP Quick Start (Steps 1–3), local development, test commands, CI/CD pipeline summary
 - [x] T030 [P] Run `pnpm prettier --write .` on all newly generated files (`.ts` step definitions, `.md` documentation) and verify `pnpm prettier --check .` passes with zero warnings — ensures `ci-format-lint` CI gate passes for non-HCL files (SC-005)
 
 ---

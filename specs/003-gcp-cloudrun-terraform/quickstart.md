@@ -9,7 +9,8 @@
   - Linux: see [official install script](https://opentofu.org/docs/intro/install/standalone/)
 - GCP project with billing enabled
 - `gcloud` CLI authenticated: `gcloud auth application-default login`
-- Operator IAM role: `roles/editor` or a custom role with Cloud Run Admin + IAM Admin + Storage Admin
+- Operator IAM role: `roles/editor` or a custom role with Cloud Run Admin + IAM Admin + Storage Admin + Artifact Registry Admin + Secret Manager Admin
+- GitHub Personal Access Token (PAT) with `read:packages` scope — used by Artifact Registry to authenticate to GHCR
 
 ## Step 1: Bootstrap (One-Time)
 
@@ -38,7 +39,12 @@ cp backend.hcl.example backend.hcl
 
 # Configure input variables
 cp terraform.tfvars.example terraform.tfvars
-# Edit terraform.tfvars: set project_id, region, and any env_vars
+# Edit terraform.tfvars and set at minimum:
+#   project_id             — your GCP project ID
+#   region                 — e.g. us-central1
+#   github_token           — GitHub PAT with read:packages scope (stored in Secret Manager by Terraform)
+#   artifact_registry_repo — Artifact Registry repo name for GHCR proxy (default: ghcr-proxy)
+#   env_vars               — e.g. { PUBLIC_API_URL = "https://api.example.com" }
 ```
 
 ## Step 3: Deploy
@@ -77,4 +83,5 @@ tofu destroy
 | `403 Permission Denied` on apply | Insufficient IAM permissions | Grant Cloud Run Admin + IAM Admin to your account |
 | `Error: bucket not found` on init | Bootstrap not run | Complete Step 1 first |
 | Service URL returns 503 | Container failed to start | Check Cloud Logging for startup errors; verify image tag exists in GHCR |
+| AR remote repo cannot pull from GHCR | Expired or invalid GitHub PAT | Rotate the PAT and run `tofu apply` to update the Secret Manager secret version |
 | `tofu plan` shows drift after apply | GCP API returned non-deterministic attributes | Run `tofu apply` again; should be idempotent on second run |

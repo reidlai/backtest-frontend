@@ -9,7 +9,7 @@ resource "google_cloud_run_v2_service" "frontend" {
     }
 
     containers {
-      image = "ghcr.io/reidlai/backtest-frontend:${var.image_tag}"
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.artifact_registry_repo}/reidlai/backtest-frontend:${var.image_tag}"
 
       ports {
         container_port = 3000
@@ -34,5 +34,5 @@ resource "google_cloud_run_v2_service" "frontend" {
 
   ingress = "INGRESS_TRAFFIC_ALL"
 
-  depends_on = [google_project_service.cloudrun_api]
+  depends_on = [google_project_service.cloudrun_api, google_artifact_registry_repository.ghcr_proxy]
 }
