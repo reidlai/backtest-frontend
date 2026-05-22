@@ -89,7 +89,7 @@ An operator tears down all GCP resources provisioned by OpenTofu cleanly, leavin
 - **FR-007**: The OpenTofu configuration MUST store state remotely (e.g., GCS bucket) to enable team collaboration and reproducible infrastructure management.
 - **FR-008**: The OpenTofu configuration MUST allow container resource limits (CPU, memory) to be configurable via input variables.
 - **FR-009**: The OpenTofu configuration MUST expose the Cloud Run service URL as an output value after provisioning.
-- **FR-010**: The OpenTofu configuration MUST enable the required GCP APIs if not already enabled: `run.googleapis.com`, `iam.googleapis.com`, `artifactregistry.googleapis.com`, and `secretmanager.googleapis.com`.
+- **FR-010**: The OpenTofu configuration MUST enable the required GCP APIs if not already enabled: `run.googleapis.com`, `artifactregistry.googleapis.com`, and `secretmanager.googleapis.com`. Note: `iam.googleapis.com` is enabled by default in all GCP projects and is intentionally excluded from explicit management.
 - **FR-011**: The OpenTofu configuration MUST support defining non-sensitive environment variables (e.g., `PUBLIC_API_URL`) as input variables that are injected into the Cloud Run service at provision time.
 - **FR-012**: A separate `bootstrap/` OpenTofu module MUST be provided that provisions the GCS bucket used for remote state storage, and MUST be applied once before the main OpenTofu configuration.
 - **FR-013**: The `bootstrap/` module MUST enable versioning on the GCS state bucket to allow state recovery from prior versions.
