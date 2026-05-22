@@ -23,5 +23,6 @@ resource "google_artifact_registry_repository" "ghcr_proxy" {
   depends_on = [
     google_project_service.artifactregistry_api,
     google_secret_manager_secret_version.github_token,
+    google_secret_manager_secret_iam_member.ar_secret_accessor,
   ]
 }

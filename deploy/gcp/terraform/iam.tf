@@ -22,4 +22,6 @@ resource "google_secret_manager_secret_iam_member" "ar_secret_accessor" {
   secret_id = google_secret_manager_secret.github_token.secret_id
   role      = "roles/secretmanager.secretAccessor"
   member    = "serviceAccount:service-${data.google_project.project.number}@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+
+  depends_on = [terraform_data.ar_service_identity]
 }
