@@ -16,7 +16,7 @@ variable "service_name" {
 }
 
 variable "image_tag" {
-  description = "Docker image tag to deploy. Matches a tag pushed to ghcr.io/reidlai/backtest-frontend by ci.yaml."
+  description = "Docker image tag to deploy. Matches a tag pushed to GHCR by ci.yaml and cached by the Artifact Registry remote repository."
   type        = string
   default     = "main"
 }
@@ -49,4 +49,16 @@ variable "env_vars" {
   description = "Map of non-sensitive environment variables to inject into the Cloud Run container."
   type        = map(string)
   default     = {}
+}
+
+variable "github_token" {
+  description = "GitHub Personal Access Token with `read:packages` scope; consumed by the Artifact Registry remote repository to authenticate to GHCR. Supplied via terraform.tfvars (gitignored). Never committed."
+  type        = string
+  sensitive   = true
+}
+
+variable "artifact_registry_repo" {
+  description = "Name of the Artifact Registry remote repository used to proxy ghcr.io images."
+  type        = string
+  default     = "ghcr-proxy"
 }
