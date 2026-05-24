@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import type { FunctionGatewayCard as IFunctionGatewayCard } from '$lib/types';
 	import FunctionGatewayCard from '../molecules/FunctionGatewayCard.svelte';
+	import { FunctionGatewaysSchema } from '$lib/schemas';
 
-	const gatewayCards: IFunctionGatewayCard[] = [
+	let state = $state(FunctionGatewaysSchema.parse({}));
+	state.gatewayCards = [
 		{
 			id: 'strategy-builder',
 			titleKey: 'gateway_card_strategy_builder_title',
@@ -44,7 +45,7 @@
 </script>
 
 <div class="grid gap-4 sm:grid-cols-2">
-	{#each gatewayCards as card (card.id)}
+	{#each state.gatewayCards as card (card.id)}
 		<FunctionGatewayCard {card} onClick={() => goto('/' + card.id)} />
 	{/each}
 </div>

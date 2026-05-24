@@ -106,7 +106,7 @@ As a developer, I want each global state singleton (`appState`, `backtestState`,
 
 - What happens when an organism has only `$props()` (e.g., `StubSection`)? Schema should reflect props shape, not state.
 - How should organisms with `SvelteSet` state (e.g., `backtestState.selectedOrderTypes`) be represented? `SvelteSet` is not a plain value — schema can use `z.array()` as the serializable equivalent.
-- Organisms with `const` static data (e.g., `FunctionGateways.gatewayCards`, `MainMenuGroup.mainSections`) that is never mutated — schema represents the shape but state is not reactive.
+- Organisms with `const` static data (e.g., `FunctionGateways.gatewayCards`, `MainMenuGroup.mainSections`) that is never mutated — these MUST still use `let state = $state(Schema.parse({}))` per FR-004; the `const` array is assigned to `state.field` immediately after parse, consistent with the display-data pattern used by `DashboardMetricGrid` and `ResourceCostPanel`. The schema's `default([])` is the uninitialized default; the component populates it.
 - `samplePerfSummary` in `src/lib/data/performance.ts` is an inferred `{ label: string; value: string }[]` with no named interface. A `PerfSummaryItem` interface must be added to `lib/types/index.ts` before its schema can be created.
 - `StrategyState.parsedStrategy: Strategy | null` requires `StrategySchema.nullable().default(null)` — the nullable complex-type pattern must reference the data-type schema for `Strategy`.
 - `z.custom<T>()` bypasses item-level Zod validation; once data-type schemas exist, organism schemas must migrate to `z.array(TypeSchema)` to achieve true runtime validation on array contents.
@@ -142,16 +142,16 @@ Organisms and their local state (to be captured in Zod schemas):
 | `AIResearchBox` | `aiText: string`, `validationError: boolean` | Also reads `strategyState` (excluded from schema) |
 | `AIReviewPanel` | `review: AIReview` | Non-nullable; `AIReviewSchema.default({ grade: '', confidence: 'low', riskFlags: [] })`; initialized via `state.review = sampleAIReview` |
 | `AIReviewSidebar` | _(none)_ | Empty schema |
-| `DashboardMetricGrid` | _(none)_ | Empty schema |
-| `FunctionGateways` | `gatewayCards: FunctionGatewayCard[]` | Static `const`; uses `z.custom<FunctionGatewayCard[]>()` |
+| `DashboardMetricGrid` | `metrics: MarketMetric[]` | Display data from `$lib/data/market`; uses `z.custom<MarketMetric[]>().default([])` initially, migrates to `z.array(MarketMetricSchema)` in Phase 6; initialized via `state.metrics = sampleMarketMetrics` |
+| `FunctionGateways` | `gatewayCards: FunctionGatewayCard[]` | Static `const`; schema uses `z.array(FunctionGatewayCardSchema)` (FR-012 migration done); initialized via `state.gatewayCards = [...]` |
 | `LiveControlForm` | _(none — reads appState)_ | Empty schema |
-| `MainMenuGroup` | `mainSections: NavSection[]` | Static `const`; uses `z.custom<NavSection[]>()` |
+| `MainMenuGroup` | `mainSections: NavSection[]` | Static `const`; schema uses `z.array(NavSectionSchema)` (FR-012 migration done); initialized via `state.mainSections = [...]` |
 | `NavigationSidebar` | _(none)_ | Empty schema |
 | `PerformancdeChartTabs` | `activeChartTab: ChartTab` | `ChartTab` is a union literal; use `z.enum(['equity-curve', 'drawdown', 'benchmark-overlay', 'monthly-heatmap'])` for full runtime validation (see research.md Decision 3) |
 | `PerformanceMetricGrid` | `tiles: MetricTile[]`, `draggedIndex: number\|null`, `editingTileId: string\|null`, `editValue: string`, `modalOpen: boolean` | `tiles` uses `z.custom<MetricTile[]>()`; primitives use native Zod types |
-| `QuickActionsPanel` | _(none — reads global state)_ | Empty schema |
-| `ResourceCostPanel` | _(none)_ | Empty schema |
-| `ResultMenuGroup` | `resultSections: NavSection[]` | Static `const`; uses `z.custom<NavSection[]>()` |
+| `QuickActionsPanel` | _(none — reads global state; uses `sampleTrades` only in CSV export handler, not display state)_ | Empty schema |
+| `ResourceCostPanel` | `resourceUsage: ResourceUsage` | Display data from `$lib/data/strategy`; uses `z.custom<ResourceUsage>().default({ tokensUsed: 4250, tokensTotal: 10000, backtestsUsed: 3, backtestsTotal: 10, queuePosition: 0, estimatedRuntime: '~42s', complexityScore: 67, planImpact: 'medium' })` initially, migrates to `ResourceUsageSchema.default({...})` in Phase 6; initialized via `state.resourceUsage = sampleResourceUsage` |
+| `ResultMenuGroup` | `resultSections: NavSection[]` | Static `const`; schema uses `z.array(NavSectionSchema)` (FR-012 migration done); initialized via `state.resultSections = [...]` |
 | `StubSection` | `title: string` (prop) | Props-based; schema used for type inference only (`z.infer` as `$props()` type), no runtime `.parse()` |
 | `TopBar` | _(none — reads global state)_ | Empty schema |
 

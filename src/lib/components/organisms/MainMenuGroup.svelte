@@ -1,10 +1,11 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
 	import { page } from '$app/state';
-	import type { NavSection } from '$lib/types';
 	import NavItem from '../molecules/NavItem.svelte';
+	import { MainMenuGroupSchema } from '$lib/schemas';
 
-	const mainSections: NavSection[] = [
+	let state = $state(MainMenuGroupSchema.parse({}));
+	state.mainSections = [
 		{
 			id: 'dashboard',
 			path: '/research-workbench',
@@ -55,7 +56,7 @@
 	<h3 class="mb-2 px-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
 		{m.nav_group_main()}
 	</h3>
-	{#each mainSections as section (section.id)}
+	{#each state.mainSections as section (section.id)}
 		<NavItem {section} isActive={page.url.pathname === section.path} href={section.path} />
 	{/each}
 </div>

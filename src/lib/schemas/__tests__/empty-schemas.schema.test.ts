@@ -15,16 +15,20 @@ import {
 } from '$lib/schemas';
 
 describe('Empty organism schemas', () => {
-	it('AIReviewPanelSchema parses empty input', () => {
-		expect(AIReviewPanelSchema.parse({})).toEqual({});
+	it('AIReviewPanelSchema defaults review with empty grade and low confidence', () => {
+		const result = AIReviewPanelSchema.parse({});
+		expect(result.review.grade).toBe('');
+		expect(result.review.confidence).toBe('low');
+		expect(result.review.riskFlags).toEqual([]);
 	});
 
 	it('AIReviewSidebarSchema parses empty input', () => {
 		expect(AIReviewSidebarSchema.parse({})).toEqual({});
 	});
 
-	it('DashboardMetricGridSchema parses empty input', () => {
-		expect(DashboardMetricGridSchema.parse({})).toEqual({});
+	it('DashboardMetricGridSchema defaults metrics to empty array', () => {
+		const result = DashboardMetricGridSchema.parse({});
+		expect(result.metrics).toEqual([]);
 	});
 
 	it('FunctionGatewaysSchema defaults gatewayCards to empty array', () => {
@@ -49,8 +53,11 @@ describe('Empty organism schemas', () => {
 		expect(QuickActionsPanelSchema.parse({})).toEqual({});
 	});
 
-	it('ResourceCostPanelSchema parses empty input', () => {
-		expect(ResourceCostPanelSchema.parse({})).toEqual({});
+	it('ResourceCostPanelSchema defaults resourceUsage with sample values', () => {
+		const result = ResourceCostPanelSchema.parse({});
+		expect(result.resourceUsage.tokensUsed).toBe(4250);
+		expect(result.resourceUsage.tokensTotal).toBe(10000);
+		expect(result.resourceUsage.planImpact).toBe('medium');
 	});
 
 	it('ResultMenuGroupSchema defaults resultSections to empty array', () => {

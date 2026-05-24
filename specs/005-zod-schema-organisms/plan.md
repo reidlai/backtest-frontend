@@ -114,11 +114,17 @@ src/lib/state/app.svelte.ts               ← MODIFIED — init from AppStateSch
 src/lib/state/backtest.svelte.ts          ← MODIFIED — init from BacktestStateSchema.parse({})
 src/lib/state/strategy.svelte.ts          ← MODIFIED — init from StrategyStateSchema.parse({})
 
-src/lib/components/organisms/             ← MODIFIED (4 files with local $state)
+src/lib/components/organisms/             ← MODIFIED (10 files with local $state or display data)
 ├── AIChatPanel.svelte                    ← consolidate chatInput + messages → state
 ├── AIResearchBox.svelte                  ← consolidate aiText + validationError → state
+├── AIReviewPanel.svelte                  ← wire review → schema state (Phase 6, T071)
+├── DashboardMetricGrid.svelte            ← wire metrics → schema state (T072)
+├── FunctionGateways.svelte               ← wire gatewayCards → schema state (T076)
+├── MainMenuGroup.svelte                  ← wire mainSections → schema state (T077)
 ├── PerformancdeChartTabs.svelte          ← consolidate activeChartTab → state
-└── PerformanceMetricGrid.svelte          ← consolidate 5 state vars → state
+├── PerformanceMetricGrid.svelte          ← consolidate 5 state vars → state
+├── ResourceCostPanel.svelte              ← wire resourceUsage → schema state (T073)
+└── ResultMenuGroup.svelte                ← wire resultSections → schema state (T078)
 
 features/
 └── zod-schema-organisms.feature          ← NEW BDD feature file

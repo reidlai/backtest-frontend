@@ -66,18 +66,27 @@
 
 - [x] T013 [P] [US2] [ZOD] Create `src/lib/schemas/ai-review-panel.schema.ts` — export `AIReviewPanelSchema = z.object({})` and `AIReviewPanelState`
 - [x] T014 [P] [US2] [ZOD] Create `src/lib/schemas/ai-review-sidebar.schema.ts` — export `AIReviewSidebarSchema = z.object({})` and `AIReviewSidebarState`
-- [x] T015 [P] [US2] [ZOD] Create `src/lib/schemas/dashboard-metric-grid.schema.ts` — export `DashboardMetricGridSchema = z.object({})` and `DashboardMetricGridState`
 - [x] T016 [P] [US2] [ZOD] Create `src/lib/schemas/live-control-form.schema.ts` — export `LiveControlFormSchema = z.object({})` and `LiveControlFormState`
 - [x] T017 [P] [US2] [ZOD] Create `src/lib/schemas/navigation-sidebar.schema.ts` — export `NavigationSidebarSchema = z.object({})` and `NavigationSidebarState`
 - [x] T018 [P] [US2] [ZOD] Create `src/lib/schemas/quick-actions-panel.schema.ts` — export `QuickActionsPanelSchema = z.object({})` and `QuickActionsPanelState`
-- [x] T019 [P] [US2] [ZOD] Create `src/lib/schemas/resource-cost-panel.schema.ts` — export `ResourceCostPanelSchema = z.object({})` and `ResourceCostPanelState`
 - [x] T020 [P] [US2] [ZOD] Create `src/lib/schemas/top-bar.schema.ts` — export `TopBarSchema = z.object({})` and `TopBarState`
+
+### Display-Data Schemas — organisms rendering sample data from `$lib/data/` (run in parallel)
+
+- [x] T015 [P] [US2] [ZOD] Create `src/lib/schemas/dashboard-metric-grid.schema.ts` — export `DashboardMetricGridSchema` with `metrics: z.custom<MarketMetric[]>().default([])`; export `DashboardMetricGridState`; migrates to `z.array(MarketMetricSchema)` in Phase 6 (T074) after T044 exists
+- [x] T019 [P] [US2] [ZOD] Create `src/lib/schemas/resource-cost-panel.schema.ts` — export `ResourceCostPanelSchema` with `resourceUsage: z.custom<ResourceUsage>().default({ tokensUsed: 4250, tokensTotal: 10000, backtestsUsed: 3, backtestsTotal: 10, queuePosition: 0, estimatedRuntime: '~42s', complexityScore: 67, planImpact: 'medium' })`; export `ResourceCostPanelState`; migrates to `ResourceUsageSchema.default({...})` in Phase 6 (T075) after T050 exists
 
 ### Typed Static-Data Schemas — organisms with const data shapes (run in parallel)
 
 - [x] T021 [P] [US2] [ZOD] Create `src/lib/schemas/function-gateways.schema.ts` — export `FunctionGatewaysSchema` with `gatewayCards: z.custom<IFunctionGatewayCard[]>().default([])`; export `FunctionGatewaysState`
 - [x] T022 [P] [US2] [ZOD] Create `src/lib/schemas/main-menu-group.schema.ts` — export `MainMenuGroupSchema` with `mainSections: z.custom<NavSection[]>().default([])`; export `MainMenuGroupState`
 - [x] T023 [P] [US2] [ZOD] Create `src/lib/schemas/result-menu-group.schema.ts` — export `ResultMenuGroupSchema` with `resultSections: z.custom<NavSection[]>().default([])`; export `ResultMenuGroupState`
+
+### Static-Data Component Wiring — organisms using const arrays (run in parallel)
+
+- [x] T076 [P] [US2] Update `src/lib/components/organisms/FunctionGateways.svelte` — remove `const gatewayCards` and the `$lib/types` import; add `import { FunctionGatewaysSchema } from '$lib/schemas'`; initialize `let state = $state(FunctionGatewaysSchema.parse({}))`; assign `state.gatewayCards = [...]`; update template from `gatewayCards` to `state.gatewayCards`
+- [x] T077 [P] [US2] Update `src/lib/components/organisms/MainMenuGroup.svelte` — remove `const mainSections` and the `$lib/types` import; add `import { MainMenuGroupSchema } from '$lib/schemas'`; initialize `let state = $state(MainMenuGroupSchema.parse({}))`; assign `state.mainSections = [...]`; update template from `mainSections` to `state.mainSections`
+- [x] T078 [P] [US2] Update `src/lib/components/organisms/ResultMenuGroup.svelte` — remove `const resultSections` and the `$lib/types` import; add `import { ResultMenuGroupSchema } from '$lib/schemas'`; initialize `let state = $state(ResultMenuGroupSchema.parse({}))`; assign `state.resultSections = [...]`; update template from `resultSections` to `state.resultSections`
 
 ### Props Schema — StubSection
 
@@ -104,7 +113,7 @@
 - [x] T028 [P] [US3] Create `src/lib/schemas/__tests__/ai-research-box.schema.test.ts` — test: `parse({})` returns `{ aiText: '', validationError: false }`; test: `safeParse({ validationError: 'yes' })` returns `{ success: false }`
 - [x] T029 [P] [US3] Create `src/lib/schemas/__tests__/performance-chart-tabs.schema.test.ts` — test: `parse({})` returns `{ activeChartTab: 'equity-curve' }`; test: `safeParse({ activeChartTab: 'invalid-tab' })` returns `{ success: false }` (enum validation)
 - [x] T030 [P] [US3] Create `src/lib/schemas/__tests__/performance-metric-grid.schema.test.ts` — test: `parse({})` returns `{ tiles: [], draggedIndex: null, editingTileId: null, editValue: '', modalOpen: false }`; test: `safeParse({ draggedIndex: 'not-a-number' })` returns `{ success: false }`
-- [x] T031 [P] [US3] Create `src/lib/schemas/__tests__/empty-schemas.schema.test.ts` — verify `parse({})` returns `{}` for all 8 empty-schema organisms (`AIReviewPanel`, `AIReviewSidebar`, `DashboardMetricGrid`, `LiveControlForm`, `NavigationSidebar`, `QuickActionsPanel`, `ResourceCostPanel`, `TopBar`) and for the 3 typed static-data schemas (`FunctionGateways`, `MainMenuGroup`, `ResultMenuGroup`) returns objects with the expected `[]` defaults; satisfies SC-002 for US2 schemas
+- [x] T031 [P] [US3] Create `src/lib/schemas/__tests__/empty-schemas.schema.test.ts` — verify `parse({})` returns `{}` for 6 truly empty-schema organisms (`AIReviewPanel`, `AIReviewSidebar`, `LiveControlForm`, `NavigationSidebar`, `QuickActionsPanel`, `TopBar`); verify `DashboardMetricGridSchema.parse({}).metrics` equals `[]`; verify `ResourceCostPanelSchema.parse({}).resourceUsage.tokensUsed` equals `4250` and `.planImpact` equals `'medium'`; for the 3 typed static-data schemas (`FunctionGateways`, `MainMenuGroup`, `ResultMenuGroup`) verify objects with the expected `[]` defaults; satisfies SC-002 for US2 schemas
 - [x] T031a [US3] Run `pnpm test:unit` and confirm all schema tests in `src/lib/schemas/__tests__/` pass
 
 **Checkpoint**: US3 complete — runtime validation confirmed, SC-002 satisfied
@@ -162,7 +171,17 @@
 - [x] T070 [US4] Update `src/lib/schemas/ai-review-panel.schema.ts` — depends on T054; replace `z.object({})` with `z.object({ review: AIReviewSchema.default({ grade: '', confidence: 'low', riskFlags: [] }) })`; import `AIReviewSchema` from `$lib/schemas/types`; update `AIReviewPanelState` type export; `review` is non-nullable so `state.review.confidence` requires no optional chaining
 - [x] T071 [US4] Update `src/lib/components/organisms/AIReviewPanel.svelte` — depends on T070; add `import { AIReviewPanelSchema } from '$lib/schemas'`; initialize `let state = $state(AIReviewPanelSchema.parse({}))`; assign `state.review = sampleAIReview`; update template references from `sampleAIReview.X` to `state.review.X` with no optional chaining
 
-**Checkpoint**: US4 complete — 18 type schema files in `src/lib/schemas/types/`, all organism `z.custom<T[]>()` replaced, `AIReviewPanel` wired to schema state, SC-006 satisfied
+### DashboardMetricGrid Schema Migration & Wiring — after T044 (MarketMetricSchema) exists
+
+- [ ] T074 [P] [US4] Update `src/lib/schemas/dashboard-metric-grid.schema.ts` — depends on T044; replace `z.custom<MarketMetric[]>()` with `z.array(MarketMetricSchema)`; import `MarketMetricSchema` from `$lib/schemas/types`; update `DashboardMetricGridState` type export
+- [x] T072 [US4] Update `src/lib/components/organisms/DashboardMetricGrid.svelte` — depends on T015; add `import { DashboardMetricGridSchema } from '$lib/schemas'`; initialize `let state = $state(DashboardMetricGridSchema.parse({}))`; assign `state.metrics = sampleMarketMetrics`; update template reference from `sampleMarketMetrics` to `state.metrics`
+
+### ResourceCostPanel Schema Migration & Wiring — after T050 (ResourceUsageSchema) exists
+
+- [ ] T075 [P] [US4] Update `src/lib/schemas/resource-cost-panel.schema.ts` — depends on T050; replace `z.custom<ResourceUsage>()` with `ResourceUsageSchema`; import `ResourceUsageSchema` from `$lib/schemas/types`; retain `.default({...})` on the field; update `ResourceCostPanelState` type export
+- [x] T073 [US4] Update `src/lib/components/organisms/ResourceCostPanel.svelte` — depends on T019; add `import { ResourceCostPanelSchema } from '$lib/schemas'`; initialize `let state = $state(ResourceCostPanelSchema.parse({}))`; assign `state.resourceUsage = sampleResourceUsage`; update all template references from `sampleResourceUsage.X` to `state.resourceUsage.X`
+
+**Checkpoint**: US4 complete — 18 type schema files in `src/lib/schemas/types/`, all organism `z.custom<T[]>()` replaced, `AIReviewPanel`, `DashboardMetricGrid`, and `ResourceCostPanel` wired to schema state, SC-006 satisfied
 
 ---
 
@@ -218,7 +237,7 @@
 - **Phase 3 (US1)**: Depends on Phase 2 (T003 complete) — T004–T007 are parallel; T008–T011 each depend on their respective schema (T008→T004, T009→T005, T010→T006, T011→T007); T012 depends on T004–T007
 - **Phase 4 (US2)**: Depends on Phase 2 (T003 complete) — T013–T024 are parallel; T025 depends on T024; T026 depends on T013–T024
 - **Phase 5 (US3)**: Depends on Phase 3 completing T004–T007 (schemas must exist to test) and Phase 4 completing T013–T024 for empty schema tests; T027–T031 parallel; T031a moves to Phase 8
-- **Phase 6 (US4)**: Depends on Phase 2 (T003) — T037 must complete before T053; T038–T052 are parallel leaf schemas; T054 depends on T049; T055 depends on T038+T039; T056 depends on T038–T055; T057–T061 (FR-012 migration) depend on T040–T043
+- **Phase 6 (US4)**: Depends on Phase 2 (T003) — T037 must complete before T053; T038–T052 are parallel leaf schemas; T054 depends on T049; T055 depends on T038+T039; T056 depends on T038–T055; T057–T061 (FR-012 migration) depend on T040–T043; T074 depends on T044 (MarketMetricSchema); T075 depends on T050 (ResourceUsageSchema); T072 depends on T015 (already done); T073 depends on T019 (already done)
 - **Phase 7 (US5)**: Depends on T048 (StrategySchema) from Phase 6 — T062–T064 are parallel; T065 depends on T062–T064; T066–T068 each depend on their respective schema; T069 depends on T062–T064
 - **Phase 8 (Polish)**: Depends on all prior phases complete; T031a is now gated here (all schema tests); T035–T036 verify existing CI jobs
 

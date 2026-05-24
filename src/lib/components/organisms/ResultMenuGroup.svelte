@@ -1,10 +1,11 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
 	import { page } from '$app/state';
-	import type { NavSection } from '$lib/types';
 	import NavItem from '../molecules/NavItem.svelte';
+	import { ResultMenuGroupSchema } from '$lib/schemas';
 
-	const resultSections: NavSection[] = [
+	let state = $state(ResultMenuGroupSchema.parse({}));
+	state.resultSections = [
 		{
 			id: 'backtest-engine',
 			path: '/backtest-engine',
@@ -34,7 +35,7 @@
 	<h3 class="mb-2 px-3 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
 		{m.nav_group_result()}
 	</h3>
-	{#each resultSections as section (section.id)}
+	{#each state.resultSections as section (section.id)}
 		<NavItem {section} isActive={page.url.pathname === section.path} href={section.path} />
 	{/each}
 </div>
