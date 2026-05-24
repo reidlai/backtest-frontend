@@ -1,6 +1,6 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
-	import RegimeCard from '../molecules/RegimeCard.svelte';
+	import RegimeCard from '$lib/components/molecules/RegimeCard.svelte';
 	import { sampleMarketRegimes } from '$lib/data/market';
 
 	const aiSummary =

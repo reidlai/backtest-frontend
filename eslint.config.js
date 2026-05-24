@@ -44,6 +44,10 @@ export default defineConfig(
 	{
 		// Override or add rule settings here, such as:
 		// 'svelte/button-has-type': 'error'
-		rules: {}
+		rules: {
+			// goto() in event handlers is the correct SvelteKit navigation pattern;
+			// this rule is intended for beforeNavigate/afterNavigate hook contexts only.
+			'svelte/no-navigation-without-resolve': 'off'
+		}
 	}
 );

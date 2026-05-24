@@ -1,26 +1,23 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Table from '$lib/components/ui/table';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as m from '$lib/paraglide/messages';
-	import { Chart, Spline, Tooltip, Axis } from 'layerchart';
-	import { scaleTime } from 'd3';
-	import MetricTile from '../molecules/MetricTile.svelte';
 	import {
 		defaultMetricTiles,
-		sampleBacktestResult,
 		sampleRegimeBreakdown,
 		samplePerfSummary
 	} from '$lib/data/performance';
+	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
-	import type { MetricTile as IMetricTile, ChartTab } from '$lib/types';
+
+	import PerformanceMetricGrid from '$lib/components/organisms/PerformanceMetricGrid.svelte';
+	import PerformancdeChartTabs from '$lib/components/organisms/PerformancdeChartTabs.svelte';
 
 	let tiles = $state([...defaultMetricTiles]);
-	let draggedIndex = $state<number | null>(null);
-	let activeChartTab = $state<ChartTab>('equity-curve');
+	// let activeChartTab = $state<ChartTab>('equity-curve');
 
 	// Edit Modal State
 	let modalOpen = $state(false);
@@ -30,34 +27,34 @@
 	const isValid = $derived(!isNaN(parseFloat(editValue)) && editValue.trim() !== '');
 
 	// Drag handlers
-	function handleDragStart(index: number) {
-		draggedIndex = index;
-	}
+	// function handleDragStart(index: number) {
+	// 	draggedIndex = index;
+	// }
 
-	function handleDragOver(e: DragEvent) {
-		e.preventDefault();
-	}
+	// function handleDragOver(e: DragEvent) {
+	// 	e.preventDefault();
+	// }
 
-	function handleDrop(targetOrder: number) {
-		if (draggedIndex === null) return;
-		const fromIndex = tiles.findIndex((t) => t.order === draggedIndex);
-		const toIndex = tiles.findIndex((t) => t.order === targetOrder);
+	// function handleDrop(targetOrder: number) {
+	// 	if (draggedIndex === null) return;
+	// 	const fromIndex = tiles.findIndex((t) => t.order === draggedIndex);
+	// 	const toIndex = tiles.findIndex((t) => t.order === targetOrder);
 
-		if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
-			const newTiles = [...tiles];
-			const [moved] = newTiles.splice(fromIndex, 1);
-			newTiles.splice(toIndex, 0, moved);
-			// Update orders
-			tiles = newTiles.map((t, i) => ({ ...t, order: i }));
-		}
-		draggedIndex = null;
-	}
+	// 	if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
+	// 		const newTiles = [...tiles];
+	// 		const [moved] = newTiles.splice(fromIndex, 1);
+	// 		newTiles.splice(toIndex, 0, moved);
+	// 		// Update orders
+	// 		tiles = newTiles.map((t, i) => ({ ...t, order: i }));
+	// 	}
+	// 	draggedIndex = null;
+	// }
 
-	function handleDoubleClick(tile: IMetricTile) {
-		editingTileId = tile.id;
-		editValue = tile.value;
-		modalOpen = true;
-	}
+	// function handleDoubleClick(tile: IMetricTile) {
+	// 	editingTileId = tile.id;
+	// 	editValue = tile.value;
+	// 	modalOpen = true;
+	// }
 
 	function handleApply() {
 		if (!isValid) return;
@@ -88,27 +85,13 @@
 <div class="space-y-8 p-6">
 	<div class="flex items-center justify-between">
 		<h1 class="text-3xl font-bold tracking-tight">{m.performance_result()}</h1>
-		<Button variant="outline" onclick={() => (appState.activeSection = 'backtest-engine')}>
-			Run New Backtest
-		</Button>
+		<Button variant="outline" onclick={() => goto('/backtest-engine')}>Run New Backtest</Button>
 	</div>
 
-	<!-- Metric Grid -->
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-		{#each tiles as tile (tile.id)}
-			<MetricTile
-				{tile}
-				draggable={true}
-				onDragStart={handleDragStart}
-				onDragOver={handleDragOver}
-				onDrop={handleDrop}
-				onDoubleClick={handleDoubleClick}
-			/>
-		{/each}
-	</div>
+	<PerformanceMetricGrid />
 
 	<!-- Charts -->
-	<div class="rounded-xl border bg-card p-6 shadow-sm">
+	<!-- <div class="rounded-xl border bg-card p-6 shadow-sm">
 		<Tabs.Root value={activeChartTab} onValueChange={(v) => (activeChartTab = v as ChartTab)}>
 			<div class="mb-6 flex items-center justify-between">
 				<Tabs.List>
@@ -146,7 +129,8 @@
 				{/if}
 			</div>
 		</Tabs.Root>
-	</div>
+		</div> -->
+	<PerformancdeChartTabs />
 
 	<div class="grid gap-8 lg:grid-cols-2">
 		<!-- Regime Breakdown -->

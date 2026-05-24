@@ -5,17 +5,9 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as m from '$lib/paraglide/messages';
 	import { toast } from 'svelte-sonner';
-	import { SvelteSet } from 'svelte/reactivity';
 	import { appState } from '$lib/state/app.svelte';
-	import type { BacktestMode, OrderType } from '$lib/types';
-
-	let mode = $state<BacktestMode>('Single Stock');
-	let initialCapital = $state('100000');
-	let startDate = $state('2020-01-01');
-	let endDate = $state('2024-12-31');
-	let universe = $state('SPY');
-	let timeframe = $state('Daily');
-	let direction = $state<'Long' | 'Short' | 'Both'>('Long');
+	import { backtestState } from '$lib/state/backtest.svelte';
+	import type { OrderType } from '$lib/types';
 
 	const orderTypes: OrderType[] = [
 		'Market',
@@ -27,20 +19,10 @@
 		'OCO',
 		'Short Sell'
 	];
-	let selectedOrderTypes = new SvelteSet<OrderType>(['Market']);
-
-	export function reset() {
-		mode = 'Single Stock';
-		initialCapital = '100000';
-		universe = 'SPY';
-		selectedOrderTypes.clear();
-		selectedOrderTypes.add('Market');
-		appState.backtestPrefillSymbol = '';
-	}
 
 	$effect(() => {
 		if (appState.backtestPrefillSymbol) {
-			universe = appState.backtestPrefillSymbol;
+			backtestState.universe = appState.backtestPrefillSymbol;
 		}
 	});
 
@@ -58,8 +40,8 @@
 			<h2 class="text-lg font-semibold">Universe & Capital</h2>
 			<div class="space-y-2">
 				<Label>Backtest Mode</Label>
-				<Select.Root type="single" bind:value={mode}>
-					<Select.Trigger>{mode}</Select.Trigger>
+				<Select.Root type="single" bind:value={backtestState.mode}>
+					<Select.Trigger>{backtestState.mode}</Select.Trigger>
 					<Select.Content>
 						<Select.Item value="Single Stock">Single Stock</Select.Item>
 						<Select.Item value="Watchlist">Watchlist</Select.Item>
@@ -70,11 +52,11 @@
 			</div>
 			<div class="space-y-2">
 				<Label>Universe / Symbol</Label>
-				<Input bind:value={universe} />
+				<Input bind:value={backtestState.universe} />
 			</div>
 			<div class="space-y-2">
 				<Label>Initial Capital ($)</Label>
-				<Input bind:value={initialCapital} />
+				<Input bind:value={backtestState.initialCapital} />
 			</div>
 		</div>
 
@@ -84,17 +66,17 @@
 			<div class="grid grid-cols-2 gap-4">
 				<div class="space-y-2">
 					<Label>Start Date</Label>
-					<Input type="date" bind:value={startDate} />
+					<Input type="date" bind:value={backtestState.startDate} />
 				</div>
 				<div class="space-y-2">
 					<Label>End Date</Label>
-					<Input type="date" bind:value={endDate} />
+					<Input type="date" bind:value={backtestState.endDate} />
 				</div>
 			</div>
 			<div class="space-y-2">
 				<Label>Timeframe</Label>
-				<Select.Root type="single" bind:value={timeframe}>
-					<Select.Trigger>{timeframe}</Select.Trigger>
+				<Select.Root type="single" bind:value={backtestState.timeframe}>
+					<Select.Trigger>{backtestState.timeframe}</Select.Trigger>
 					<Select.Content>
 						<Select.Item value="Minute">Minute</Select.Item>
 						<Select.Item value="Hourly">Hourly</Select.Item>
@@ -105,8 +87,8 @@
 			</div>
 			<div class="space-y-2">
 				<Label>Direction</Label>
-				<Select.Root type="single" bind:value={direction}>
-					<Select.Trigger>{direction}</Select.Trigger>
+				<Select.Root type="single" bind:value={backtestState.direction}>
+					<Select.Trigger>{backtestState.direction}</Select.Trigger>
 					<Select.Content>
 						<Select.Item value="Long">Long Only</Select.Item>
 						<Select.Item value="Short">Short Only</Select.Item>
@@ -125,10 +107,11 @@
 						<input
 							type="checkbox"
 							id={type}
-							checked={selectedOrderTypes.has(type)}
+							checked={backtestState.selectedOrderTypes.has(type)}
 							onchange={(e) => {
-								if ((e.target as HTMLInputElement).checked) selectedOrderTypes.add(type);
-								else selectedOrderTypes.delete(type);
+								if ((e.target as HTMLInputElement).checked)
+									backtestState.selectedOrderTypes.add(type);
+								else backtestState.selectedOrderTypes.delete(type);
 							}}
 							class="h-4 w-4 cursor-pointer rounded border border-input accent-primary"
 						/>

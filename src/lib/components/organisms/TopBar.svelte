@@ -4,14 +4,9 @@
 	import * as m from '$lib/paraglide/messages';
 	import { setLocale } from '$lib/paraglide/runtime';
 	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
-	import { getContext } from 'svelte';
-
-	interface OrganismRefs {
-		strategyBuilder?: { getStrategyConfig?: () => unknown };
-	}
-
-	const organismRefs = getContext<OrganismRefs>('organism-refs');
+	import { strategyState } from '$lib/state/strategy.svelte';
 
 	function toggleLanguage() {
 		const newLocale = appState.currentLocale === 'en' ? 'zh-TW' : 'en';
@@ -24,10 +19,7 @@
 	}
 
 	function handleExportJSON() {
-		// Placeholder implementation
-		const config = organismRefs?.strategyBuilder?.getStrategyConfig?.() || {
-			msg: 'Default Strategy'
-		};
+		const config = strategyState.getStrategyConfig();
 		const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
 		const url = URL.createObjectURL(blob);
 		const a = document.createElement('a');
@@ -39,7 +31,7 @@
 	}
 
 	function handleSendToAI() {
-		appState.activeSection = 'strategy-builder';
+		goto('/strategy-builder');
 	}
 </script>
 

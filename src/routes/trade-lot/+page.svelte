@@ -3,7 +3,7 @@
 	import * as Table from '$lib/components/ui/table';
 	import * as m from '$lib/paraglide/messages';
 	import { sampleTrades } from '$lib/data/trades';
-	import { appState } from '$lib/state/app.svelte';
+	import { goto } from '$app/navigation';
 
 	let trades = $state([...sampleTrades]);
 </script>
@@ -11,9 +11,7 @@
 <div class="space-y-6 p-6">
 	<div class="flex items-center justify-between">
 		<h1 class="text-3xl font-bold tracking-tight">{m.trade_log()}</h1>
-		<Button variant="outline" onclick={() => (appState.activeSection = 'backtest-engine')}>
-			New Backtest
-		</Button>
+		<Button variant="outline" onclick={() => goto('/backtest-engine')}>New Backtest</Button>
 	</div>
 
 	<div class="overflow-hidden rounded-xl border bg-card shadow-sm">
@@ -73,9 +71,7 @@
 		{:else}
 			<div class="m-4 space-y-4 rounded-lg border-2 border-dashed bg-muted/20 p-12 text-center">
 				<p class="font-medium text-muted-foreground">No trade records yet.</p>
-				<Button size="sm" onclick={() => (appState.activeSection = 'backtest-engine')}>
-					Go to Backtest Engine
-				</Button>
+				<Button size="sm" onclick={() => goto('/backtest-engine')}>Go to Backtest Engine</Button>
 			</div>
 		{/if}
 	</div>

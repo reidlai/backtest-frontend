@@ -27,6 +27,8 @@ export type NavGroup = 'main' | 'result';
 
 export interface NavSection {
 	id: SectionId;
+	/** Canonical route path, e.g. '/research-workbench' */
+	path: string;
 	/** i18n message key — resolved via Paraglide m.* at render time */
 	labelKey: string;
 	/** Lucide icon component name */
@@ -319,7 +321,7 @@ export interface RegimeCardProps {
 export interface NavItemProps {
 	section: NavSection;
 	isActive: boolean;
-	onClick: () => void;
+	href: string;
 }
 
 /** Props for FunctionGatewayCard molecule */
