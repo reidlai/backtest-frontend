@@ -3,15 +3,15 @@ import type { BacktestMode, OrderType } from '$lib/types';
 
 const defaultOrderTypes: OrderType[] = ['Market'];
 
-const backtestState = {
-	mode: $state<BacktestMode>('Single Stock'),
-	initialCapital: $state<string>('100000'),
-	startDate: $state<string>('2020-01-01'),
-	endDate: $state<string>('2024-12-31'),
-	universe: $state<string>('SPY'),
-	timeframe: $state<string>('Daily'),
-	direction: $state<'Long' | 'Short' | 'Both'>('Long'),
-	selectedOrderTypes: new SvelteSet<OrderType>(defaultOrderTypes),
+class BacktestState {
+	mode = $state<BacktestMode>('Single Stock');
+	initialCapital = $state<string>('100000');
+	startDate = $state<string>('2020-01-01');
+	endDate = $state<string>('2024-12-31');
+	universe = $state<string>('SPY');
+	timeframe = $state<string>('Daily');
+	direction = $state<'Long' | 'Short' | 'Both'>('Long');
+	selectedOrderTypes = new SvelteSet<OrderType>(defaultOrderTypes);
 
 	reset() {
 		this.mode = 'Single Stock';
@@ -24,6 +24,6 @@ const backtestState = {
 		this.selectedOrderTypes.clear();
 		this.selectedOrderTypes.add('Market');
 	}
-};
+}
 
-export { backtestState };
+export const backtestState = new BacktestState();
