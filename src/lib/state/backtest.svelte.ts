@@ -1,28 +1,32 @@
 import { SvelteSet } from 'svelte/reactivity';
+import { BacktestStateSchema } from '$lib/schemas/state';
 import type { BacktestMode, OrderType } from '$lib/types';
 
-const defaultOrderTypes: OrderType[] = ['Market'];
+const _defaults = BacktestStateSchema.parse({});
 
 class BacktestState {
-	mode = $state<BacktestMode>('Single Stock');
-	initialCapital = $state<string>('100000');
-	startDate = $state<string>('2020-01-01');
-	endDate = $state<string>('2024-12-31');
-	universe = $state<string>('SPY');
-	timeframe = $state<string>('Daily');
-	direction = $state<'Long' | 'Short' | 'Both'>('Long');
-	selectedOrderTypes = new SvelteSet<OrderType>(defaultOrderTypes);
+	mode = $state<BacktestMode>(_defaults.mode);
+	initialCapital = $state<string>(_defaults.initialCapital);
+	startDate = $state<string>(_defaults.startDate);
+	endDate = $state<string>(_defaults.endDate);
+	universe = $state<string>(_defaults.universe);
+	timeframe = $state<string>(_defaults.timeframe);
+	direction = $state<'Long' | 'Short' | 'Both'>(_defaults.direction);
+	selectedOrderTypes = new SvelteSet<OrderType>(_defaults.selectedOrderTypes as OrderType[]);
 
 	reset() {
-		this.mode = 'Single Stock';
-		this.initialCapital = '100000';
-		this.startDate = '2020-01-01';
-		this.endDate = '2024-12-31';
-		this.universe = 'SPY';
-		this.timeframe = 'Daily';
-		this.direction = 'Long';
+		const d = BacktestStateSchema.parse({});
+		this.mode = d.mode;
+		this.initialCapital = d.initialCapital;
+		this.startDate = d.startDate;
+		this.endDate = d.endDate;
+		this.universe = d.universe;
+		this.timeframe = d.timeframe;
+		this.direction = d.direction;
 		this.selectedOrderTypes.clear();
-		this.selectedOrderTypes.add('Market');
+		for (const t of d.selectedOrderTypes) {
+			this.selectedOrderTypes.add(t as OrderType);
+		}
 	}
 }
 

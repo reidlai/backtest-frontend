@@ -1,13 +1,11 @@
-import type { Locale } from '../types';
+import { AppStateSchema } from '$lib/schemas/state';
+
+const _defaults = AppStateSchema.parse({});
 
 class AppState {
-	currentLocale = $state<Locale>('en');
-	backtestPrefillSymbol = $state<string>('');
-	simulatedMetrics = $state({
-		totalReturn: '42.8',
-		maxDrawdown: '-18.2',
-		winRate: '58.3'
-	});
+	currentLocale = $state(_defaults.currentLocale);
+	backtestPrefillSymbol = $state(_defaults.backtestPrefillSymbol);
+	simulatedMetrics = $state(_defaults.simulatedMetrics);
 }
 
 export const appState = new AppState();

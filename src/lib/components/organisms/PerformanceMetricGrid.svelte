@@ -2,20 +2,13 @@
 	import MetricTile from '../molecules/MetricTile.svelte';
 	import { defaultMetricTiles } from '$lib/data/performance';
 	import type { MetricTile as IMetricTile } from '$lib/types';
+	import { PerformanceMetricGridSchema } from '$lib/schemas';
 
-	let tiles = $state([...defaultMetricTiles]);
-	let draggedIndex = $state<number | null>(null);
+	let state = $state(PerformanceMetricGridSchema.parse({}));
+	state.tiles = [...defaultMetricTiles];
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	let editingTileId = $state<string | null>(null);
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	let editValue = $state('');
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	let modalOpen = $state(false);
-
-	// Drag handlers
 	function handleDragStart(index: number) {
-		draggedIndex = index;
+		state.draggedIndex = index;
 	}
 
 	function handleDragOver(e: DragEvent) {
@@ -23,29 +16,28 @@
 	}
 
 	function handleDrop(targetOrder: number) {
-		if (draggedIndex === null) return;
-		const fromIndex = tiles.findIndex((t) => t.order === draggedIndex);
-		const toIndex = tiles.findIndex((t) => t.order === targetOrder);
+		if (state.draggedIndex === null) return;
+		const fromIndex = state.tiles.findIndex((t) => t.order === state.draggedIndex);
+		const toIndex = state.tiles.findIndex((t) => t.order === targetOrder);
 
 		if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
-			const newTiles = [...tiles];
+			const newTiles = [...state.tiles];
 			const [moved] = newTiles.splice(fromIndex, 1);
 			newTiles.splice(toIndex, 0, moved);
-			// Update orders
-			tiles = newTiles.map((t, i) => ({ ...t, order: i }));
+			state.tiles = newTiles.map((t, i) => ({ ...t, order: i }));
 		}
-		draggedIndex = null;
+		state.draggedIndex = null;
 	}
 
 	function handleDoubleClick(tile: IMetricTile) {
-		editingTileId = tile.id;
-		editValue = tile.value;
-		modalOpen = true;
+		state.editingTileId = tile.id;
+		state.editValue = tile.value;
+		state.modalOpen = true;
 	}
 </script>
 
 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-	{#each tiles as tile (tile.id)}
+	{#each state.tiles as tile (tile.id)}
 		<MetricTile
 			{tile}
 			draggable={true}

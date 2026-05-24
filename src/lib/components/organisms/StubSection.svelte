@@ -1,5 +1,6 @@
 <script lang="ts">
-	let { title = 'Section' } = $props();
+	import type { StubSectionProps } from '$lib/schemas';
+	let { title = 'Section' }: StubSectionProps = $props();
 </script>
 
 <div class="p-6">

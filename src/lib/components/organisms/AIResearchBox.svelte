@@ -5,17 +5,17 @@
 	import { cn } from '$lib/utils';
 	import { goto } from '$app/navigation';
 	import { strategyState } from '$lib/state/strategy.svelte';
+	import { AIResearchBoxSchema } from '$lib/schemas';
 
-	let aiText = $state('');
-	let validationError = $state(false);
+	let state = $state(AIResearchBoxSchema.parse({}));
 
 	function handleConvertToStrategy() {
-		if (!aiText.trim()) {
-			validationError = true;
+		if (!state.aiText.trim()) {
+			state.validationError = true;
 			return;
 		}
-		validationError = false;
-		strategyState.inputText = aiText.trim();
+		state.validationError = false;
+		strategyState.inputText = state.aiText.trim();
 		goto('/strategy-builder');
 	}
 </script>
@@ -25,13 +25,13 @@
 		<h2 class="mb-4 text-xl font-semibold">AI Research Box</h2>
 		<Textarea
 			placeholder={m.ai_research_box_placeholder()}
-			bind:value={aiText}
+			bind:value={state.aiText}
 			class={cn(
 				'min-h-[200px] resize-none',
-				validationError && 'border-destructive ring-destructive'
+				state.validationError && 'border-destructive ring-destructive'
 			)}
 		/>
-		{#if validationError}
+		{#if state.validationError}
 			<p class="mt-2 text-sm text-destructive">{m.ai_research_box_error()}</p>
 		{/if}
 		<Button class="mt-4 w-full" onclick={handleConvertToStrategy}>

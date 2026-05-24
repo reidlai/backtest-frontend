@@ -1,0 +1,8 @@
+import { z } from 'zod';
+
+export const TimeSeriesPointSchema = z.object({
+	date: z.string(),
+	value: z.number()
+});
+
+export type TimeSeriesPoint = z.infer<typeof TimeSeriesPointSchema>;
