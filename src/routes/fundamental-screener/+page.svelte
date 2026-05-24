@@ -4,8 +4,9 @@
 	import * as Table from '$lib/components/ui/table';
 	import * as Select from '$lib/components/ui/select';
 	import * as m from '$lib/paraglide/messages';
-	import ScreenerResultRow from '../molecules/ScreenerResultRow.svelte';
+	import ScreenerResultRow from '$lib/components/molecules/ScreenerResultRow.svelte';
 	import { sampleScreenerResults } from '$lib/data/market';
+	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
 
 	let peMax = $state('30');
@@ -14,7 +15,7 @@
 
 	function handleBacktest(symbol: string) {
 		appState.backtestPrefillSymbol = symbol;
-		appState.activeSection = 'backtest-engine';
+		goto('/backtest-engine');
 	}
 </script>
 

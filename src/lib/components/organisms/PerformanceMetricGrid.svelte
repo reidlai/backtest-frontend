@@ -1,15 +1,13 @@
 <script lang="ts">
 	import MetricTile from '../molecules/MetricTile.svelte';
-	import {
-		defaultMetricTiles,
-	} from '$lib/data/performance';
-  import type { MetricTile as IMetricTile } from '$lib/types';
-	
-  let tiles = $state([...defaultMetricTiles]);
-  let draggedIndex = $state<number | null>(null);
+	import { defaultMetricTiles } from '$lib/data/performance';
+	import type { MetricTile as IMetricTile } from '$lib/types';
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let editingTileId = $state<string | null>(null);
+	let tiles = $state([...defaultMetricTiles]);
+	let draggedIndex = $state<number | null>(null);
+
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	let editingTileId = $state<string | null>(null);
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	let editValue = $state('');
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,7 +22,7 @@
 		e.preventDefault();
 	}
 
-  function handleDrop(targetOrder: number) {
+	function handleDrop(targetOrder: number) {
 		if (draggedIndex === null) return;
 		const fromIndex = tiles.findIndex((t) => t.order === draggedIndex);
 		const toIndex = tiles.findIndex((t) => t.order === targetOrder);
@@ -44,17 +42,17 @@
 		editValue = tile.value;
 		modalOpen = true;
 	}
-
 </script>
+
 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-  {#each tiles as tile (tile.id)}
-    <MetricTile
-      {tile}
-      draggable={true}
-      onDragStart={handleDragStart}
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-      onDoubleClick={handleDoubleClick}
-    />
-  {/each}
+	{#each tiles as tile (tile.id)}
+		<MetricTile
+			{tile}
+			draggable={true}
+			onDragStart={handleDragStart}
+			onDragOver={handleDragOver}
+			onDrop={handleDrop}
+			onDoubleClick={handleDoubleClick}
+		/>
+	{/each}
 </div>

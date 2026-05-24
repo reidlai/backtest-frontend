@@ -1,21 +1,17 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Table from '$lib/components/ui/table';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as m from '$lib/paraglide/messages';
-	import { Chart, Spline, Tooltip, Axis } from 'layerchart';
-	import { scaleTime } from 'd3';
 	import {
 		defaultMetricTiles,
-		sampleBacktestResult,
 		sampleRegimeBreakdown,
 		samplePerfSummary
 	} from '$lib/data/performance';
+	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
-	import type { ChartTab } from '$lib/types';
 
 	import PerformanceMetricGrid from '$lib/components/organisms/PerformanceMetricGrid.svelte';
 	import PerformancdeChartTabs from '$lib/components/organisms/PerformancdeChartTabs.svelte';
@@ -89,12 +85,10 @@
 <div class="space-y-8 p-6">
 	<div class="flex items-center justify-between">
 		<h1 class="text-3xl font-bold tracking-tight">{m.performance_result()}</h1>
-		<Button variant="outline" onclick={() => (appState.activeSection = 'backtest-engine')}>
-			Run New Backtest
-		</Button>
+		<Button variant="outline" onclick={() => goto('/backtest-engine')}>Run New Backtest</Button>
 	</div>
 
-  <PerformanceMetricGrid />
+	<PerformanceMetricGrid />
 
 	<!-- Charts -->
 	<!-- <div class="rounded-xl border bg-card p-6 shadow-sm">
@@ -136,7 +130,7 @@
 			</div>
 		</Tabs.Root>
 		</div> -->
-  <PerformancdeChartTabs />
+	<PerformancdeChartTabs />
 
 	<div class="grid gap-8 lg:grid-cols-2">
 		<!-- Regime Breakdown -->

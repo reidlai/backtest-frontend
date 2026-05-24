@@ -6,7 +6,7 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import NavigationSidebar from '$lib/components/organisms/NavigationSidebar.svelte';
 	import AIReviewSidebar from '$lib/components/organisms/AIReviewSidebar.svelte';
-	import './layout.css';
+	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 
 	let { children } = $props();
@@ -21,7 +21,7 @@
 	<NavigationSidebar />
 
 	<!-- Main Content (flexible) -->
-	<div class="relative flex flex-1 flex-col overflow-hidden">
+	<div class="relative flex flex-1 flex-col overflow-y-auto">
 		{@render children()}
 	</div>
 
@@ -32,7 +32,7 @@
 <Toaster position="top-right" />
 
 <!-- SEO Locale links -->
-<div style="display:none">
+<div style="display:none" aria-hidden="true">
 	{#each locales as locale (locale)}
 		<a href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}>{locale}</a>
 	{/each}

@@ -71,7 +71,9 @@
       "Bash(tofu init *)",
       "Bash(tofu validate *)",
       "Bash(tofu fmt *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(npm run *)",
+      "Bash(npx prettier *)"
     ]
   }
 }

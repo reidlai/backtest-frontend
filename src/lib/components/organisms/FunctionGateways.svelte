@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { appState } from '$lib/state/app.svelte';
-	import type { FunctionGatewayCard as IFunctionGatewayCard, SectionId } from '$lib/types';
+	import { goto } from '$app/navigation';
+	import type { FunctionGatewayCard as IFunctionGatewayCard } from '$lib/types';
 	import FunctionGatewayCard from '../molecules/FunctionGatewayCard.svelte';
+
 	const gatewayCards: IFunctionGatewayCard[] = [
 		{
 			id: 'strategy-builder',
@@ -39,15 +40,11 @@
 			descriptionKey: 'gateway_card_sentiment_desc',
 			icon: 'message-square'
 		}
-	];	
-
-	function handleQuickAction(id: SectionId) {
-		appState.activeSection = id;
-	}
-
+	];
 </script>
+
 <div class="grid gap-4 sm:grid-cols-2">
-  {#each gatewayCards as card (card.id)}
-    <FunctionGatewayCard {card} onClick={() => handleQuickAction(card.id)} />
-  {/each}
+	{#each gatewayCards as card (card.id)}
+		<FunctionGatewayCard {card} onClick={() => goto('/' + card.id)} />
+	{/each}
 </div>

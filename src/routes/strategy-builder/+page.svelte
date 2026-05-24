@@ -3,36 +3,25 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as Table from '$lib/components/ui/table';
 	import * as m from '$lib/paraglide/messages';
-	import { appState } from '$lib/state/app.svelte';
+	import { goto } from '$app/navigation';
+	import { strategyState } from '$lib/state/strategy.svelte';
 	import { sampleStrategy } from '$lib/data/strategy';
-	import type { Strategy } from '$lib/types';
-
-	let parsedStrategy = $state<Strategy | null>(null);
-
-	export function reset() {
-		appState.strategyInputText = '';
-		parsedStrategy = null;
-	}
-
-	export function getStrategyConfig() {
-		return parsedStrategy || sampleStrategy;
-	}
 
 	function handleParse() {
 		// Mock parse
-		parsedStrategy = sampleStrategy;
+		strategyState.parsedStrategy = sampleStrategy;
 	}
 
 	function handleSendToBacktest() {
-		appState.activeSection = 'backtest-engine';
+		goto('/backtest-engine');
 	}
 
 	function handleOpenFundamental() {
-		appState.activeSection = 'fundamental-screener';
+		goto('/fundamental-screener');
 	}
 
 	function handleOpenTechnical() {
-		appState.activeSection = 'technical-screener';
+		goto('/technical-screener');
 	}
 </script>
 
@@ -54,7 +43,7 @@
 				<h2 class="mb-4 text-xl font-semibold">Strategy Description</h2>
 				<Textarea
 					placeholder="Describe your strategy..."
-					bind:value={appState.strategyInputText}
+					bind:value={strategyState.inputText}
 					class="min-h-[300px] resize-none"
 				/>
 				<Button class="mt-4 w-full" onclick={handleParse}>Parse Strategy</Button>
@@ -63,7 +52,7 @@
 
 		<!-- Output Panel -->
 		<div class="space-y-4">
-			{#if parsedStrategy}
+			{#if strategyState.parsedStrategy}
 				<div
 					class="animate-in rounded-xl border bg-card p-6 shadow-sm duration-300 fade-in slide-in-from-right-4"
 				>
@@ -72,27 +61,27 @@
 						<Table.Body>
 							<Table.Row>
 								<Table.Head class="w-[150px]">Market</Table.Head>
-								<Table.Cell>{parsedStrategy.market}</Table.Cell>
+								<Table.Cell>{strategyState.parsedStrategy.market}</Table.Cell>
 							</Table.Row>
 							<Table.Row>
 								<Table.Head>Fundamental</Table.Head>
-								<Table.Cell>{parsedStrategy.fundamentalFilter}</Table.Cell>
+								<Table.Cell>{strategyState.parsedStrategy.fundamentalFilter}</Table.Cell>
 							</Table.Row>
 							<Table.Row>
 								<Table.Head>Technical</Table.Head>
-								<Table.Cell>{parsedStrategy.technicalFilter}</Table.Cell>
+								<Table.Cell>{strategyState.parsedStrategy.technicalFilter}</Table.Cell>
 							</Table.Row>
 							<Table.Row>
 								<Table.Head>Period</Table.Head>
-								<Table.Cell>{parsedStrategy.backtestPeriod}</Table.Cell>
+								<Table.Cell>{strategyState.parsedStrategy.backtestPeriod}</Table.Cell>
 							</Table.Row>
 							<Table.Row>
 								<Table.Head>Position Size</Table.Head>
-								<Table.Cell>{parsedStrategy.positionSize}</Table.Cell>
+								<Table.Cell>{strategyState.parsedStrategy.positionSize}</Table.Cell>
 							</Table.Row>
 							<Table.Row>
 								<Table.Head>Risk Rule</Table.Head>
-								<Table.Cell>{parsedStrategy.riskRule}</Table.Cell>
+								<Table.Cell>{strategyState.parsedStrategy.riskRule}</Table.Cell>
 							</Table.Row>
 						</Table.Body>
 					</Table.Root>

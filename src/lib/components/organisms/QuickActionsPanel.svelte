@@ -1,26 +1,20 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { toast } from 'svelte-sonner';
-	import { getContext } from 'svelte';
-	import { appState } from '$lib/state/app.svelte';
+	import { goto } from '$app/navigation';
+	import { strategyState } from '$lib/state/strategy.svelte';
+	import { backtestState } from '$lib/state/backtest.svelte';
 	import { sampleTrades, tradesToCsv } from '$lib/data/trades';
 
-	interface OrganismRefs {
-		strategyBuilder?: { reset?: () => void };
-		backtest?: { reset?: () => void };
-	}
-
-	const organismRefs = getContext<OrganismRefs>('organism-refs');
-
 	function handleNewStrategy() {
-		organismRefs?.strategyBuilder?.reset?.();
-		appState.activeSection = 'strategy-builder';
+		strategyState.reset();
+		goto('/strategy-builder');
 		toast.success('Strategy Builder reset');
 	}
 
 	function handleNewBacktest() {
-		organismRefs?.backtest?.reset?.();
-		appState.activeSection = 'backtest-engine';
+		backtestState.reset();
+		goto('/backtest-engine');
 		toast.success('Backtest parameters reset');
 	}
 
@@ -58,7 +52,7 @@
 			variant="outline"
 			size="sm"
 			class="h-7 text-[9px] font-bold uppercase"
-			onclick={() => (appState.activeSection = 'performance-result')}>Report</Button
+			onclick={() => goto('/performance-result')}>Report</Button
 		>
 		<Button
 			variant="outline"

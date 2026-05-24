@@ -15,6 +15,7 @@
 
 	const dashboardSection: NavSection = {
 		id: 'dashboard',
+		path: '/research-workbench',
 		labelKey: 'dashboard',
 		icon: 'layout-dashboard',
 		group: 'main'
@@ -22,12 +23,19 @@
 
 	const backtestSection: NavSection = {
 		id: 'backtest-engine',
+		path: '/backtest-engine',
 		labelKey: 'backtest_engine',
 		icon: 'play',
 		group: 'main'
 	};
 </script>
 
-<Story name="Active" args={{ section: dashboardSection, isActive: true, onClick: () => {} }} />
+<Story
+	name="Active"
+	args={{ section: dashboardSection, isActive: true, href: '/research-workbench' }}
+/>
 
-<Story name="Inactive" args={{ section: backtestSection, isActive: false, onClick: () => {} }} />
+<Story
+	name="Inactive"
+	args={{ section: backtestSection, isActive: false, href: '/backtest-engine' }}
+/>

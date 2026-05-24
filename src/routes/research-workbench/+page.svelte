@@ -2,7 +2,7 @@
 	import * as m from '$lib/paraglide/messages';
 	import DashboardMetricGrid from '$lib/components/organisms/DashboardMetricGrid.svelte';
 	import AIResearchBox from '$lib/components/organisms/AIResearchBox.svelte';
-  import FunctionGateways from '$lib/components/organisms/FunctionGateways.svelte';
+	import FunctionGateways from '$lib/components/organisms/FunctionGateways.svelte';
 </script>
 
 <div class="space-y-8 p-6">

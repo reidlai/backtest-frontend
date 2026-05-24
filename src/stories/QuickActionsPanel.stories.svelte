@@ -1,11 +1,9 @@
 <script module lang="ts">
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import QuickActionsPanel from '$lib/components/organisms/QuickActionsPanel.svelte';
-
-	// Note: QuickActionsPanel calls getContext('organism-refs') internally.
-	// In Storybook, this context is not set, so getContext returns undefined.
-	// All handlers use optional chaining (?.), so buttons render safely and
-	// context-dependent actions (New Strategy, New Backtest) gracefully no-op.
+	import * as nav from '$app/navigation';
+	// Navigation is suppressed in Storybook — goto calls are no-ops
+	(nav as unknown as Record<string, unknown>).goto = () => {};
 
 	const { Story } = defineMeta({
 		title: 'Organisms/QuickActionsPanel',
