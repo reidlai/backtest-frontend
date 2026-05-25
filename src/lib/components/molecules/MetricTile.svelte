@@ -1,7 +1,19 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as Card from '$lib/components/ui/card';
-	import type { MetricTileProps, MetricTile } from '$lib/types';
+	import { MetricTileSchema, MarketMetricSchema } from '$lib/schemas';
 	import { cn } from '$lib/utils';
+
+	type MetricTile = z.infer<typeof MetricTileSchema>;
+	type MarketMetric = z.infer<typeof MarketMetricSchema>;
+	type Props = {
+		tile: MetricTile | MarketMetric;
+		draggable?: boolean;
+		onDragStart?: (index: number) => void;
+		onDragOver?: (e: DragEvent) => void;
+		onDrop?: (index: number) => void;
+		onDoubleClick?: (tile: MetricTile) => void;
+	};
 
 	let {
 		tile,
@@ -10,7 +22,7 @@
 		onDragOver,
 		onDrop,
 		onDoubleClick
-	}: MetricTileProps = $props();
+	}: Props = $props();
 
 	const isMetricTile = (t: typeof tile): t is MetricTile => 'order' in t;
 

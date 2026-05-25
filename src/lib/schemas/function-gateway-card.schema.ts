@@ -8,4 +8,3 @@ export const FunctionGatewayCardSchema = z.object({
 	icon: z.string()
 });
 
-export type FunctionGatewayCard = z.infer<typeof FunctionGatewayCardSchema>;

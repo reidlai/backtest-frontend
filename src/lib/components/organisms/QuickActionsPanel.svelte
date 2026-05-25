@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { strategyState } from '$lib/state/strategy.svelte';
 	import { backtestState } from '$lib/state/backtest.svelte';
-	import { sampleTrades, tradesToCsv } from '$lib/data/trades';
+	import { sampleTrades, tradesToCsv } from '$lib/shared-mockdata/trades';
 
 	function handleNewStrategy() {
 		strategyState.reset();

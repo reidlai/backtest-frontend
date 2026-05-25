@@ -1,4 +1,7 @@
-import type { SentimentEvent } from '../types';
+import { z } from 'zod';
+import { SentimentEventSchema } from '$lib/schemas';
+
+type SentimentEvent = z.infer<typeof SentimentEventSchema>;
 
 export const sampleSentimentEvents: SentimentEvent[] = [
 	{

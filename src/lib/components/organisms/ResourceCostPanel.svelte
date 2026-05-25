@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { Progress } from '$lib/components/ui/progress';
-	import { sampleResourceUsage } from '$lib/data/strategy';
+	import { sampleResourceUsage } from '$lib/shared-mockdata/strategy';
 	import { ResourceCostPanelSchema } from '$lib/schemas';
 
-	let state = $state(ResourceCostPanelSchema.parse({}));
+	let state = $state<z.infer<typeof ResourceCostPanelSchema>>(ResourceCostPanelSchema.parse({}));
 	state.resourceUsage = sampleResourceUsage;
 </script>
 

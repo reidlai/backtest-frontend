@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { goto } from '$app/navigation';
 	import FunctionGatewayCard from '../molecules/FunctionGatewayCard.svelte';
 	import { FunctionGatewaysSchema } from '$lib/schemas';
 
-	let state = $state(FunctionGatewaysSchema.parse({}));
+	let state = $state<z.infer<typeof FunctionGatewaysSchema>>(FunctionGatewaysSchema.parse({}));
 	state.gatewayCards = [
 		{
 			id: 'strategy-builder',

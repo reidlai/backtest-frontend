@@ -1,10 +1,11 @@
 <script lang="ts">
+  import { z } from 'zod';
 	import * as m from '$lib/paraglide/messages';
 	import { page } from '$app/state';
 	import NavItem from '../molecules/NavItem.svelte';
 	import { ResultMenuGroupSchema } from '$lib/schemas';
 
-	let state = $state(ResultMenuGroupSchema.parse({}));
+	let state = $state<z.infer<typeof ResultMenuGroupSchema>>(ResultMenuGroupSchema.parse({}));
 	state.resultSections = [
 		{
 			id: 'backtest-engine',

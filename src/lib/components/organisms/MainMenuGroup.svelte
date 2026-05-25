@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as m from '$lib/paraglide/messages';
 	import { page } from '$app/state';
 	import NavItem from '../molecules/NavItem.svelte';
 	import { MainMenuGroupSchema } from '$lib/schemas';
 
-	let state = $state(MainMenuGroupSchema.parse({}));
+	let state = $state<z.infer<typeof MainMenuGroupSchema>>(MainMenuGroupSchema.parse({}));
 	state.mainSections = [
 		{
 			id: 'dashboard',

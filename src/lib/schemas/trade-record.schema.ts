@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
+export const TradeDirectionSchema = z.enum(['Long', 'Short']);
+
 export const TradeRecordSchema = z.object({
 	tradeId: z.string(),
 	symbol: z.string(),
-	direction: z.enum(['Long', 'Short']),
+	direction: TradeDirectionSchema,
 	entryDate: z.string(),
 	entryPrice: z.number(),
 	exitDate: z.string(),
@@ -16,5 +18,3 @@ export const TradeRecordSchema = z.object({
 	holdingDays: z.number(),
 	exitReason: z.string()
 });
-
-export type TradeRecord = z.infer<typeof TradeRecordSchema>;

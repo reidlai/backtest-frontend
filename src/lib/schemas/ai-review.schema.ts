@@ -1,10 +1,10 @@
 import { z } from 'zod';
 import { RiskFlagSchema } from './risk-flag.schema';
 
+export const ConfidenceLevelSchema = z.enum(['high', 'medium', 'low']);
+
 export const AIReviewSchema = z.object({
 	grade: z.string(),
-	confidence: z.enum(['high', 'medium', 'low']),
+	confidence: ConfidenceLevelSchema,
 	riskFlags: z.array(RiskFlagSchema)
 });
-
-export type AIReview = z.infer<typeof AIReviewSchema>;

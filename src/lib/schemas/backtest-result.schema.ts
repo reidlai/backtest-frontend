@@ -17,4 +17,3 @@ export const BacktestResultSchema = z.object({
 	benchmarkSeries: z.array(TimeSeriesPointSchema)
 });
 
-export type BacktestResult = z.infer<typeof BacktestResultSchema>;

@@ -13,12 +13,12 @@ export const SectionIdSchema = z.enum([
 	'settings-billing'
 ]);
 
+export const NavGroupSchema = z.enum(['main', 'result']);
+
 export const NavSectionSchema = z.object({
 	id: SectionIdSchema,
 	path: z.string(),
 	labelKey: z.string(),
 	icon: z.string(),
-	group: z.enum(['main', 'result'])
+	group: NavGroupSchema
 });
-
-export type NavSection = z.infer<typeof NavSectionSchema>;

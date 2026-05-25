@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { Badge } from '$lib/components/ui/badge';
-	import { sampleAIReview } from '$lib/data/strategy';
+	import { sampleAIReview } from '$lib/shared-mockdata/strategy';
 	import { AIReviewPanelSchema } from '$lib/schemas';
 	import RiskFlagItem from '../molecules/RiskFlagItem.svelte';
 
-	let state = $state(AIReviewPanelSchema.parse({}));
+	let state = $state<z.infer<typeof AIReviewPanelSchema>>(AIReviewPanelSchema.parse({}));
 	state.review = sampleAIReview;
 </script>
 

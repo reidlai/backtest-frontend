@@ -8,4 +8,3 @@ export const MetricTileSchema = z.object({
 	order: z.number()
 });
 
-export type MetricTile = z.infer<typeof MetricTileSchema>;

@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import MetricTile from '../molecules/MetricTile.svelte';
-	import { sampleMarketMetrics } from '$lib/data/market';
+	import { sampleMarketMetrics } from '$lib/shared-mockdata/market';
 	import { DashboardMetricGridSchema } from '$lib/schemas';
 
-	let state = $state(DashboardMetricGridSchema.parse({}));
+	let state = $state<z.infer<typeof DashboardMetricGridSchema>>(DashboardMetricGridSchema.parse({}));
 	state.metrics = sampleMarketMetrics;
 </script>
 

@@ -5,7 +5,7 @@
 	import * as m from '$lib/paraglide/messages';
 	import { goto } from '$app/navigation';
 	import { strategyState } from '$lib/state/strategy.svelte';
-	import { sampleStrategy } from '$lib/data/strategy';
+	import { sampleStrategy } from '$lib/shared-mockdata/strategy';
 
 	function handleParse() {
 		// Mock parse

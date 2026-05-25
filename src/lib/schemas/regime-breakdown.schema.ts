@@ -8,4 +8,3 @@ export const RegimeBreakdownSchema = z.object({
 	tradeCount: z.number()
 });
 
-export type RegimeBreakdown = z.infer<typeof RegimeBreakdownSchema>;

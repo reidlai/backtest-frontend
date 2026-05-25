@@ -1,6 +1,8 @@
-import { sampleStrategy } from '$lib/data/strategy';
-import { StrategyStateSchema } from '$lib/schemas/state';
-import type { Strategy } from '$lib/types';
+import { z } from 'zod';
+import { sampleStrategy } from '$lib/shared-mockdata/strategy';
+import { StrategyStateSchema, StrategySchema } from '$lib/schemas';
+
+type Strategy = z.infer<typeof StrategySchema>;
 
 const _defaults = StrategyStateSchema.parse({});
 

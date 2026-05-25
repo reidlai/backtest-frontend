@@ -7,4 +7,3 @@ export const ChatMessageSchema = z.object({
 	timestamp: z.string()
 });
 
-export type ChatMessage = z.infer<typeof ChatMessageSchema>;

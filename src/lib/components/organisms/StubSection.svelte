@@ -1,6 +1,8 @@
 <script lang="ts">
-	import type { StubSectionProps } from '$lib/schemas';
-	let { title = 'Section' }: StubSectionProps = $props();
+	import { z } from 'zod';
+	import { StubSectionSchema } from '$lib/schemas';
+	type Props = z.infer<typeof StubSectionSchema>;
+	let { title = 'Section' }: Props = $props();
 </script>
 
 <div class="p-6">

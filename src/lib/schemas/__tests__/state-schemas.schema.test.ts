@@ -1,25 +1,15 @@
 import { describe, it, expect } from 'vitest';
-import { AppStateSchema } from '../state/app-state.schema';
-import { BacktestStateSchema } from '../state/backtest-state.schema';
-import { StrategyStateSchema } from '../state/strategy-state.schema';
+import { AppStateSchema } from '../app-state.schema';
+import { BacktestStateSchema } from '../backtest-state.schema';
+import { StrategyStateSchema } from '../strategy-state.schema';
+import { LiveControlFormSchema } from '../live-control-form.schema';
 
 describe('AppStateSchema', () => {
 	it('parse({}) returns expected defaults', () => {
 		const result = AppStateSchema.parse({});
 		expect(result).toEqual({
-			currentLocale: 'en',
-			backtestPrefillSymbol: '',
-			simulatedMetrics: {
-				totalReturn: '42.8',
-				maxDrawdown: '-18.2',
-				winRate: '58.3'
-			}
+			backtestPrefillSymbol: ''
 		});
-	});
-
-	it('rejects invalid locale', () => {
-		const result = AppStateSchema.safeParse({ currentLocale: 'fr' });
-		expect(result.success).toBe(false);
 	});
 });
 
@@ -44,6 +34,17 @@ describe('BacktestStateSchema', () => {
 	it('rejects invalid direction', () => {
 		const result = BacktestStateSchema.safeParse({ direction: 'Up' });
 		expect(result.success).toBe(false);
+	});
+});
+
+describe('LiveControlFormSchema', () => {
+	it('parse({}) returns expected defaults', () => {
+		const result = LiveControlFormSchema.parse({});
+		expect(result).toEqual({
+			totalReturn: '42.8',
+			maxDrawdown: '-18.2',
+			winRate: '58.3'
+		});
 	});
 });
 

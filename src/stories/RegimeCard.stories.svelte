@@ -1,7 +1,10 @@
 <script module lang="ts">
+	import { z } from 'zod';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import RegimeCard from '$lib/components/molecules/RegimeCard.svelte';
-	import type { MarketRegime } from '$lib/types';
+	import { MarketRegimeSchema } from '$lib/schemas';
+
+	type MarketRegime = z.infer<typeof MarketRegimeSchema>;
 
 	const { Story } = defineMeta({
 		title: 'Molecules/RegimeCard',

@@ -5,4 +5,3 @@ export const PerfSummaryItemSchema = z.object({
 	value: z.string()
 });
 
-export type PerfSummaryItem = z.infer<typeof PerfSummaryItemSchema>;

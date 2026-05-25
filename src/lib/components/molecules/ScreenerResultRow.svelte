@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { Button } from '$lib/components/ui/button';
 	import * as Table from '$lib/components/ui/table';
-	import type { ScreenerResultRowProps } from '$lib/types';
+	import { ScreenerResultSchema } from '$lib/schemas';
 
-	let { result, onBacktest }: ScreenerResultRowProps = $props();
+	type Props = { result: z.infer<typeof ScreenerResultSchema>; onBacktest: (symbol: string) => void };
+	let { result, onBacktest }: Props = $props();
 </script>
 
 <Table.Row>

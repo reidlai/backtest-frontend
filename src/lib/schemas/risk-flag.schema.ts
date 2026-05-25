@@ -1,10 +1,10 @@
 import { z } from 'zod';
 
+export const FlagSeveritySchema = z.enum(['high', 'medium', 'low']);
+
 export const RiskFlagSchema = z.object({
 	id: z.string(),
 	label: z.string(),
-	severity: z.enum(['high', 'medium', 'low']),
+	severity: FlagSeveritySchema,
 	description: z.string()
 });
-
-export type RiskFlag = z.infer<typeof RiskFlagSchema>;

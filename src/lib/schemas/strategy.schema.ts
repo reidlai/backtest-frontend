@@ -9,4 +9,3 @@ export const StrategySchema = z.object({
 	riskRule: z.string()
 });
 
-export type Strategy = z.infer<typeof StrategySchema>;

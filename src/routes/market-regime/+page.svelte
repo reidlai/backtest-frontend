@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as m from '$lib/paraglide/messages';
 	import RegimeCard from '$lib/components/molecules/RegimeCard.svelte';
-	import { sampleMarketRegimes } from '$lib/data/market';
+	import { sampleMarketRegimes } from '$lib/shared-mockdata/market';
 
 	const aiSummary =
 		'The current market is characterized by a strong Bull Trend in major US indices, supported by low volatility and positive momentum. However, High Volatility warnings are present in Asian markets due to regional economic shifts. Risk-On sentiment remains dominant as capital continues to flow into technology and growth sectors.';

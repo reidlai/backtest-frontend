@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import MetricTile from '../molecules/MetricTile.svelte';
-	import { defaultMetricTiles } from '$lib/data/performance';
-	import type { MetricTile as IMetricTile } from '$lib/types';
-	import { PerformanceMetricGridSchema } from '$lib/schemas';
+	import { defaultMetricTiles } from '$lib/shared-mockdata/performance';
+	import { PerformanceMetricGridSchema, MetricTileSchema } from '$lib/schemas';
 
-	let state = $state(PerformanceMetricGridSchema.parse({}));
+	type MetricTile = z.infer<typeof MetricTileSchema>;
+
+	let state = $state<z.infer<typeof PerformanceMetricGridSchema>>(PerformanceMetricGridSchema.parse({}));
 	state.tiles = [...defaultMetricTiles];
 
 	function handleDragStart(index: number) {
@@ -29,7 +31,7 @@
 		state.draggedIndex = null;
 	}
 
-	function handleDoubleClick(tile: IMetricTile) {
+	function handleDoubleClick(tile: MetricTile) {
 		state.editingTileId = tile.id;
 		state.editValue = tile.value;
 		state.modalOpen = true;

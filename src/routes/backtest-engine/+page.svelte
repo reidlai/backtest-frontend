@@ -5,9 +5,12 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as m from '$lib/paraglide/messages';
 	import { toast } from 'svelte-sonner';
+	import { z } from 'zod';
 	import { appState } from '$lib/state/app.svelte';
 	import { backtestState } from '$lib/state/backtest.svelte';
-	import type { OrderType } from '$lib/types';
+	import { OrderTypeSchema } from '$lib/schemas';
+
+	type OrderType = z.infer<typeof OrderTypeSchema>;
 
 	const orderTypes: OrderType[] = [
 		'Market',

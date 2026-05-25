@@ -5,4 +5,3 @@ export const TimeSeriesPointSchema = z.object({
 	value: z.number()
 });
 
-export type TimeSeriesPoint = z.infer<typeof TimeSeriesPointSchema>;

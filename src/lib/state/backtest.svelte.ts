@@ -1,6 +1,9 @@
 import { SvelteSet } from 'svelte/reactivity';
-import { BacktestStateSchema } from '$lib/schemas/state';
-import type { BacktestMode, OrderType } from '$lib/types';
+import { z } from 'zod';
+import { BacktestStateSchema, BacktestModeSchema, OrderTypeSchema } from '$lib/schemas';
+
+type BacktestMode = z.infer<typeof BacktestModeSchema>;
+type OrderType = z.infer<typeof OrderTypeSchema>;
 
 const _defaults = BacktestStateSchema.parse({});
 

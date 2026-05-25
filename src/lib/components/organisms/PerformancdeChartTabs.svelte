@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Chart, Spline, Tooltip, Axis } from 'layerchart';
-	import { sampleBacktestResult } from '$lib/data/performance';
+	import { sampleBacktestResult } from '$lib/shared-mockdata/performance';
 	import { scaleTime } from 'd3';
 	import { PerformanceChartTabsSchema } from '$lib/schemas';
 
-	let state = $state(PerformanceChartTabsSchema.parse({}));
+	let state = $state<z.infer<typeof PerformanceChartTabsSchema>>(PerformanceChartTabsSchema.parse({}));
 </script>
 
 <div class="rounded-xl border bg-card p-6 shadow-sm">

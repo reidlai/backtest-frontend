@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as Card from '$lib/components/ui/card';
 	import { Badge } from '$lib/components/ui/badge';
-	import type { RegimeCardProps } from '$lib/types';
+	import { MarketRegimeSchema } from '$lib/schemas';
 	import { cn } from '$lib/utils';
 
-	let { regime }: RegimeCardProps = $props();
+	type Props = { regime: z.infer<typeof MarketRegimeSchema> };
+	let { regime }: Props = $props();
 </script>
 
 <Card.Root

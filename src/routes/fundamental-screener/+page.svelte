@@ -5,7 +5,7 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as m from '$lib/paraglide/messages';
 	import ScreenerResultRow from '$lib/components/molecules/ScreenerResultRow.svelte';
-	import { sampleScreenerResults } from '$lib/data/market';
+	import { sampleScreenerResults } from '$lib/shared-mockdata/market';
 	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
 

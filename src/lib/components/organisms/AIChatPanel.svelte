@@ -1,10 +1,12 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { Button } from '$lib/components/ui/button';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import type { ChatMessage } from '$lib/types';
-	import { AIChatPanelSchema } from '$lib/schemas';
+	import { AIChatPanelSchema, ChatMessageSchema } from '$lib/schemas';
 
-	let state = $state(AIChatPanelSchema.parse({}));
+	type ChatMessage = z.infer<typeof ChatMessageSchema>;
+
+	let state = $state<z.infer<typeof AIChatPanelSchema>>(AIChatPanelSchema.parse({}));
 
 	function handleSendMessage() {
 		if (!state.chatInput.trim()) return;

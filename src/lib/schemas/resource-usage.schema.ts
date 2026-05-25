@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const PlanImpactSchema = z.enum(['low', 'medium', 'high']);
+
 export const ResourceUsageSchema = z.object({
 	tokensUsed: z.number(),
 	tokensTotal: z.number(),
@@ -8,7 +10,5 @@ export const ResourceUsageSchema = z.object({
 	queuePosition: z.number(),
 	estimatedRuntime: z.string(),
 	complexityScore: z.number(),
-	planImpact: z.enum(['low', 'medium', 'high'])
+	planImpact: PlanImpactSchema
 });
-
-export type ResourceUsage = z.infer<typeof ResourceUsageSchema>;

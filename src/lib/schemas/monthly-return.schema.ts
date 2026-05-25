@@ -5,4 +5,3 @@ export const MonthlyReturnSchema = z.object({
 	value: z.number()
 });
 
-export type MonthlyReturn = z.infer<typeof MonthlyReturnSchema>;

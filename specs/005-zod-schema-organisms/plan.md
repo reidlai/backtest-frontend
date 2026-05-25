@@ -6,7 +6,7 @@
 
 ## Summary
 
-Add `zod` as a runtime dependency and create one Zod schema file per organism under `src/lib/schemas/` (16 files + 1 index barrel), 18 data-contract type schemas under `src/lib/schemas/types/` (18 files + 1 index barrel), and 3 state singleton schemas under `src/lib/schemas/state/` (3 files + 1 index barrel). Organisms with local `$state` consolidate scattered state variables into a single `let state = $state(Schema.parse({}))`. Each schema embeds `.default()` values, provides TypeScript types via `z.infer<typeof Schema>`, and supports runtime validation via `.parse()`/`.safeParse()`. Fields typed with existing TypeScript interfaces use `z.custom<T>()` initially, then migrate to `z.array(TypeSchema)` once type schemas exist. Global state singleton classes (`AppState`, `BacktestState`, `StrategyState`) derive their default values from Zod schemas rather than hardcoded class-body values.
+Add `zod` as a runtime dependency and create one Zod schema file per organism under `src/lib/schemas/` (16 files), 21 data-contract type schemas under `src/lib/schemas/` (21 files), and 3 state singleton schemas under `src/lib/schemas/` (3 files) — all co-located flat under a single `src/lib/schemas/index.ts` barrel (no subdirectories). Organisms with local `$state` consolidate scattered state variables into a single `let state = $state(Schema.parse({}))`. Each schema embeds `.default()` values, provides TypeScript types via `z.infer<typeof Schema>`, and supports runtime validation via `.parse()`/`.safeParse()`. All 7 `z.custom<T>()` usages in organism schemas were migrated to `z.array(TypeSchema)` or `TypeSchema` once data-contract schemas existed (FR-012 complete). Global state singleton classes (`AppState`, `BacktestState`, `StrategyState`) derive their default values from Zod schemas rather than hardcoded class-body values. Schema files import dependencies via direct relative paths — never from the barrel — to prevent circular imports (FR-016).
 
 ## Technical Context
 
@@ -25,12 +25,13 @@ Add `zod` as a runtime dependency and create one Zod schema file per organism un
 **Performance Goals**: N/A — `Schema.parse({})` at component initialization is negligible; schema compilation is build-time
 
 **Constraints**:
-- `z.custom<T>()` interim for all fields typed via existing TypeScript interfaces; replaced by `z.array(TypeSchema)` once `src/lib/schemas/types/` schemas exist (FR-012)
+- `z.custom<T>()` was used as an interim strategy for fields typed via existing TypeScript interfaces; all 7 organism schema migrations to `z.array(TypeSchema)` or `TypeSchema` are complete per FR-012
 - `zod` must be a runtime dependency (`.parse()` runs in the browser)
 - Package manager: `pnpm`
 - State singleton class bodies MUST NOT duplicate schema defaults — class initializers use `Schema.parse({}).fieldName`
+- Schema files MUST import dependencies via direct relative paths (e.g., `'./strategy.schema'`); the barrel (`$lib/schemas`) is reserved for external consumers — no intra-schema barrel imports permitted (FR-016); verified by SC-009
 
-**Scale/Scope**: 16 organism schemas + 18 data-type schemas + 3 state schemas + 3 index barrels + 5 organism schema updates (FR-012) + 4 organism component updates + 3 state class updates + 1 BDD feature file = ~40 new/modified files
+**Scale/Scope**: 16 organism schemas + 21 data-type schemas + 3 state schemas + 1 index barrel + 7 organism schema updates (FR-012) + 4 organism component updates + 3 state class updates + 1 BDD feature file = ~45 new/modified files
 
 ## Constitution Check
 
@@ -39,7 +40,7 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 | Gate | Rule | Check | Status |
 |---|---|---|---|
 | Branch name follows `###-feature-name` format | Rule 1 | `005-zod-schema-organisms` matches `[0-9]{3}-[a-z_-]+` | ✅ |
-| BDD acceptance criteria defined in spec before this plan | Rule 6 | spec.md has Given/When/Then in all 3 user stories | ✅ |
+| BDD acceptance criteria defined in spec before this plan | Rule 6 | spec.md has Given/When/Then in all 5 user stories | ✅ |
 | Docker image uses distroless base (if feature touches Docker) | Rule 3 | Feature does not touch Docker | N/A |
 | CI gates covered by tasks (SCA, lint, secrets scan, unit tests) | Rule 7 | Tasks will include `ci-sca`, `ci-format-lint`, `ci-secrets-scan`, `ci-unit-tests` | ✅ |
 | Required directory structure included | Rule 9 | `features/`, `e2e-tests/`, `deploy/docker/` all exist | ✅ |
@@ -65,8 +66,10 @@ specs/005-zod-schema-organisms/
 ### Source Code (repository root)
 
 ```text
-src/lib/schemas/                          ← NEW directory (organism schemas)
-├── index.ts                              ← barrel re-export for organism schemas
+src/lib/schemas/                          ← flat directory — no subdirectories
+├── index.ts                              ← single barrel re-exporting all 40 schemas
+│
+│   — Organism schemas (16 files) —
 ├── ai-chat-panel.schema.ts
 ├── ai-research-box.schema.ts
 ├── ai-review-panel.schema.ts
@@ -83,33 +86,36 @@ src/lib/schemas/                          ← NEW directory (organism schemas)
 ├── result-menu-group.schema.ts
 ├── stub-section.schema.ts
 ├── top-bar.schema.ts
-├── types/                                ← NEW subdirectory (data-contract type schemas — FR-011)
-│   ├── index.ts                          ← barrel re-export for type schemas
-│   ├── time-series-point.schema.ts
-│   ├── monthly-return.schema.ts
-│   ├── metric-tile.schema.ts
-│   ├── nav-section.schema.ts
-│   ├── chat-message.schema.ts
-│   ├── function-gateway-card.schema.ts
-│   ├── market-metric.schema.ts
-│   ├── market-regime.schema.ts
-│   ├── screener-result.schema.ts
-│   ├── backtest-result.schema.ts
-│   ├── regime-breakdown.schema.ts
-│   ├── perf-summary-item.schema.ts
-│   ├── strategy.schema.ts
-│   ├── risk-flag.schema.ts
-│   ├── ai-review.schema.ts
-│   ├── resource-usage.schema.ts
-│   ├── trade-record.schema.ts
-│   └── sentiment-event.schema.ts
-└── state/                                ← NEW subdirectory (state singleton schemas — FR-013)
-    ├── index.ts                          ← barrel re-export for state schemas
-    ├── app-state.schema.ts
-    ├── backtest-state.schema.ts
-    └── strategy-state.schema.ts
+│
+│   — Data-contract type schemas (21 files, FR-011) —
+├── time-series-point.schema.ts
+├── monthly-return.schema.ts
+├── metric-tile.schema.ts
+├── nav-section.schema.ts
+├── chat-message.schema.ts
+├── function-gateway-card.schema.ts
+├── market-metric.schema.ts
+├── market-regime.schema.ts
+├── screener-result.schema.ts
+├── backtest-result.schema.ts
+├── regime-breakdown.schema.ts
+├── perf-summary-item.schema.ts
+├── strategy.schema.ts
+├── risk-flag.schema.ts
+├── ai-review.schema.ts
+├── resource-usage.schema.ts
+├── trade-record.schema.ts
+├── sentiment-event.schema.ts
+├── backtest-params.schema.ts
+├── usage-metric.schema.ts
+├── metric-edit-payload.schema.ts
+│
+│   — State singleton schemas (3 files, FR-013) —
+├── app-state.schema.ts
+├── backtest-state.schema.ts
+└── strategy-state.schema.ts
 
-src/lib/types/index.ts                    ← MODIFIED — add PerfSummaryItem interface
+src/lib/types/index.ts                    ← DELETED — all interfaces migrated to src/lib/schemas/; file removed in T085
 src/lib/state/app.svelte.ts               ← MODIFIED — init from AppStateSchema.parse({})
 src/lib/state/backtest.svelte.ts          ← MODIFIED — init from BacktestStateSchema.parse({})
 src/lib/state/strategy.svelte.ts          ← MODIFIED — init from StrategyStateSchema.parse({})
@@ -132,4 +138,4 @@ features/
 package.json                              ← MODIFIED — add zod runtime dependency
 ```
 
-**Structure Decision**: Single-project SvelteKit layout. Organism schemas under `src/lib/schemas/` mirror organism naming. Data-contract type schemas live in `src/lib/schemas/types/`. State singleton schemas live in `src/lib/schemas/state/`. All use kebab-case with `.schema.ts` suffix.
+**Structure Decision**: Single-project SvelteKit layout. All schemas (organism, data-contract, state) are co-located flat under `src/lib/schemas/` with no subdirectories. Naming convention: `<organism>.schema.ts` for organisms, `<type>.schema.ts` for data contracts, `<name>-state.schema.ts` for state singletons. A single `index.ts` barrel exports all 40 schemas (16 organism + 21 data-contract + 3 state). No `types/` or `state/` subdirectories.

@@ -12,4 +12,3 @@ export const ScreenerResultSchema = z.object({
 	score: z.number()
 });
 
-export type ScreenerResult = z.infer<typeof ScreenerResultSchema>;

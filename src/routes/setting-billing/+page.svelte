@@ -2,7 +2,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Progress } from '$lib/components/ui/progress';
 	import * as m from '$lib/paraglide/messages';
-	import { sampleResourceUsage } from '$lib/data/strategy';
+	import { sampleResourceUsage } from '$lib/shared-mockdata/strategy';
 </script>
 
 <div class="space-y-8 p-6">

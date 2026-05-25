@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import type { ResourceUsage } from '$lib/types';
+import { ResourceUsageSchema } from './resource-usage.schema';
 
 export const ResourceCostPanelSchema = z.object({
-	resourceUsage: z.custom<ResourceUsage>().default({
+	resourceUsage: ResourceUsageSchema.default({
 		tokensUsed: 4250,
 		tokensTotal: 10000,
 		backtestsUsed: 3,
@@ -13,5 +13,3 @@ export const ResourceCostPanelSchema = z.object({
 		planImpact: 'medium'
 	})
 });
-
-export type ResourceCostPanelState = z.infer<typeof ResourceCostPanelSchema>;

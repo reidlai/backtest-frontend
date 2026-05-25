@@ -1,8 +1,6 @@
 import { z } from 'zod';
-import type { MarketMetric } from '$lib/types';
+import { MarketMetricSchema } from './market-metric.schema';
 
 export const DashboardMetricGridSchema = z.object({
-	metrics: z.custom<MarketMetric[]>().default([])
+	metrics: z.array(MarketMetricSchema).default([])
 });
-
-export type DashboardMetricGridState = z.infer<typeof DashboardMetricGridSchema>;

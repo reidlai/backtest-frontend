@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { Button } from '$lib/components/ui/button';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as m from '$lib/paraglide/messages';
@@ -7,7 +8,7 @@
 	import { strategyState } from '$lib/state/strategy.svelte';
 	import { AIResearchBoxSchema } from '$lib/schemas';
 
-	let state = $state(AIResearchBoxSchema.parse({}));
+	let state = $state<z.infer<typeof AIResearchBoxSchema>>(AIResearchBoxSchema.parse({}));
 
 	function handleConvertToStrategy() {
 		if (!state.aiText.trim()) {
@@ -15,8 +16,11 @@
 			return;
 		}
 		state.validationError = false;
+
+		//TODO: Use more generic method to pass strategy text to strategy builder
 		strategyState.inputText = state.aiText.trim();
 		goto('/strategy-builder');
+		
 	}
 </script>
 

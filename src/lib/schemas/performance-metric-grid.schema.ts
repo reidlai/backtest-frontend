@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { MetricTileSchema } from './types/metric-tile.schema';
+import { MetricTileSchema } from './metric-tile.schema';
 
 export const PerformanceMetricGridSchema = z.object({
 	tiles: z.array(MetricTileSchema).default([]),
@@ -9,4 +9,3 @@ export const PerformanceMetricGridSchema = z.object({
 	modalOpen: z.boolean().default(false)
 });
 
-export type PerformanceMetricGridState = z.infer<typeof PerformanceMetricGridSchema>;

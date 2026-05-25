@@ -1,4 +1,15 @@
-import type { BacktestResult, MetricTile, RegimeBreakdown, TimeSeriesPoint } from '../types';
+import { z } from 'zod';
+import {
+	BacktestResultSchema,
+	MetricTileSchema,
+	RegimeBreakdownSchema,
+	TimeSeriesPointSchema
+} from '$lib/schemas';
+
+type BacktestResult = z.infer<typeof BacktestResultSchema>;
+type MetricTile = z.infer<typeof MetricTileSchema>;
+type RegimeBreakdown = z.infer<typeof RegimeBreakdownSchema>;
+type TimeSeriesPoint = z.infer<typeof TimeSeriesPointSchema>;
 
 const generateTimeSeries = (
 	startValue: number,

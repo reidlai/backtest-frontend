@@ -1,7 +1,10 @@
 <script module lang="ts">
+	import { z } from 'zod';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import RiskFlagItem from '$lib/components/molecules/RiskFlagItem.svelte';
-	import type { RiskFlag } from '$lib/types';
+	import { RiskFlagSchema } from '$lib/schemas';
+
+	type RiskFlag = z.infer<typeof RiskFlagSchema>;
 
 	const { Story } = defineMeta({
 		title: 'Molecules/RiskFlagItem',

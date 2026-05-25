@@ -5,4 +5,3 @@ export const AIResearchBoxSchema = z.object({
 	validationError: z.boolean().default(false)
 });
 
-export type AIResearchBoxState = z.infer<typeof AIResearchBoxSchema>;
