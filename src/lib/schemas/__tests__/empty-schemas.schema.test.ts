@@ -37,7 +37,11 @@ describe('Empty organism schemas', () => {
 	});
 
 	it('LiveControlFormSchema parses empty input', () => {
-		expect(LiveControlFormSchema.parse({})).toEqual({});
+		expect(LiveControlFormSchema.parse({})).toEqual({
+			totalReturn: '42.8',
+			maxDrawdown: '-18.2',
+			winRate: '58.3'
+		});
 	});
 
 	it('MainMenuGroupSchema defaults mainSections to empty array', () => {
