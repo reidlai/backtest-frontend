@@ -6,7 +6,9 @@
 	import { scaleTime } from 'd3';
 	import { PerformanceChartTabsSchema } from '$lib/schemas';
 
-	let state = $state<z.infer<typeof PerformanceChartTabsSchema>>(PerformanceChartTabsSchema.parse({}));
+	let state = $state<z.infer<typeof PerformanceChartTabsSchema>>(
+		PerformanceChartTabsSchema.parse({})
+	);
 </script>
 
 <div class="rounded-xl border bg-card p-6 shadow-sm">

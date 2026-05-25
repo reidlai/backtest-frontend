@@ -8,4 +8,3 @@ export const StrategySchema = z.object({
 	positionSize: z.string(),
 	riskRule: z.string()
 });
-

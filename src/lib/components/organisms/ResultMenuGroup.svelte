@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { z } from 'zod';
+	import { z } from 'zod';
 	import * as m from '$lib/paraglide/messages';
 	import { page } from '$app/state';
 	import NavItem from '../molecules/NavItem.svelte';

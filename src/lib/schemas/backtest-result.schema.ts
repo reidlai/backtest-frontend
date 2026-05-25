@@ -16,4 +16,3 @@ export const BacktestResultSchema = z.object({
 	monthlyReturns: z.array(MonthlyReturnSchema),
 	benchmarkSeries: z.array(TimeSeriesPointSchema)
 });
-

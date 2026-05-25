@@ -4,7 +4,9 @@
 	import { sampleMarketMetrics } from '$lib/shared-mockdata/market';
 	import { DashboardMetricGridSchema } from '$lib/schemas';
 
-	let state = $state<z.infer<typeof DashboardMetricGridSchema>>(DashboardMetricGridSchema.parse({}));
+	let state = $state<z.infer<typeof DashboardMetricGridSchema>>(
+		DashboardMetricGridSchema.parse({})
+	);
 	state.metrics = sampleMarketMetrics;
 </script>
 

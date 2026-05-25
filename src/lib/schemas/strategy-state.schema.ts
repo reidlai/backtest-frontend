@@ -5,4 +5,3 @@ export const StrategyStateSchema = z.object({
 	inputText: z.string().default(''),
 	parsedStrategy: StrategySchema.nullable().default(null)
 });
-

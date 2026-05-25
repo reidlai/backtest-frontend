@@ -15,14 +15,7 @@
 		onDoubleClick?: (tile: MetricTile) => void;
 	};
 
-	let {
-		tile,
-		draggable = false,
-		onDragStart,
-		onDragOver,
-		onDrop,
-		onDoubleClick
-	}: Props = $props();
+	let { tile, draggable = false, onDragStart, onDragOver, onDrop, onDoubleClick }: Props = $props();
 
 	const isMetricTile = (t: typeof tile): t is MetricTile => 'order' in t;
 

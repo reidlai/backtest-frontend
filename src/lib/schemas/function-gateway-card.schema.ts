@@ -7,4 +7,3 @@ export const FunctionGatewayCardSchema = z.object({
 	descriptionKey: z.string(),
 	icon: z.string()
 });
-

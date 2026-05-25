@@ -11,4 +11,3 @@ export const ScreenerResultSchema = z.object({
 	epsGrowth: z.number(),
 	score: z.number()
 });
-

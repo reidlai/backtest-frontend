@@ -6,4 +6,3 @@ export const ChatMessageSchema = z.object({
 	content: z.string(),
 	timestamp: z.string()
 });
-

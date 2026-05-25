@@ -8,4 +8,3 @@ export const PerformanceMetricGridSchema = z.object({
 	editValue: z.string().default(''),
 	modalOpen: z.boolean().default(false)
 });
-

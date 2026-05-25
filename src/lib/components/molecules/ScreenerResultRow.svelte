@@ -4,7 +4,10 @@
 	import * as Table from '$lib/components/ui/table';
 	import { ScreenerResultSchema } from '$lib/schemas';
 
-	type Props = { result: z.infer<typeof ScreenerResultSchema>; onBacktest: (symbol: string) => void };
+	type Props = {
+		result: z.infer<typeof ScreenerResultSchema>;
+		onBacktest: (symbol: string) => void;
+	};
 	let { result, onBacktest }: Props = $props();
 </script>
 

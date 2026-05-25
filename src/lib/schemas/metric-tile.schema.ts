@@ -7,4 +7,3 @@ export const MetricTileSchema = z.object({
 	unit: z.string(),
 	order: z.number()
 });
-

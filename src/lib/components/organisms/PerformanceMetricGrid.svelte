@@ -6,7 +6,9 @@
 
 	type MetricTile = z.infer<typeof MetricTileSchema>;
 
-	let state = $state<z.infer<typeof PerformanceMetricGridSchema>>(PerformanceMetricGridSchema.parse({}));
+	let state = $state<z.infer<typeof PerformanceMetricGridSchema>>(
+		PerformanceMetricGridSchema.parse({})
+	);
 	state.tiles = [...defaultMetricTiles];
 
 	function handleDragStart(index: number) {

@@ -20,7 +20,6 @@
 		//TODO: Use more generic method to pass strategy text to strategy builder
 		strategyState.inputText = state.aiText.trim();
 		goto('/strategy-builder');
-		
 	}
 </script>
 
