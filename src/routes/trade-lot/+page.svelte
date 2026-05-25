@@ -2,7 +2,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import * as Table from '$lib/components/ui/table';
 	import * as m from '$lib/paraglide/messages';
-	import { sampleTrades } from '$lib/data/trades';
+	import { sampleTrades } from '$lib/shared-mockdata/trades';
 	import { goto } from '$app/navigation';
 
 	let trades = $state([...sampleTrades]);

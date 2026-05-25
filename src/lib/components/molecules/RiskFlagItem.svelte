@@ -1,8 +1,10 @@
 <script lang="ts">
-	import type { RiskFlagItemProps } from '$lib/types';
+	import { z } from 'zod';
+	import { RiskFlagSchema } from '$lib/schemas';
 	import { cn } from '$lib/utils';
 
-	let { flag }: RiskFlagItemProps = $props();
+	type Props = { flag: z.infer<typeof RiskFlagSchema> };
+	let { flag }: Props = $props();
 </script>
 
 <div class="group flex items-start gap-3">

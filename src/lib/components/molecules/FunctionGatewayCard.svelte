@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as Card from '$lib/components/ui/card';
 	import * as m from '$lib/paraglide/messages';
-	import type { FunctionGatewayCardProps } from '$lib/types';
+	import { FunctionGatewayCardSchema } from '$lib/schemas';
 
-	let { card, onClick }: FunctionGatewayCardProps = $props();
+	type Props = { card: z.infer<typeof FunctionGatewayCardSchema>; onClick: () => void };
+	let { card, onClick }: Props = $props();
 </script>
 
 <Card.Root class="group cursor-pointer transition-all hover:border-primary/50" onclick={onClick}>

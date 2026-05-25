@@ -2,15 +2,13 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import * as m from '$lib/paraglide/messages';
-	import { setLocale } from '$lib/paraglide/runtime';
+	import { getLocale, setLocale } from '$lib/paraglide/runtime';
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
-	import { appState } from '$lib/state/app.svelte';
 	import { strategyState } from '$lib/state/strategy.svelte';
 
 	function toggleLanguage() {
-		const newLocale = appState.currentLocale === 'en' ? 'zh-TW' : 'en';
-		appState.currentLocale = newLocale;
+		const newLocale = getLocale() === 'en' ? 'zh-TW' : 'en';
 		setLocale(newLocale);
 	}
 
@@ -63,7 +61,7 @@
 
 	<div class="flex items-center gap-2">
 		<Button variant="ghost" size="sm" onclick={toggleLanguage}>
-			{appState.currentLocale === 'en' ? m.language_en() : m.language_zh_tw()}
+			{getLocale() === 'en' ? m.language_en() : m.language_zh_tw()}
 		</Button>
 		<Button variant="outline" size="sm" onclick={handleSave}>
 			{m.save()}

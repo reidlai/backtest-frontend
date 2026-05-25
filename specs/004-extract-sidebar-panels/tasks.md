@@ -33,7 +33,7 @@
 **⚠️ CRITICAL**: T004 and T005 block Phases 6, 7, and 8. T006 blocks Phase 7.
 
 - [x] T003 Record pre-refactor baseline — `src/lib/components/organisms/AIReviewSidebar.svelte` has 229 lines; post-refactor target ≤69 lines (≥70% reduction per SC-004)
-- [x] T004 Create `src/lib/state/strategy.svelte.ts` — export `strategyState` Svelte 5 reactive object with `inputText: $state<string>('')`, `parsedStrategy: $state<ParsedStrategy | null>(null)`, `reset()` method (clears both fields to defaults), and `getStrategyConfig()` method returning `parsedStrategy ?? sampleStrategy`; import `sampleStrategy` from `$lib/data/strategy` (FR-019)
+- [x] T004 Create `src/lib/state/strategy.svelte.ts` — export `strategyState` Svelte 5 reactive object with `inputText: $state<string>('')`, `parsedStrategy: $state<ParsedStrategy | null>(null)`, `reset()` method (clears both fields to defaults), and `getStrategyConfig()` method returning `parsedStrategy ?? sampleStrategy`; import `sampleStrategy` from `$lib/shared-mockdata/strategy` (FR-019)
 - [x] T005 Create `src/lib/state/backtest.svelte.ts` — export `backtestState` Svelte 5 reactive object with `$state` fields: `mode` (`'Single Stock'`), `initialCapital` (`'100000'`), `startDate` (`'2020-01-01'`), `endDate` (`'2024-12-31'`), `universe` (`'SPY'`), `timeframe` (`'Daily'`), `direction` (`'Long'`), and `orderTypes` (matching current backtest-engine page defaults); export `reset()` method restoring all fields to those defaults (FR-019a)
 - [x] T006 Add `path: string` field to `NavSection` interface in `src/lib/types/index.ts` — this field holds the canonical route path for each nav section (e.g., `'/research-workbench'`); do not remove `SectionId` yet (may still be used elsewhere) (FR-023)
 
@@ -50,7 +50,7 @@
 ### Implementation for User Story 1
 
 - [x] T007 [STORYBOOK] [US1] Create `src/stories/AIReviewPanel.stories.svelte` — `defineMeta` with `title: 'Organisms/AIReviewPanel'`, `tags: ['autodocs']`, dark background; single no-arg `<Story name="Default" />` (component imports sample data internally)
-- [x] T008 [US1] Create `src/lib/components/organisms/AIReviewPanel.svelte` — extract AI Review panel `<div>` block from AIReviewSidebar; import `sampleAIReview` from `$lib/data/strategy`, `Badge` from `$lib/components/ui/badge`, `RiskFlagItem` from `$lib/components/molecules/RiskFlagItem.svelte`; no props; stateless
+- [x] T008 [US1] Create `src/lib/components/organisms/AIReviewPanel.svelte` — extract AI Review panel `<div>` block from AIReviewSidebar; import `sampleAIReview` from `$lib/shared-mockdata/strategy`, `Badge` from `$lib/components/ui/badge`, `RiskFlagItem` from `$lib/components/molecules/RiskFlagItem.svelte`; no props; stateless
 - [ ] T009 [US1] Verify AIReviewPanel in Storybook — confirm grade circle, confidence badge, and all risk flag items render correctly; confirm component is independently renderable without AIReviewSidebar
 
 **Checkpoint**: AIReviewPanel complete ✅ — US1 independently testable
@@ -66,7 +66,7 @@
 ### Implementation for User Story 2
 
 - [x] T010 [P] [STORYBOOK] [US2] Create `src/stories/ResourceCostPanel.stories.svelte` — `defineMeta` with `title: 'Organisms/ResourceCostPanel'`, dark background; single no-arg `<Story name="Default" />`
-- [x] T011 [P] [US2] Create `src/lib/components/organisms/ResourceCostPanel.svelte` — extract Resource & Cost panel `<div>` block from AIReviewSidebar; import `sampleResourceUsage` from `$lib/data/strategy`, `Progress` from `$lib/components/ui/progress`; no props; stateless
+- [x] T011 [P] [US2] Create `src/lib/components/organisms/ResourceCostPanel.svelte` — extract Resource & Cost panel `<div>` block from AIReviewSidebar; import `sampleResourceUsage` from `$lib/shared-mockdata/strategy`, `Progress` from `$lib/components/ui/progress`; no props; stateless
 - [ ] T012 [US2] Verify ResourceCostPanel in Storybook — confirm Tokens Used progress bar (4250/10000), Backtests progress bar (3/10), Est. Runtime (~42s), and Plan Impact (medium) render correctly
 
 **Checkpoint**: ResourceCostPanel complete ✅ — US2 independently testable

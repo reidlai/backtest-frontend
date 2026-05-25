@@ -2,7 +2,7 @@
 	import * as Table from '$lib/components/ui/table';
 	import { Badge } from '$lib/components/ui/badge';
 	import * as m from '$lib/paraglide/messages';
-	import { sampleSentimentEvents } from '$lib/data/sentiment';
+	import { sampleSentimentEvents } from '$lib/shared-mockdata/sentiment';
 	import { cn } from '$lib/utils';
 </script>
 

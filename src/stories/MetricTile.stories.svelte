@@ -1,7 +1,11 @@
 <script module lang="ts">
+	import { z } from 'zod';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import MetricTile from '$lib/components/molecules/MetricTile.svelte';
-	import type { MetricTile as IMetricTile, MarketMetric } from '$lib/types';
+	import { MetricTileSchema, MarketMetricSchema } from '$lib/schemas';
+
+	type IMetricTile = z.infer<typeof MetricTileSchema>;
+	type MarketMetric = z.infer<typeof MarketMetricSchema>;
 
 	const { Story } = defineMeta({
 		title: 'Molecules/MetricTile',

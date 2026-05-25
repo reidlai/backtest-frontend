@@ -23,7 +23,7 @@ interface RiskFlag {
   description: string;
 }
 ```
-**Source**: `sampleAIReview` imported directly from `$lib/data/strategy.ts`
+**Source**: `sampleAIReview` imported directly from `$lib/shared-mockdata/strategy.ts`
 
 ---
 
@@ -40,7 +40,7 @@ interface ResourceUsage {
   planImpact: PlanImpact;       // 'low' | 'medium' | 'high'
 }
 ```
-**Source**: `sampleResourceUsage` imported directly from `$lib/data/strategy.ts`
+**Source**: `sampleResourceUsage` imported directly from `$lib/shared-mockdata/strategy.ts`
 
 ---
 
@@ -61,7 +61,7 @@ interface ChatMessage {
 ```typescript
 interface TradeRecord { ... }  // full definition in src/lib/types/index.ts
 ```
-**Source**: `sampleTrades` imported from `$lib/data/trades.ts`; `tradesToCsv` utility also imported from same module.
+**Source**: `sampleTrades` imported from `$lib/shared-mockdata/trades.ts`; `tradesToCsv` utility also imported from same module.
 
 ---
 
@@ -71,7 +71,7 @@ interface TradeRecord { ... }  // full definition in src/lib/types/index.ts
 
 ```typescript
 // src/lib/state/strategy.svelte.ts
-import { sampleStrategy } from '$lib/data/strategy';
+import { sampleStrategy } from '$lib/shared-mockdata/strategy';
 
 const strategyState = {
   inputText: $state<string>(''),

@@ -1,7 +1,10 @@
 <script module lang="ts">
+	import { z } from 'zod';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import FunctionGatewayCard from '$lib/components/molecules/FunctionGatewayCard.svelte';
-	import type { FunctionGatewayCard as IFunctionGatewayCard } from '$lib/types';
+	import { FunctionGatewayCardSchema } from '$lib/schemas';
+
+	type IFunctionGatewayCard = z.infer<typeof FunctionGatewayCardSchema>;
 
 	const { Story } = defineMeta({
 		title: 'Molecules/FunctionGatewayCard',

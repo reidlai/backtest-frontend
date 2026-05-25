@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as m from '$lib/paraglide/messages';
-	import type { NavItemProps } from '$lib/types';
+	import { NavSectionSchema } from '$lib/schemas';
 	import { cn } from '$lib/utils';
 
-	let { section, isActive, href }: NavItemProps = $props();
+	type Props = { section: z.infer<typeof NavSectionSchema>; isActive: boolean; href: string };
+	let { section, isActive, href }: Props = $props();
 </script>
 
 <a

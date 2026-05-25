@@ -1,18 +1,20 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import { Button } from '$lib/components/ui/button';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import type { ChatMessage } from '$lib/types';
+	import { AIChatPanelSchema, ChatMessageSchema } from '$lib/schemas';
 
-	let chatInput = $state('');
-	let messages = $state<ChatMessage[]>([]);
+	type ChatMessage = z.infer<typeof ChatMessageSchema>;
+
+	let state = $state<z.infer<typeof AIChatPanelSchema>>(AIChatPanelSchema.parse({}));
 
 	function handleSendMessage() {
-		if (!chatInput.trim()) return;
+		if (!state.chatInput.trim()) return;
 
 		const userMsg: ChatMessage = {
 			id: Math.random().toString(36).substring(7),
 			role: 'user',
-			content: chatInput,
+			content: state.chatInput,
 			timestamp: new Date().toLocaleTimeString()
 		};
 
@@ -24,8 +26,8 @@
 			timestamp: new Date().toLocaleTimeString()
 		};
 
-		messages = [...messages, userMsg, assistantMsg];
-		chatInput = '';
+		state.messages = [...state.messages, userMsg, assistantMsg];
+		state.chatInput = '';
 	}
 </script>
 
@@ -35,12 +37,12 @@
 	</div>
 
 	<div class="scrollbar-hide flex-1 space-y-3 overflow-y-auto p-3">
-		{#if messages.length === 0}
+		{#if state.messages.length === 0}
 			<p class="mt-8 px-4 text-center text-[11px] text-muted-foreground">
 				Ask me about your strategy parameters or optimization tips.
 			</p>
 		{/if}
-		{#each messages as msg (msg.id)}
+		{#each state.messages as msg (msg.id)}
 			<div class={msg.role === 'user' ? 'ml-4' : 'mr-4'}>
 				<div
 					class={msg.role === 'user'
@@ -58,7 +60,7 @@
 
 	<div class="space-y-2 border-t bg-muted/10 p-3">
 		<Textarea
-			bind:value={chatInput}
+			bind:value={state.chatInput}
 			placeholder="Ask AI..."
 			class="min-h-[60px] border-none bg-background text-[11px] ring-offset-0 focus-visible:ring-1"
 		/>

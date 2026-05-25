@@ -1,7 +1,10 @@
 <script module lang="ts">
+	import { z } from 'zod';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import NavItem from '$lib/components/molecules/NavItem.svelte';
-	import type { NavSection } from '$lib/types';
+	import { NavSectionSchema } from '$lib/schemas';
+
+	type NavSection = z.infer<typeof NavSectionSchema>;
 
 	const { Story } = defineMeta({
 		title: 'Molecules/NavItem',

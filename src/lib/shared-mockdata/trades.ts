@@ -1,4 +1,7 @@
-import type { TradeRecord } from '../types';
+import { z } from 'zod';
+import { TradeRecordSchema } from '$lib/schemas';
+
+type TradeRecord = z.infer<typeof TradeRecordSchema>;
 
 export const sampleTrades: TradeRecord[] = [
 	{

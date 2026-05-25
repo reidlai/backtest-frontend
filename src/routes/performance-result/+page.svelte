@@ -9,7 +9,7 @@
 		defaultMetricTiles,
 		sampleRegimeBreakdown,
 		samplePerfSummary
-	} from '$lib/data/performance';
+	} from '$lib/shared-mockdata/performance';
 	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
 

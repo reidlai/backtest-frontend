@@ -1,4 +1,9 @@
-import type { MarketMetric, MarketRegime, ScreenerResult } from '../types';
+import { z } from 'zod';
+import { MarketMetricSchema, MarketRegimeSchema, ScreenerResultSchema } from '$lib/schemas';
+
+type MarketMetric = z.infer<typeof MarketMetricSchema>;
+type MarketRegime = z.infer<typeof MarketRegimeSchema>;
+type ScreenerResult = z.infer<typeof ScreenerResultSchema>;
 
 export const sampleMarketMetrics: MarketMetric[] = [
 	{

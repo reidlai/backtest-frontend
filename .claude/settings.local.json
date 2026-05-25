@@ -73,7 +73,8 @@
       "Bash(tofu fmt *)",
       "Bash(echo \"exit: $?\")",
       "Bash(npm run *)",
-      "Bash(npx prettier *)"
+      "Bash(npx prettier *)",
+      "Bash(grep *)"
     ]
   }
 }

@@ -1,15 +1,21 @@
 <script lang="ts">
+	import { z } from 'zod';
 	import * as Tabs from '$lib/components/ui/tabs';
 	import { Chart, Spline, Tooltip, Axis } from 'layerchart';
-	import { sampleBacktestResult } from '$lib/data/performance';
-	import type { ChartTab } from '$lib/types';
+	import { sampleBacktestResult } from '$lib/shared-mockdata/performance';
 	import { scaleTime } from 'd3';
+	import { PerformanceChartTabsSchema } from '$lib/schemas';
 
-	let activeChartTab = $state<ChartTab>('equity-curve');
+	let state = $state<z.infer<typeof PerformanceChartTabsSchema>>(
+		PerformanceChartTabsSchema.parse({})
+	);
 </script>
 
 <div class="rounded-xl border bg-card p-6 shadow-sm">
-	<Tabs.Root value={activeChartTab} onValueChange={(v) => (activeChartTab = v as ChartTab)}>
+	<Tabs.Root
+		value={state.activeChartTab}
+		onValueChange={(v) => (state.activeChartTab = v as typeof state.activeChartTab)}
+	>
 		<div class="mb-6 flex items-center justify-between">
 			<Tabs.List>
 				<Tabs.Trigger value="equity-curve">Equity Curve</Tabs.Trigger>
@@ -20,7 +26,7 @@
 		</div>
 
 		<div class="h-[400px] w-full">
-			{#if activeChartTab === 'equity-curve'}
+			{#if state.activeChartTab === 'equity-curve'}
 				<Chart
 					data={sampleBacktestResult.equityCurve}
 					x="date"
@@ -41,7 +47,7 @@
 				<div
 					class="flex h-full items-center justify-center rounded border border-dashed text-muted-foreground"
 				>
-					Chart tab "{activeChartTab}" implementation placeholder
+					Chart tab "{state.activeChartTab}" implementation placeholder
 				</div>
 			{/if}
 		</div>

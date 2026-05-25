@@ -1,7 +1,10 @@
 <script module lang="ts">
+	import { z } from 'zod';
 	import { defineMeta } from '@storybook/addon-svelte-csf';
 	import ScreenerResultRow from '$lib/components/molecules/ScreenerResultRow.svelte';
-	import type { ScreenerResult } from '$lib/types';
+	import { ScreenerResultSchema } from '$lib/schemas';
+
+	type ScreenerResult = z.infer<typeof ScreenerResultSchema>;
 
 	const { Story } = defineMeta({
 		title: 'Molecules/ScreenerResultRow',

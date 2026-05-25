@@ -1,13 +1,19 @@
-import { sampleStrategy } from '$lib/data/strategy';
-import type { Strategy } from '$lib/types';
+import { z } from 'zod';
+import { sampleStrategy } from '$lib/shared-mockdata/strategy';
+import { StrategyStateSchema, StrategySchema } from '$lib/schemas';
+
+type Strategy = z.infer<typeof StrategySchema>;
+
+const _defaults = StrategyStateSchema.parse({});
 
 class StrategyState {
-	inputText = $state<string>('');
-	parsedStrategy = $state<Strategy | null>(null);
+	inputText = $state<string>(_defaults.inputText);
+	parsedStrategy = $state<Strategy | null>(_defaults.parsedStrategy);
 
 	reset() {
-		this.inputText = '';
-		this.parsedStrategy = null;
+		const d = StrategyStateSchema.parse({});
+		this.inputText = d.inputText;
+		this.parsedStrategy = d.parsedStrategy;
 	}
 
 	getStrategyConfig(): Strategy {

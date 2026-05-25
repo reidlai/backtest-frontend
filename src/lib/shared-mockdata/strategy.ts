@@ -1,4 +1,9 @@
-import type { AIReview, ResourceUsage, Strategy } from '../types';
+import { z } from 'zod';
+import { AIReviewSchema, ResourceUsageSchema, StrategySchema } from '$lib/schemas';
+
+type AIReview = z.infer<typeof AIReviewSchema>;
+type ResourceUsage = z.infer<typeof ResourceUsageSchema>;
+type Strategy = z.infer<typeof StrategySchema>;
 
 export const sampleStrategy: Strategy = {
 	market: 'US Equities — S&P 500',
