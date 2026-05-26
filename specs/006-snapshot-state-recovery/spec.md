@@ -111,9 +111,9 @@ A user configures filter values (e.g., PE Ratio ≤ 25, ROIC ≥ 20%) in the Fun
 
 ### Measurable Outcomes
 
-- **SC-001**: Users can navigate away from and back to any of the four target pages without losing any component-local or page-local state they had configured.
+- **SC-001**: Users can navigate away from and back to any of the three target pages (Research Workbench, Fundamental Screener, Technical Screener) without losing component-local or page-local state they had configured; additionally, users can hard-refresh any page and recover the global AIChatPanel chat history from the `+layout.svelte` snapshot.
 - **SC-002**: Snapshot capture and restoration adds no perceptible delay to page navigation (under 50ms overhead measured on mid-range hardware).
-- **SC-003**: 100% of component-local and page-local configurable fields across the four target pages are included in snapshot capture (verified by integration tests covering each field).
+- **SC-003**: 100% of component-local and page-local configurable fields across the four snapshot targets are included in snapshot capture (verified by manual browser tests T018–T020 covering each field; automated integration tests are deferred to a future testing feature).
 - **SC-004**: Snapshot restoration never displays stale or invalid data; 0 regression incidents related to snapshot data corruption after launch.
 
 ## Assumptions

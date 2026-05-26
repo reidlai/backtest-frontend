@@ -38,3 +38,5 @@ export * from './strategy-state.schema';
 export * from './backtest-params.schema';
 export * from './usage-metric.schema';
 export * from './metric-edit-payload.schema';
+export * from './fundamental-screener.schema';
+export * from './technical-screener.schema';

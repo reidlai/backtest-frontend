@@ -12,8 +12,13 @@
 		parameters: {
 			layout: 'centered',
 			backgrounds: { default: 'dark' }
+		},
+		argTypes: {
+			aiText: { control: 'text', description: 'Bindable research text value' }
 		}
 	});
 </script>
 
 <Story name="Default" />
+
+<Story name="WithText" args={{ aiText: 'Analyze momentum strategies with RSI filter for S&P 500' }} />
