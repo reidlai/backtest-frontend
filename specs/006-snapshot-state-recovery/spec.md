@@ -1,0 +1,115 @@
+# Feature Specification: Snapshot State Recovery
+
+**Feature Branch**: `006-snapshot-state-recovery`
+
+**Created**: 2026-05-26
+
+**Status**: Draft
+
+## Clarifications
+
+### Session 2026-05-26
+
+- Q: How should AIResearchBox and AIChatPanel expose their internal state to the parent page for snapshot capture and restoration? → A: Svelte 5 `$bindable()` props — organisms expose state fields as bindable props; parent page binds to them and includes them in the `snapshot` export.
+- Q: Should the feature snapshot global stores (strategyState, backtestState) or focus only on state that is actually lost on navigation (component-local and page-local variables)? → A: Local state only — global stores already survive client-side navigation; snapshot targets only component-local (AIResearchBox, AIChatPanel) and page-local variables (screener filter fields, selected patterns).
+- Q: Strategy Builder and Backtest Engine pages have no page-local state (all state is in global stores that already persist). Should they be removed from snapshot scope? → A: Yes, remove from scope — their global stores already handle persistence; no snapshot implementation needed for those pages.
+
+**Input**: User description: "Implement SvelteKit snapshot for state in organisms: AIResearchBox, AIChatPanel, src/routes/strategy-builder/+page.svelte, src/routes/fundamental-screener/+page.svelte, src/routes/technical-screener/+page.svelte, src/routes/backtest-engine/+page.svelte so the state can be recovered if navigate to other page"
+
+## User Scenarios & Testing _(mandatory)_
+
+### User Story 1 - Recover AI Research Box Input After Navigation (Priority: P1)
+
+A user types a research query in the AI Research Box, then navigates to another page. When they navigate back, the previously entered research text is still present in the textarea — they do not have to retype it.
+
+**Why this priority**: The AI Research Box is the primary entry point for users beginning a research workflow. Losing typed text mid-workflow is the most disruptive data-loss scenario for users.
+
+**Independent Test**: Can be tested by typing text in AIResearchBox, navigating away using the sidebar, and returning to confirm the text is preserved.
+
+**Acceptance Scenarios**:
+
+1. **Given** a user has typed text in the AIResearchBox textarea, **When** the user navigates to any other page in the app, **Then** the textarea content is stored in the page snapshot.
+2. **Given** a snapshot exists for the page containing AIResearchBox, **When** the user navigates back to that page, **Then** the textarea shows the previously typed text.
+3. **Given** a user has NOT typed anything in the AIResearchBox, **When** the user navigates away and back, **Then** the textarea remains empty (no stale data from a prior session).
+
+---
+
+### User Story 2 - Recover AI Chat History After Navigation (Priority: P1)
+
+A user exchanges several messages with the AI Chat assistant on any page embedding AIChatPanel. They navigate to another page, then navigate back. The full chat message history is restored — no messages are lost.
+
+**Why this priority**: Chat history represents a conversational context the user is actively building. Losing it mid-session forces the user to restart their analysis from scratch.
+
+**Independent Test**: Can be tested by sending messages in AIChatPanel, navigating away, and returning to verify message history is intact.
+
+**Acceptance Scenarios**:
+
+1. **Given** a user has sent one or more messages in AIChatPanel, **When** the user navigates away from the page, **Then** all messages (user and assistant) are captured in the snapshot.
+2. **Given** a snapshot with chat history exists, **When** the user navigates back, **Then** all prior messages are displayed in the correct order with their timestamps.
+3. **Given** AIChatPanel has a partially typed but unsent message, **When** the user navigates away and back, **Then** the in-progress message in the input is also restored.
+
+---
+
+### User Story 3 - Recover Screener Filter Settings After Navigation (Priority: P2)
+
+A user configures filter values (e.g., PE Ratio ≤ 25, ROIC ≥ 20%) in the Fundamental Screener or selects pattern filters and indicators in the Technical Screener. They navigate to run a backtest, then return. All filter/indicator selections are restored.
+
+**Why this priority**: Reconstructing filter combinations from memory adds friction and errors to multi-step research workflows.
+
+**Independent Test**: Can be tested by setting non-default filter values, navigating away, and returning to verify all filter inputs are unchanged.
+
+**Acceptance Scenarios**:
+
+1. **Given** a user has set custom filter values in Fundamental Screener (PE, ROIC, Revenue Growth), **When** the user navigates away and back, **Then** all three filter fields show the values the user set.
+2. **Given** a user has selected pattern buttons and indicator choices in Technical Screener, **When** the user navigates away and back, **Then** the exact same set of patterns and indicators is selected.
+3. **Given** a screener page is freshly loaded (no prior snapshot), **When** the page renders, **Then** default filter values are shown (snapshot does not introduce stale defaults).
+
+---
+
+### Edge Cases
+
+- What happens when a snapshot is present but the component's schema has changed (e.g., new field added)? The snapshot should fall back gracefully to schema defaults for missing fields.
+- How does the system handle a snapshot that contains invalid data (e.g., a string in a numeric field)? Invalid snapshot fields are silently ignored and defaults are used.
+- What happens if a user clears a field intentionally and navigates away and back? The empty/cleared value is preserved, not reset to a default.
+
+## Requirements _(mandatory)_
+
+### Functional Requirements
+
+- **FR-001**: Each of the four target pages (the pages embedding AIResearchBox, the pages embedding AIChatPanel, Fundamental Screener, and Technical Screener) MUST implement SvelteKit's `snapshot` export to capture and restore local component state on navigation.
+- **FR-002**: AIResearchBox MUST expose its local state (`aiText`, `validationError`) as Svelte 5 `$bindable()` props so the parent page can bind to them and include them in the page's `snapshot` export.
+- **FR-003**: AIChatPanel MUST expose its local state (`messages`, `chatInput`) as Svelte 5 `$bindable()` props so the parent page can bind to them and include them in the page's `snapshot` export.
+- **FR-004**: The Fundamental Screener page MUST capture its three filter field values (`peMax`, `roicMin`, `revGrowthMin`) in its snapshot.
+- **FR-005**: The Technical Screener page MUST capture the selected patterns (`selectedPatterns`) and any indicator dropdown selections in its snapshot.
+- **FR-006**: Snapshot restoration MUST validate captured values against the relevant Zod schemas before applying; invalid values MUST fall back to schema defaults.
+- **FR-007**: Snapshots MUST NOT persist beyond the browser session (SvelteKit's default snapshot behavior uses `sessionStorage`).
+
+### Out of Scope
+
+- **Strategy Builder** (`/strategy-builder`): All state lives in `strategyState`, a global module-level store that already survives client-side navigation. No snapshot implementation is required.
+- **Backtest Engine** (`/backtest-engine`): All state lives in `backtestState`, a global module-level store that already survives client-side navigation. No snapshot implementation is required.
+
+### Key Entities
+
+- **Page Snapshot**: The serialized state object captured by SvelteKit's `snapshot` API for a given route; survives same-session navigation.
+- **Component Local State**: The reactive `$state` object local to an organism component (AIResearchBox, AIChatPanel) or a page's own script block; lost on navigation without a snapshot.
+- **Global Store**: Module-level reactive state (e.g., `strategyState`, `backtestState`) that persists across client-side navigation without a snapshot.
+- **Snapshot Schema**: The Zod schema used to validate and parse restored snapshot data before applying it to component state.
+
+## Success Criteria _(mandatory)_
+
+### Measurable Outcomes
+
+- **SC-001**: Users can navigate away from and back to any of the four target pages without losing any component-local or page-local state they had configured.
+- **SC-002**: Snapshot capture and restoration adds no perceptible delay to page navigation (under 50ms overhead measured on mid-range hardware).
+- **SC-003**: 100% of component-local and page-local configurable fields across the four target pages are included in snapshot capture (verified by integration tests covering each field).
+- **SC-004**: Snapshot restoration never displays stale or invalid data; 0 regression incidents related to snapshot data corruption after launch.
+
+## Assumptions
+
+- SvelteKit's built-in `snapshot` API (using `sessionStorage`) is the correct mechanism; no custom serialization library is required.
+- AIResearchBox and AIChatPanel will be refactored to expose their local state via Svelte 5 `$bindable()` props so the parent page's `snapshot` export can capture and restore the values.
+- The existing Zod schemas for each organism's state are sufficient for snapshot validation; no new schemas need to be created from scratch.
+- Snapshots are session-scoped only; there is no requirement to persist state across browser tabs or hard refreshes.
+- Global module-level stores (`strategyState`, `backtestState`) already survive client-side navigation in SvelteKit and are explicitly excluded from this feature's scope.
+- Mobile browser support for `sessionStorage`-backed snapshots is assumed equivalent to desktop; no special mobile handling is required for this feature.
