@@ -1,24 +1,23 @@
 <script lang="ts">
-	import { z } from 'zod';
 	import { Button } from '$lib/components/ui/button';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import * as m from '$lib/paraglide/messages';
 	import { cn } from '$lib/utils';
 	import { goto } from '$app/navigation';
 	import { strategyState } from '$lib/state/strategy.svelte';
-	import { AIResearchBoxSchema } from '$lib/schemas';
 
-	let state = $state<z.infer<typeof AIResearchBoxSchema>>(AIResearchBoxSchema.parse({}));
+	let { aiText = $bindable('') } = $props();
+	let validationError = $state(false);
 
 	function handleConvertToStrategy() {
-		if (!state.aiText.trim()) {
-			state.validationError = true;
+		if (!aiText.trim()) {
+			validationError = true;
 			return;
 		}
-		state.validationError = false;
+		validationError = false;
 
 		//TODO: Use more generic method to pass strategy text to strategy builder
-		strategyState.inputText = state.aiText.trim();
+		strategyState.inputText = aiText.trim();
 		goto('/strategy-builder');
 	}
 </script>
@@ -28,13 +27,13 @@
 		<h2 class="mb-4 text-xl font-semibold">AI Research Box</h2>
 		<Textarea
 			placeholder={m.ai_research_box_placeholder()}
-			bind:value={state.aiText}
+			bind:value={aiText}
 			class={cn(
 				'min-h-[200px] resize-none',
-				state.validationError && 'border-destructive ring-destructive'
+				validationError && 'border-destructive ring-destructive'
 			)}
 		/>
-		{#if state.validationError}
+		{#if validationError}
 			<p class="mt-2 text-sm text-destructive">{m.ai_research_box_error()}</p>
 		{/if}
 		<Button class="mt-4 w-full" onclick={handleConvertToStrategy}>

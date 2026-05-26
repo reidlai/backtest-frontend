@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snapshot } from '@sveltejs/kit';
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
@@ -6,10 +7,28 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import NavigationSidebar from '$lib/components/organisms/NavigationSidebar.svelte';
 	import AIReviewSidebar from '$lib/components/organisms/AIReviewSidebar.svelte';
+	import { z } from 'zod';
+	import { AIChatPanelSchema, ChatMessageSchema } from '$lib/schemas';
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 
+	type ChatMessage = z.infer<typeof ChatMessageSchema>;
+
 	let { children } = $props();
+
+	let messages = $state<ChatMessage[]>([]);
+	let chatInput = $state('');
+
+	export const snapshot: Snapshot = {
+		capture: () => ({ messages: messages.slice(-50), chatInput }),
+		restore: (value: unknown) => {
+			const result = AIChatPanelSchema.safeParse(value);
+			if (result.success) {
+				messages = result.data.messages;
+				chatInput = result.data.chatInput;
+			}
+		}
+	};
 </script>
 
 <svelte:head>
@@ -26,7 +45,7 @@
 	</div>
 
 	<!-- Right Sidebar (fixed 280px) -->
-	<AIReviewSidebar />
+	<AIReviewSidebar bind:messages bind:chatInput />
 </div>
 
 <Toaster position="top-right" />

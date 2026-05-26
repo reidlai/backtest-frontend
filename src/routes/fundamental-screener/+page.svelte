@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Snapshot } from '@sveltejs/kit';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as Table from '$lib/components/ui/table';
@@ -8,10 +9,25 @@
 	import { sampleScreenerResults } from '$lib/shared-mockdata/market';
 	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
+	import { FundamentalScreenerSchema } from '$lib/schemas';
 
+	let universe = $state('S&P 500');
 	let peMax = $state('30');
 	let roicMin = $state('15');
 	let revGrowthMin = $state('10');
+
+	export const snapshot: Snapshot = {
+		capture: () => ({ universe, peMax, roicMin, revGrowthMin }),
+		restore: (value: unknown) => {
+			const result = FundamentalScreenerSchema.safeParse(value);
+			if (result.success) {
+				universe = result.data.universe;
+				peMax = result.data.peMax;
+				roicMin = result.data.roicMin;
+				revGrowthMin = result.data.revGrowthMin;
+			}
+		}
+	};
 
 	function handleBacktest(symbol: string) {
 		appState.backtestPrefillSymbol = symbol;
@@ -26,8 +42,8 @@
 	<div class="grid items-end gap-4 rounded-xl border bg-card p-6 shadow-sm md:grid-cols-4">
 		<div class="space-y-2">
 			<Label>Universe</Label>
-			<Select.Root type="single" value="S&P 500">
-				<Select.Trigger>S&P 500</Select.Trigger>
+			<Select.Root type="single" bind:value={universe}>
+				<Select.Trigger>{universe}</Select.Trigger>
 				<Select.Content>
 					<Select.Item value="S&P 500">S&P 500</Select.Item>
 					<Select.Item value="Nasdaq 100">Nasdaq 100</Select.Item>

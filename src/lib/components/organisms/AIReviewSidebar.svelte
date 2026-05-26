@@ -1,8 +1,17 @@
 <script lang="ts">
+	import { z } from 'zod';
+	import { ChatMessageSchema } from '$lib/schemas';
 	import AIReviewPanel from './AIReviewPanel.svelte';
 	import ResourceCostPanel from './ResourceCostPanel.svelte';
 	import AIChatPanel from './AIChatPanel.svelte';
 	import QuickActionsPanel from './QuickActionsPanel.svelte';
+
+	type ChatMessage = z.infer<typeof ChatMessageSchema>;
+
+	let { messages = $bindable([]), chatInput = $bindable('') } = $props<{
+		messages?: ChatMessage[];
+		chatInput?: string;
+	}>();
 </script>
 
 <aside
@@ -10,6 +19,6 @@
 >
 	<AIReviewPanel />
 	<ResourceCostPanel />
-	<AIChatPanel />
+	<AIChatPanel bind:messages bind:chatInput />
 	<QuickActionsPanel />
 </aside>
