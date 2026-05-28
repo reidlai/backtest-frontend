@@ -3,7 +3,9 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import { strategyState } from '$lib/state/strategy.svelte';
-	import { backtestState } from '$lib/state/backtest.svelte';
+	import { universeCapitalConfigState } from '$lib/state/universe-capital-config.svelte';
+	import { scheduleExecutionConfigState } from '$lib/state/schedule-execution-config.svelte';
+	import { orderTypesConfigState } from '$lib/state/order-types-config.svelte';
 	import { sampleTrades, tradesToCsv } from '$lib/shared-mockdata/trades';
 
 	function handleNewStrategy() {
@@ -13,7 +15,9 @@
 	}
 
 	function handleNewBacktest() {
-		backtestState.reset();
+		universeCapitalConfigState.reset();
+		scheduleExecutionConfigState.reset();
+		orderTypesConfigState.reset();
 		goto('/backtest-engine');
 		toast.success('Backtest parameters reset');
 	}

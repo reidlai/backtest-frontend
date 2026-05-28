@@ -1,6 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { AppStateSchema } from '../app-state.schema';
-import { BacktestStateSchema } from '../backtest-state.schema';
+import {
+	UniverseCapitalConfigSchema,
+	ScheduleExecutionConfigSchema,
+	OrderTypesConfigSchema
+} from '../../schemas/index';
 import { StrategyStateSchema } from '../strategy-state.schema';
 import { LiveControlFormSchema } from '../live-control-form.schema';
 
@@ -13,27 +17,39 @@ describe('AppStateSchema', () => {
 	});
 });
 
-describe('BacktestStateSchema', () => {
+describe('UniverseCapitalConfigSchema', () => {
 	it('parse({}) returns expected defaults', () => {
-		const result = BacktestStateSchema.parse({});
+		const result = UniverseCapitalConfigSchema.parse({});
 		expect(result.mode).toBe('Single Stock');
-		expect(result.initialCapital).toBe('100000');
-		expect(result.startDate).toBe('2020-01-01');
-		expect(result.endDate).toBe('2024-12-31');
 		expect(result.universe).toBe('SPY');
-		expect(result.timeframe).toBe('Daily');
-		expect(result.direction).toBe('Long');
-		expect(result.selectedOrderTypes).toEqual(['Market']);
+		expect(result.initialCapital).toBe('100000');
 	});
 
 	it('rejects invalid mode', () => {
-		const result = BacktestStateSchema.safeParse({ mode: 'InvalidMode' });
+		const result = UniverseCapitalConfigSchema.safeParse({ mode: 'InvalidMode' });
 		expect(result.success).toBe(false);
+	});
+});
+
+describe('ScheduleExecutionConfigSchema', () => {
+	it('parse({}) returns expected defaults', () => {
+		const result = ScheduleExecutionConfigSchema.parse({});
+		expect(result.startDate).toBe('2020-01-01');
+		expect(result.endDate).toBe('2024-12-31');
+		expect(result.timeframe).toBe('Daily');
+		expect(result.direction).toBe('Long');
 	});
 
 	it('rejects invalid direction', () => {
-		const result = BacktestStateSchema.safeParse({ direction: 'Up' });
+		const result = ScheduleExecutionConfigSchema.safeParse({ direction: 'Up' });
 		expect(result.success).toBe(false);
+	});
+});
+
+describe('OrderTypesConfigSchema', () => {
+	it('parse({}) returns expected defaults', () => {
+		const result = OrderTypesConfigSchema.parse({});
+		expect(result.selectedOrderTypes).toEqual(['Market']);
 	});
 });
 
