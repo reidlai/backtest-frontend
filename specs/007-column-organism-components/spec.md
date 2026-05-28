@@ -4,7 +4,7 @@
 
 **Created**: 2026-05-28
 
-**Status**: Draft
+**Status**: Implemented
 
 **Input**: User description: "in src/routes/backtest-engine/+page.svelte, there are three columns. Each column should be organisms components and has its own state."
 
@@ -70,7 +70,7 @@ A developer opens the backtest engine page and sees the "Order Types" column ren
 ### Edge Cases
 
 - What happens when an organism component is rendered outside the backtest engine page (e.g., in a story or test harness)?
-- If `onRun` prop is not provided to the Order Types organism, the Run Backtest button should be disabled or render a no-op.
+- If `onRun` prop is not provided to the Order Types organism, the Run Backtest button is a no-op (the prop defaults to an empty function `() => {}`; the button remains enabled and visible but clicking it has no effect).
 - What happens if one column's organism state fails to initialize (missing schema defaults)?
 
 ## Requirements _(mandatory)_
