@@ -33,7 +33,7 @@
 				id: 'msg-2',
 				role: 'assistant',
 				content:
-					"For swing trading, RSI(14) is the standard. Consider RSI(9) for more sensitive signals on higher-volatility assets.",
+					'For swing trading, RSI(14) is the standard. Consider RSI(9) for more sensitive signals on higher-volatility assets.',
 				timestamp: '10:30 AM'
 			}
 		],

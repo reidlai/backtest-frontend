@@ -80,34 +80,25 @@ When('the user navigates to the {string} page', function (_pageName: string) {
 // US1 — AIResearchBox steps
 // ---------------------------------------------------------------------------
 
-Given(
-	'the user has typed {string} in the AIResearchBox textarea',
-	function (_text: string) {
-		pending();
-	}
-);
+Given('the user has typed {string} in the AIResearchBox textarea', function (_text: string) {
+	pending();
+});
 
 Given('the AIResearchBox textarea is empty', function () {
 	pending();
 });
 
-Given(
-	'the user has clicked {string} with an empty textarea',
-	function (_buttonLabel: string) {
-		pending();
-	}
-);
+Given('the user has clicked {string} with an empty textarea', function (_buttonLabel: string) {
+	pending();
+});
 
 Given('a validation error is displayed on the AIResearchBox', function () {
 	pending();
 });
 
-Then(
-	'the AIResearchBox textarea contains {string}',
-	function (_expectedText: string) {
-		pending();
-	}
-);
+Then('the AIResearchBox textarea contains {string}', function (_expectedText: string) {
+	pending();
+});
 
 Then('the AIResearchBox textarea is empty', function () {
 	pending();
@@ -121,12 +112,9 @@ Then('no validation error is displayed on the AIResearchBox', function () {
 // US2 — AIChatPanel steps
 // ---------------------------------------------------------------------------
 
-Given(
-	'the user has sent the message {string} in AIChatPanel',
-	function (_message: string) {
-		pending();
-	}
-);
+Given('the user has sent the message {string} in AIChatPanel', function (_message: string) {
+	pending();
+});
 
 Given('AIChatPanel shows a response from the assistant', function () {
 	pending();
@@ -151,12 +139,9 @@ Then('AIChatPanel displays the previously sent user message', function () {
 	pending();
 });
 
-Then(
-	'AIChatPanel displays the assistant response in the correct order',
-	function () {
-		pending();
-	}
-);
+Then('AIChatPanel displays the assistant response in the correct order', function () {
+	pending();
+});
 
 Then('the AIChatPanel input contains {string}', function (_text: string) {
 	pending();
@@ -174,47 +159,29 @@ Then('AIChatPanel shows the empty-state placeholder text', function () {
 // US3 — Fundamental Screener steps
 // ---------------------------------------------------------------------------
 
-Given(
-	'the user has set the Universe filter to {string}',
-	function (_value: string) {
-		pending();
-	}
-);
+Given('the user has set the Universe filter to {string}', function (_value: string) {
+	pending();
+});
 
-Given(
-	'the user has set the PE Ratio filter to {string}',
-	function (_value: string) {
-		pending();
-	}
-);
+Given('the user has set the PE Ratio filter to {string}', function (_value: string) {
+	pending();
+});
 
-Given(
-	'the user has set the ROIC filter to {string}',
-	function (_value: string) {
-		pending();
-	}
-);
+Given('the user has set the ROIC filter to {string}', function (_value: string) {
+	pending();
+});
 
-Given(
-	'the user has set the Revenue Growth filter to {string}',
-	function (_value: string) {
-		pending();
-	}
-);
+Given('the user has set the Revenue Growth filter to {string}', function (_value: string) {
+	pending();
+});
 
-Given(
-	'the user has cleared the PE Ratio filter field',
-	function () {
-		pending();
-	}
-);
+Given('the user has cleared the PE Ratio filter field', function () {
+	pending();
+});
 
-Given(
-	'no prior snapshot exists for the Fundamental Screener',
-	function () {
-		pending();
-	}
-);
+Given('no prior snapshot exists for the Fundamental Screener', function () {
+	pending();
+});
 
 Then('the Universe filter shows {string}', function (_value: string) {
 	pending();
@@ -247,26 +214,17 @@ Given(
 	}
 );
 
-Given(
-	'the user has set the Trend indicator to {string}',
-	function (_value: string) {
-		pending();
-	}
-);
+Given('the user has set the Trend indicator to {string}', function (_value: string) {
+	pending();
+});
 
-Given(
-	'the user has set the Momentum indicator to {string}',
-	function (_value: string) {
-		pending();
-	}
-);
+Given('the user has set the Momentum indicator to {string}', function (_value: string) {
+	pending();
+});
 
-Given(
-	'no prior snapshot exists for the Technical Screener',
-	function () {
-		pending();
-	}
-);
+Given('no prior snapshot exists for the Technical Screener', function () {
+	pending();
+});
 
 Then('the {string} pattern button is selected', function (_pattern: string) {
 	pending();

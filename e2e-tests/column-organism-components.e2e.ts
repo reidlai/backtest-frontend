@@ -10,7 +10,9 @@ const DASHBOARD = '/';
 
 // ── Background helper ─────────────────────────────────────────────────────────
 
-async function loadBacktestPage(page: Parameters<typeof test>[1] extends (arg: infer T) => unknown ? T : never) {
+async function loadBacktestPage(
+	page: Parameters<typeof test>[1] extends (arg: infer T) => unknown ? T : never
+) {
 	await page.goto(BACKTEST);
 }
 
