@@ -85,25 +85,13 @@ jobs:
           tofu_version: '>=1.6.0'
 
       - name: Formatting check (Prettier)
-        run: pnpm prettier --check . 2>&1 | tee prettier-report.txt; exit ${PIPESTATUS[0]}
+        run: pnpm prettier --check .
 
       - name: Formatting check (OpenTofu HCL)
-        run: |
-          tofu fmt -check -recursive deploy/gcp/terraform 2>&1 | tee tofu-fmt-report.txt; exit ${PIPESTATUS[0]}
+        run: tofu fmt -check -recursive deploy/gcp/terraform
 
       - name: Linting
-        run: pnpm eslint . --format json --output-file eslint-report.json; exit $?
-
-      - name: Upload Format and Lint reports
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: format-lint-report
-          path: |
-            prettier-report.txt
-            tofu-fmt-report.txt
-            eslint-report.json
-          retention-days: 7
+        run: pnpm eslint . --format stylish
 
   ci-secrets-scan:
     name: ci-secrets-scan
