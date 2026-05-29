@@ -38,15 +38,29 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: SCA — dependency vulnerability scan
-        run: pnpm dlx audit-ci --high --output-format json 2>&1 | tee sca-report.json; exit ${PIPESTATUS[0]}
-
-      - name: Upload SCA report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: sca-report
-          path: sca-report.json
-          retention-days: 3
+        run: |
+          set +e
+          output=$(pnpm dlx audit-ci --high --output-format json 2>&1)
+          exit_code=$?
+          echo "$output"
+          if [ $exit_code -ne 0 ]; then
+            echo "::error::SCA found HIGH or CRITICAL vulnerabilities — details above"
+            echo "$output" | python3 -c "
+          import sys, json
+          try:
+            data = json.load(sys.stdin)
+            advisories = data.get('advisories', {})
+            for key, adv in advisories.items():
+              sev = adv.get('severity','').upper()
+              title = adv.get('title','')
+              module = adv.get('module_name','')
+              url = adv.get('url','')
+              print(f'::error::[{sev}] {module} — {title} ({url})')
+          except Exception:
+            pass
+          " || true
+          fi
+          exit $exit_code
 
   ci-format-lint:
     name: ci-format-lint
