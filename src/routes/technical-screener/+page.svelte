@@ -14,7 +14,7 @@
 		value: 100 + Math.random() * 20 + Math.sin(i / 5) * 10
 	}));
 
-	let selectedPatterns = $state(new SvelteSet<string>());
+	let selectedPatterns = new SvelteSet<string>();
 	let trendIndicator = $state('EMA(200)');
 	let momentumIndicator = $state('RSI(14)');
 
@@ -34,7 +34,7 @@
 		restore: (value: unknown) => {
 			const result = TechnicalScreenerSchema.safeParse(value);
 			if (result.success) {
-				selectedPatterns = new Set(result.data.selectedPatterns);
+				selectedPatterns = new SvelteSet(result.data.selectedPatterns);
 				trendIndicator = result.data.trendIndicator;
 				momentumIndicator = result.data.momentumIndicator;
 			}
