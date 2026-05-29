@@ -129,16 +129,7 @@ jobs:
           tar -xz -C /usr/local/bin -f /tmp/gitleaks_8.30.1_linux_x64.tar.gz gitleaks
 
       - name: Secrets scan
-        run: gitleaks detect --source . --report-format json --report-path gitleaks.report.json --exit-code 1
-
-      - name: Upload secrets scan report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: secrets-scan-report
-          path: gitleaks.report.json
-          if-no-files-found: ignore
-          retention-days: 7
+        run: gitleaks detect --source . --exit-code 1
 
   ci-unit-tests:
     # Scope: isolated unit tests only (vitest --project server).
@@ -166,13 +157,9 @@ jobs:
       - name: Run unit tests
         run: pnpm vitest run --project server --coverage --reporter=verbose
 
-      - name: Upload coverage report
+      - name: Log coverage report path
         if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: coverage-report
-          path: coverage/
-          retention-days: 7
+        run: echo "Coverage report written to coverage/"
 
   build:
     name: build
@@ -200,22 +187,15 @@ jobs:
             type=ref,event=branch
             type=sha,prefix=,format=short
 
-      - name: Build and export
+      - name: Build image
         uses: docker/build-push-action@v7
         with:
           context: .
           file: deploy/docker/Dockerfile
           push: false
+          load: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=docker,dest=/tmp/image.tar
-
-      - name: Upload image artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: docker-image
-          path: /tmp/image.tar
-          retention-days: 1
 
   sast:
     name: sast
@@ -226,14 +206,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Download image artifact
-        uses: actions/download-artifact@v8
-        with:
-          name: docker-image
-          path: /tmp
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
 
-      - name: Load image
-        run: docker load --input /tmp/image.tar
+      - name: Docker metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=,format=short
+
+      - name: Build image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: deploy/docker/Dockerfile
+          push: false
+          load: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Run Trivy vulnerability scanner (HIGH, CRITICAL)
         uses: aquasecurity/trivy-action@v0.36.0
@@ -257,13 +250,9 @@ jobs:
           severity: 'LOW,MEDIUM'
           ignore-unfixed: true
 
-      - name: Upload Trivy report
+      - name: Log Trivy report path
         if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: trivy-sast-report
-          path: trivy-report.sarif
-          retention-days: 7
+        run: echo "Trivy SARIF report written to trivy-report.sarif"
 
   push-to-ghcr:
     name: push-to-ghcr
@@ -295,23 +284,17 @@ jobs:
             type=sha,prefix=,format=short
             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
-      - name: Download image artifact
-        uses: actions/download-artifact@v8
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Build and push image
+        uses: docker/build-push-action@v7
         with:
-          name: docker-image
-          path: /tmp
-
-      - name: Load image
-        run: docker load --input /tmp/image.tar
-
-      - name: Re-tag image
-        run: |
-          while IFS= read -r tag; do
-            docker tag "${{ needs.build.outputs.image-name }}" "$tag"
-          done <<< "${{ steps.meta.outputs.tags }}"
-
-      - name: Push image
-        run: docker push --all-tags ghcr.io/${{ github.repository }}
+          context: .
+          file: deploy/docker/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Job Summary
         run: |
