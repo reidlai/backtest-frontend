@@ -67,14 +67,14 @@
 
 ---
 
-## Phase 5: Polish & Cross-Cutting Concerns
+## Phase 5: CD Post-Deploy Coverage, Local Lint/Type-Check & Final Page Structure Verification
 
-**Purpose**: E2E test coverage, CI validation, and final page structure verification.
+**Purpose**: Create the Playwright E2E smoke test for CD post-deploy consumption, run local lint/type-check, and do final manual verification. **E2E tests MUST NOT be added to `ci.yaml`** — they belong to the `cd-smoke-tests` CD gate (Constitution Rule 7).
 
-- [x] T011 [P] Create `e2e-tests/screener-organism-refactor.e2e.ts` — Playwright test: load `/fundamental-screener`, assert filter controls visible, assert table rows visible, assert Backtest button navigates to `/backtest-engine`
-- [x] T012 [P] Run `pnpm check` (TypeScript type-check) and `pnpm lint` — fix any type errors from snapshot re-export or prop declarations
-- [ ] T013 Manually verify snapshot: navigate from screener → another page → back; confirm filter values restored
-- [ ] T014 [P] Run Storybook (`pnpm storybook`) — confirm `ScreenerFilterPanel` and `ScreenerResultTable` stories render without errors
+- [x] T011 [P] Create `e2e-tests/screener-organism-refactor.e2e.ts` — Playwright test: load `/fundamental-screener`, assert filter controls visible, assert table rows visible, assert Backtest button navigates to `/backtest-engine`. **⚠️ CD ONLY: this file MUST NOT be wired into `ci.yaml`. It is consumed by the `cd-smoke-tests` post-deploy gate per Constitution Rule 7.**
+- [x] T012 [P] [AUTO] Run `pnpm check` (TypeScript type-check) and `pnpm lint` — fix any type errors from snapshot re-export or prop declarations
+- [ ] T013 [MANUAL] Manually verify snapshot: navigate from screener → another page → back; confirm filter values restored
+- [ ] T014 [P] [MANUAL] Run Storybook (`pnpm storybook`) — confirm `ScreenerFilterPanel` and `ScreenerResultTable` stories render without errors
 
 ---
 

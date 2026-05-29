@@ -11,8 +11,6 @@
  * runner is added in future, replace the `pending()` stubs below with the
  * Playwright page interactions from the .e2e.ts file.
  */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 // @ts-expect-error — @cucumber/cucumber is not installed; stubs kept for traceability
 import { Given, When, Then, pending } from '@cucumber/cucumber';
 

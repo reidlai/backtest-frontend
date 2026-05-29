@@ -141,6 +141,9 @@ jobs:
           retention-days: 7
 
   ci-unit-tests:
+    # Scope: isolated unit tests only (vitest --project server).
+    # DO NOT add Playwright/E2E tests here — e2e-tests/ belongs to the
+    # cd-smoke-tests CD gate (post-deploy, per constitution Rule 7).
     name: ci-unit-tests
     needs: [ci-secrets-scan]
     runs-on: ubuntu-latest
