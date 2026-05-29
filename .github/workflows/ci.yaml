@@ -46,7 +46,7 @@ jobs:
         with:
           name: sca-report
           path: sca-report.json
-          retention-days: 7
+          retention-days: 3
 
   ci-format-lint:
     name: ci-format-lint
