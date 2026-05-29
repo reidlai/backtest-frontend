@@ -85,7 +85,19 @@ jobs:
           tofu_version: '>=1.6.0'
 
       - name: Formatting check (Prettier)
-        run: pnpm prettier --check .
+        run: |
+          set +e
+          files=$(pnpm prettier --list-different . 2>/dev/null)
+          exit_code=$?
+          if [ -n "$files" ]; then
+            echo "::error::Prettier found formatting issues in $(echo "$files" | wc -l | tr -d ' ') file(s). Run 'pnpm prettier --write .' to fix."
+            while IFS= read -r file; do
+              echo "::group::$file"
+              diff <(cat "$file") <(pnpm prettier --stdin-filepath "$file" < "$file" 2>/dev/null) || true
+              echo "::endgroup::"
+            done <<< "$files"
+          fi
+          exit $exit_code
 
       - name: Formatting check (OpenTofu HCL)
         run: tofu fmt -check -recursive deploy/gcp/terraform
