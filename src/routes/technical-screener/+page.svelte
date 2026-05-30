@@ -6,6 +6,7 @@
 	import { Chart, Spline, Tooltip, Axis } from 'layerchart';
 	import { scaleTime } from 'd3';
 	import { TechnicalScreenerSchema } from '$lib/schemas';
+	import { SvelteSet } from 'svelte/reactivity';
 
 	// Mock data for chart preview
 	const chartData = Array.from({ length: 60 }, (_, i) => ({
@@ -13,7 +14,7 @@
 		value: 100 + Math.random() * 20 + Math.sin(i / 5) * 10
 	}));
 
-	let selectedPatterns = $state(new Set<string>());
+	let selectedPatterns = new SvelteSet<string>();
 	let trendIndicator = $state('EMA(200)');
 	let momentumIndicator = $state('RSI(14)');
 
@@ -33,7 +34,7 @@
 		restore: (value: unknown) => {
 			const result = TechnicalScreenerSchema.safeParse(value);
 			if (result.success) {
-				selectedPatterns = new Set(result.data.selectedPatterns);
+				selectedPatterns = new SvelteSet(result.data.selectedPatterns);
 				trendIndicator = result.data.trendIndicator;
 				momentumIndicator = result.data.momentumIndicator;
 			}

@@ -3,8 +3,6 @@
 	import { toast } from 'svelte-sonner';
 	import { appState } from '$lib/state/app.svelte';
 	import { universeCapitalConfigState } from '$lib/state/universe-capital-config.svelte';
-	import { scheduleExecutionConfigState } from '$lib/state/schedule-execution-config.svelte';
-	import { orderTypesConfigState } from '$lib/state/order-types-config.svelte';
 	import UniverseCapitalConfig from '$lib/components/organisms/UniverseCapitalConfig.svelte';
 	import ScheduleExecutionConfig from '$lib/components/organisms/ScheduleExecutionConfig.svelte';
 	import OrderTypesConfig from '$lib/components/organisms/OrderTypesConfig.svelte';
@@ -16,17 +14,6 @@
 	});
 
 	function handleRun() {
-		// Page owns run coordination: reads from all three singletons
-		const _config = {
-			mode: universeCapitalConfigState.mode,
-			universe: universeCapitalConfigState.universe,
-			initialCapital: universeCapitalConfigState.initialCapital,
-			startDate: scheduleExecutionConfigState.startDate,
-			endDate: scheduleExecutionConfigState.endDate,
-			timeframe: scheduleExecutionConfigState.timeframe,
-			direction: scheduleExecutionConfigState.direction,
-			selectedOrderTypes: [...orderTypesConfigState.selectedOrderTypes]
-		};
 		toast.info('Backtest queued and processing...');
 	}
 </script>

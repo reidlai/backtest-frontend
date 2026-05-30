@@ -8,12 +8,6 @@ import { test, expect } from '@playwright/test';
 const BACKTEST = '/backtest-engine';
 const DASHBOARD = '/';
 
-// ── Background helper ─────────────────────────────────────────────────────────
-
-async function loadBacktestPage(page: Parameters<typeof test>[1] extends (arg: infer T) => unknown ? T : never) {
-	await page.goto(BACKTEST);
-}
-
 // ── @smoke US1: Universe & Capital Column ─────────────────────────────────────
 
 test.describe('@smoke @organisms US1 – Universe & Capital Column', () => {

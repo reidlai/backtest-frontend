@@ -20,7 +20,8 @@ const RESEARCH = '/research-workbench';
 const FUNDAMENTAL = '/fundamental-screener';
 const TECHNICAL = '/technical-screener';
 
-const AI_RESEARCH_TEXTAREA = 'textarea[placeholder="Describe your investment strategy in natural language..."]';
+const AI_RESEARCH_TEXTAREA =
+	'textarea[placeholder="Describe your investment strategy in natural language..."]';
 const AI_CHAT_TEXTAREA = 'textarea[placeholder="Ask AI..."]';
 
 // ── US1: AI Research Box ──────────────────────────────────────────────────────

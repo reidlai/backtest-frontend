@@ -21,4 +21,7 @@
 
 <Story name="Default" />
 
-<Story name="WithText" args={{ aiText: 'Analyze momentum strategies with RSI filter for S&P 500' }} />
+<Story
+	name="WithText"
+	args={{ aiText: 'Analyze momentum strategies with RSI filter for S&P 500' }}
+/>

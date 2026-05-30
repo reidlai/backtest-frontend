@@ -11,8 +11,6 @@
  * runner is added in future, replace the `pending()` stubs below with the
  * Playwright page interactions from the .e2e.ts file.
  */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 // @ts-expect-error — @cucumber/cucumber is not installed; stubs kept for traceability
 import { Given, When, Then, pending } from '@cucumber/cucumber';
 
@@ -44,7 +42,10 @@ Then('it does not require orderTypesConfigState to be present', pending);
 // ---------------------------------------------------------------------------
 // US2 – Schedule & Execution Column
 
-Then('the Schedule & Execution column is rendered by the ScheduleExecutionConfig organism', pending);
+Then(
+	'the Schedule & Execution column is rendered by the ScheduleExecutionConfig organism',
+	pending
+);
 Then('it displays the default start date {string}', pending);
 Then('it displays the default end date {string}', pending);
 Then('it displays the default timeframe {string}', pending);
@@ -67,7 +68,10 @@ Then('the orderTypesConfigState selectedOrderTypes includes {string}', pending);
 Given('the OrderTypesConfig organism has an onRun callback provided by the page', pending);
 When('the user clicks the Run Backtest button', pending);
 Then('the onRun callback is invoked', pending);
-Then('the organism does not directly access universeCapitalConfigState or scheduleExecutionConfigState', pending);
+Then(
+	'the organism does not directly access universeCapitalConfigState or scheduleExecutionConfigState',
+	pending
+);
 
 Given('the OrderTypesConfig organism is rendered without an onRun prop', pending);
 Then('no error is thrown', pending);
