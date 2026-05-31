@@ -38,5 +38,10 @@
 	"gateway_card_regime_title": "Market Regime",
 	"gateway_card_regime_desc": "Identify current market environment.",
 	"gateway_card_sentiment_title": "Sentiment & Events",
-	"gateway_card_sentiment_desc": "Track news and social sentiment shifts."
+	"gateway_card_sentiment_desc": "Track news and social sentiment shifts.",
+	"screener_indicator_selection": "Screening Criteria",
+	"screener_trend": "Trend",
+	"screener_momentum": "Momentum",
+	"screener_chart_patterns": "Pattern Filter",
+	"screener_pattern_preview": "Pattern Preview"
 }
