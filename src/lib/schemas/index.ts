@@ -45,3 +45,5 @@ export * from './regime-cards-grid.schema';
 export * from './fundamental-screener.schema';
 export * from './technical-screener.schema';
 export * from './screener-filter-panel.schema';
+export * from './strategy-input-panel.schema';
+export * from './strategy-output-panel.schema';
