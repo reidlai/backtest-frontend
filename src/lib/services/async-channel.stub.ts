@@ -42,4 +42,4 @@ export type AsyncChannelRequest = (payload?: AsyncChannelPayload) => Promise<voi
  * No-op stub. Replace with real chrome.runtime.sendMessage implementation
  * when async API integration begins.
  */
-export const asyncChannelRequest: AsyncChannelRequest = (_payload?) => Promise.resolve();
+export const asyncChannelRequest: AsyncChannelRequest = () => Promise.resolve();
