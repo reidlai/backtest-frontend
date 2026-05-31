@@ -90,7 +90,9 @@
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k,':',v\\) for k,v in d.get\\('scripts',{}\\).items\\(\\)]\")",
       "Bash(./node_modules/.bin/cucumber-js --version)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('devDependencies',{}\\), indent=2\\)\\)\")",
-      "Bash(gh pr create --title 'feat\\(011\\): add StrategyInputPanel and StrategyOutputPanel organisms to strategy-builder page' --body ' *)"
+      "Bash(gh pr create --title 'feat\\(011\\): add StrategyInputPanel and StrategyOutputPanel organisms to strategy-builder page' --body ' *)",
+      "Bash(pnpm run *)",
+      "Bash(gh pr create --title 'feat\\(012\\): refactor technical-screener into Atomic Design organisms' --body ' *)"
     ]
   }
 }
