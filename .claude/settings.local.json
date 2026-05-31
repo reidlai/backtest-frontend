@@ -83,7 +83,14 @@
       "Bash(sed -i '' 's/- \\\\[ \\\\] T004 /- [x] T004 /' specs/008-screener-organism-refactor/tasks.md)",
       "Bash(gh pr create --title 'feat\\(008\\): extract fundamental screener filter and result into organism components' --body ' *)",
       "Bash(pnpm test:unit --run)",
-      "Bash(gh pr create --title 'feat\\(010\\): extract MarketEnvironmentSummary and RegimeCardsGrid organisms' --body ' *)"
+      "Bash(gh pr create --title 'feat\\(010\\): extract MarketEnvironmentSummary and RegimeCardsGrid organisms' --body ' *)",
+      "Bash(pnpm build-storybook *)",
+      "Bash(pnpm cucumber *)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(d.get\\('scripts',{}\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(k,':',v\\) for k,v in d.get\\('scripts',{}\\).items\\(\\)]\")",
+      "Bash(./node_modules/.bin/cucumber-js --version)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('devDependencies',{}\\), indent=2\\)\\)\")",
+      "Bash(gh pr create --title 'feat\\(011\\): add StrategyInputPanel and StrategyOutputPanel organisms to strategy-builder page' --body ' *)"
     ]
   }
 }
