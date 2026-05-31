@@ -82,7 +82,8 @@
       "Bash(sed -i '' 's/- \\\\[ \\\\] T003 /- [x] T003 /' specs/008-screener-organism-refactor/tasks.md)",
       "Bash(sed -i '' 's/- \\\\[ \\\\] T004 /- [x] T004 /' specs/008-screener-organism-refactor/tasks.md)",
       "Bash(gh pr create --title 'feat\\(008\\): extract fundamental screener filter and result into organism components' --body ' *)",
-      "Bash(pnpm test:unit --run)"
+      "Bash(pnpm test:unit --run)",
+      "Bash(gh pr create --title 'feat\\(010\\): extract MarketEnvironmentSummary and RegimeCardsGrid organisms' --body ' *)"
     ]
   }
 }
