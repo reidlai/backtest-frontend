@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/008-screener-organism-refactor/plan.md`
+at `specs/009-fix-ui-runtime-errors/plan.md`
 
 <!-- SPECKIT END -->
