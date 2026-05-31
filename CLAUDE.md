@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/009-fix-ui-runtime-errors/plan.md`
+at `specs/010-market-regime-organisms/plan.md`
 
 <!-- SPECKIT END -->
