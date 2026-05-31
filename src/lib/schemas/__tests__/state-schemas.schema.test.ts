@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { AppStateSchema } from '../app-state.schema';
+import { AppStateSchema, SimulatedMetricsSchema } from '../app-state.schema';
 import {
 	UniverseCapitalConfigSchema,
 	ScheduleExecutionConfigSchema,
@@ -12,8 +12,31 @@ describe('AppStateSchema', () => {
 	it('parse({}) returns expected defaults', () => {
 		const result = AppStateSchema.parse({});
 		expect(result).toEqual({
-			backtestPrefillSymbol: ''
+			backtestPrefillSymbol: '',
+			simulatedMetrics: { totalReturn: 0, maxDrawdown: 0, winRate: 0 }
 		});
+	});
+});
+
+describe('SimulatedMetricsSchema', () => {
+	it('parse({}) returns expected defaults', () => {
+		const result = SimulatedMetricsSchema.parse({});
+		expect(result).toEqual({ totalReturn: 0, maxDrawdown: 0, winRate: 0 });
+	});
+
+	it('rejects non-numeric totalReturn', () => {
+		const result = SimulatedMetricsSchema.safeParse({ totalReturn: 'bad' });
+		expect(result.success).toBe(false);
+	});
+
+	it('rejects non-numeric maxDrawdown', () => {
+		const result = SimulatedMetricsSchema.safeParse({ maxDrawdown: 'bad' });
+		expect(result.success).toBe(false);
+	});
+
+	it('rejects non-numeric winRate', () => {
+		const result = SimulatedMetricsSchema.safeParse({ winRate: 'bad' });
+		expect(result.success).toBe(false);
 	});
 });
 
