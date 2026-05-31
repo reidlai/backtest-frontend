@@ -9,11 +9,7 @@ import * as path from 'node:path';
 
 const ROOT = path.resolve(process.cwd());
 const ORGANISMS_DIR = path.join(ROOT, 'src', 'lib', 'components', 'organisms');
-const SCHEMAS_DIR = path.join(ROOT, 'src', 'lib', 'schemas');
-const STORIES_DIR = path.join(ROOT, 'src', 'stories');
-const FEATURES_DIR = path.join(ROOT, 'features');
 const ROUTES_DIR = path.join(ROOT, 'src', 'routes');
-const STATE_DIR = path.join(ROOT, 'src', 'lib', 'state');
 
 interface StrategyBuilderWorld {
 	pageContent?: string;
@@ -42,7 +38,10 @@ When('the page has loaded', function (this: StrategyBuilderWorld) {
 // ---------------------------------------------------------------------------
 
 Then('the Input Panel is visible', function (this: StrategyBuilderWorld) {
-	assert.ok(this.pageContent?.includes('StrategyInputPanel'), 'Page must import StrategyInputPanel');
+	assert.ok(
+		this.pageContent?.includes('StrategyInputPanel'),
+		'Page must import StrategyInputPanel'
+	);
 	const inputPanelPath = path.join(ORGANISMS_DIR, 'StrategyInputPanel.svelte');
 	assert.ok(fs.existsSync(inputPanelPath), 'StrategyInputPanel.svelte must exist');
 	this.inputPanelContent = fs.readFileSync(inputPanelPath, 'utf-8');
@@ -50,7 +49,10 @@ Then('the Input Panel is visible', function (this: StrategyBuilderWorld) {
 
 Then('the Run button is disabled', function (this: StrategyBuilderWorld) {
 	const content = this.inputPanelContent ?? '';
-	assert.ok(content.includes('runDisabled'), 'StrategyInputPanel must have runDisabled derived state');
+	assert.ok(
+		content.includes('runDisabled'),
+		'StrategyInputPanel must have runDisabled derived state'
+	);
 	assert.ok(content.includes('disabled={runDisabled}'), 'Run button must be bound to runDisabled');
 });
 
@@ -206,10 +208,7 @@ When('the backtest fails with an error', function (this: StrategyBuilderWorld) {
 });
 
 Then('the Output Panel displays an inline error message', function (this: StrategyBuilderWorld) {
-	assert.ok(
-		this.outputPanelContent?.includes('error'),
-		'Output Panel must handle error prop'
-	);
+	assert.ok(this.outputPanelContent?.includes('error'), 'Output Panel must handle error prop');
 	assert.ok(
 		this.outputPanelContent?.includes('text-destructive'),
 		'Error state must use destructive styling'
@@ -228,16 +227,13 @@ Then('the Input Panel remains editable', function (this: StrategyBuilderWorld) {
 // US3: Layout steps
 // ---------------------------------------------------------------------------
 
-Given(
-	'my viewport width is 1280 pixels or wider',
-	function (this: StrategyBuilderWorld) {
-		// Structural: verify responsive grid class exists
-		assert.ok(
-			this.pageContent?.includes('lg:grid-cols-2'),
-			'Page must use lg:grid-cols-2 for side-by-side layout'
-		);
-	}
-);
+Given('my viewport width is 1280 pixels or wider', function (this: StrategyBuilderWorld) {
+	// Structural: verify responsive grid class exists
+	assert.ok(
+		this.pageContent?.includes('lg:grid-cols-2'),
+		'Page must use lg:grid-cols-2 for side-by-side layout'
+	);
+});
 
 When('the page has loaded', function (this: StrategyBuilderWorld) {
 	// Aliased by earlier definition — no-op here
@@ -254,28 +250,22 @@ Then(
 	}
 );
 
-Then(
-	'neither panel has overflowing or clipped content',
-	function (this: StrategyBuilderWorld) {
-		// Structural: verify no overflow-hidden on panel wrapper that would clip content
-		const pageContent = this.pageContent ?? '';
-		assert.ok(
-			!pageContent.includes('overflow-hidden'),
-			'Page layout must not use overflow-hidden on panel wrappers'
-		);
-	}
-);
+Then('neither panel has overflowing or clipped content', function (this: StrategyBuilderWorld) {
+	// Structural: verify no overflow-hidden on panel wrapper that would clip content
+	const pageContent = this.pageContent ?? '';
+	assert.ok(
+		!pageContent.includes('overflow-hidden'),
+		'Page layout must not use overflow-hidden on panel wrappers'
+	);
+});
 
-Given(
-	'my viewport width is between 768 and 1023 pixels',
-	function (this: StrategyBuilderWorld) {
-		// Single-column layout is the default (no lg: prefix); verify grid exists
-		assert.ok(
-			this.pageContent?.includes('grid gap-6 lg:grid-cols-2'),
-			'Page must use responsive grid that stacks below lg breakpoint'
-		);
-	}
-);
+Given('my viewport width is between 768 and 1023 pixels', function (this: StrategyBuilderWorld) {
+	// Single-column layout is the default (no lg: prefix); verify grid exists
+	assert.ok(
+		this.pageContent?.includes('grid gap-6 lg:grid-cols-2'),
+		'Page must use responsive grid that stacks below lg breakpoint'
+	);
+});
 
 Then(
 	'the Input Panel and Output Panel are stacked vertically',
