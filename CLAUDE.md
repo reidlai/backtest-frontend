@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/011-strategy-builder-panels/plan.md`
+at `specs/012-technical-indicator-layout/plan.md`
 
 <!-- SPECKIT END -->
