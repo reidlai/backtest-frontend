@@ -16,7 +16,10 @@
 	let { ticker = 'AAPL', chartData = [] }: Props = $props();
 </script>
 
-<div class="flex h-full flex-col rounded-xl border bg-card p-6 shadow-sm" aria-label={m.screener_pattern_preview()}>
+<div
+	class="flex h-full flex-col rounded-xl border bg-card p-6 shadow-sm"
+	aria-label={m.screener_pattern_preview()}
+>
 	<h2 class="mb-4 text-lg font-semibold">{m.screener_pattern_preview()} ({ticker})</h2>
 	<div class="h-[400px]">
 		{#if chartData.length === 0}

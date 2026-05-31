@@ -26,7 +26,10 @@
 	}
 </script>
 
-<div class="space-y-4 rounded-xl border bg-card p-6 shadow-sm" aria-label={m.screener_chart_patterns()}>
+<div
+	class="space-y-4 rounded-xl border bg-card p-6 shadow-sm"
+	aria-label={m.screener_chart_patterns()}
+>
 	<h2 class="text-lg font-semibold">{m.screener_chart_patterns()}</h2>
 	<div class="flex flex-wrap gap-2">
 		{#each availablePatterns as pattern (pattern)}

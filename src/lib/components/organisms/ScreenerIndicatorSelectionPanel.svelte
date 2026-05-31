@@ -18,7 +18,10 @@
 	}: Props = $props();
 </script>
 
-<div class="space-y-4 rounded-xl border bg-card p-6 shadow-sm" aria-label={m.screener_indicator_selection()}>
+<div
+	class="space-y-4 rounded-xl border bg-card p-6 shadow-sm"
+	aria-label={m.screener_indicator_selection()}
+>
 	<h2 class="text-lg font-semibold">{m.screener_indicator_selection()}</h2>
 	<div class="space-y-4">
 		<div class="space-y-2">
