@@ -63,10 +63,7 @@ When('the organism renders', function (this: TradeLotWorld) {
 	// Rendering verified via Storybook stories
 });
 
-Then(
-	'it displays a table row for each trade',
-	function (this: TradeLotWorld) {}
-);
+Then('it displays a table row for each trade', function (this: TradeLotWorld) {});
 
 Then(
 	/^each row contains cells for Trade ID, Symbol, L\/S, Entry Date, Entry Price, Exit Date, Exit Price, Qty, Comm\., Slip\., Net PnL, Return %, Days, and Exit Reason$/,
@@ -74,9 +71,20 @@ Then(
 		const filePath = path.join(ORGANISMS_DIR, 'TradeLotTable.svelte');
 		const contents = fs.readFileSync(filePath, 'utf-8');
 		const columns = [
-			'Trade ID', 'Symbol', 'L/S', 'Entry Date', 'Entry Price',
-			'Exit Date', 'Exit Price', 'Qty', 'Comm.', 'Slip.',
-			'Net PnL', 'Return %', 'Days', 'Exit Reason'
+			'Trade ID',
+			'Symbol',
+			'L/S',
+			'Entry Date',
+			'Entry Price',
+			'Exit Date',
+			'Exit Price',
+			'Qty',
+			'Comm.',
+			'Slip.',
+			'Net PnL',
+			'Return %',
+			'Days',
+			'Exit Reason'
 		];
 		for (const col of columns) {
 			assert.ok(contents.includes(col), `Expected column "${col}" in TradeLotTable.svelte`);
@@ -84,76 +92,61 @@ Then(
 	}
 );
 
-Then(
-	'the direction cell text has blue colour styling',
-	function (this: TradeLotWorld) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes('text-blue-400'), 'Expected text-blue-400 in TradeLotTable.svelte');
-	}
-);
+Then('the direction cell text has blue colour styling', function (this: TradeLotWorld) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(contents.includes('text-blue-400'), 'Expected text-blue-400 in TradeLotTable.svelte');
+});
 
-Then(
-	'the direction cell text has orange colour styling',
-	function (this: TradeLotWorld) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes('text-orange-400'), 'Expected text-orange-400 in TradeLotTable.svelte');
-	}
-);
+Then('the direction cell text has orange colour styling', function (this: TradeLotWorld) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(
+		contents.includes('text-orange-400'),
+		'Expected text-orange-400 in TradeLotTable.svelte'
+	);
+});
 
-Then(
-	'the Net PnL cell has green colour styling',
-	function (this: TradeLotWorld) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes('text-green-400'), 'Expected text-green-400 in TradeLotTable.svelte');
-	}
-);
+Then('the Net PnL cell has green colour styling', function (this: TradeLotWorld) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(contents.includes('text-green-400'), 'Expected text-green-400 in TradeLotTable.svelte');
+});
 
-Then(
-	'the Net PnL cell has red colour styling',
-	function (this: TradeLotWorld) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes('text-red-400'), 'Expected text-red-400 in TradeLotTable.svelte');
-	}
-);
+Then('the Net PnL cell has red colour styling', function (this: TradeLotWorld) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(contents.includes('text-red-400'), 'Expected text-red-400 in TradeLotTable.svelte');
+});
 
-Then(
-	'it displays a card with the text {string}',
-	function (this: TradeLotWorld, text: string) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes(text), `Expected "${text}" in TradeLotTable.svelte`);
-	}
-);
+Then('it displays a card with the text {string}', function (this: TradeLotWorld, text: string) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(contents.includes(text), `Expected "${text}" in TradeLotTable.svelte`);
+});
 
-Then(
-	'it displays a {string} button',
-	function (this: TradeLotWorld, label: string) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes(label), `Expected button label "${label}" in TradeLotTable.svelte`);
-	}
-);
+Then('it displays a {string} button', function (this: TradeLotWorld, label: string) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(contents.includes(label), `Expected button label "${label}" in TradeLotTable.svelte`);
+});
 
 Then(
 	'the {string} button links to {string}',
 	function (this: TradeLotWorld, _label: string, href: string) {
 		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(contents.includes(href), `Expected navigation target "${href}" in TradeLotTable.svelte`);
+		assert.ok(
+			contents.includes(href),
+			`Expected navigation target "${href}" in TradeLotTable.svelte`
+		);
 	}
 );
 
-Then(
-	'only the valid trade is displayed as a table row',
-	function (this: TradeLotWorld) {
-		const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
-		assert.ok(
-			contents.includes('safeParse'),
-			'Expected safeParse usage in TradeLotTable.svelte for invalid record exclusion'
-		);
-		assert.ok(
-			contents.includes('console.warn'),
-			'Expected console.warn in TradeLotTable.svelte for excluded record logging'
-		);
-	}
-);
+Then('only the valid trade is displayed as a table row', function (this: TradeLotWorld) {
+	const contents = fs.readFileSync(path.join(ORGANISMS_DIR, 'TradeLotTable.svelte'), 'utf-8');
+	assert.ok(
+		contents.includes('safeParse'),
+		'Expected safeParse usage in TradeLotTable.svelte for invalid record exclusion'
+	);
+	assert.ok(
+		contents.includes('console.warn'),
+		'Expected console.warn in TradeLotTable.svelte for excluded record logging'
+	);
+});
 
 // ---------------------------------------------------------------------------
 // Parent page delegation
@@ -172,8 +165,5 @@ Then('it does not contain any {string} markup', function (this: TradeLotWorld, m
 });
 
 Then('it does contain a {string} component tag', function (this: TradeLotWorld, tag: string) {
-	assert.ok(
-		this.fileContents?.includes(tag),
-		`Expected "${tag}" component tag in +page.svelte`
-	);
+	assert.ok(this.fileContents?.includes(tag), `Expected "${tag}" component tag in +page.svelte`);
 });
