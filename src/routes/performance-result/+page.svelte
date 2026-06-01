@@ -1,13 +1,11 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import * as Table from '$lib/components/ui/table';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as m from '$lib/paraglide/messages';
 	import {
 		defaultMetricTiles,
-		sampleRegimeBreakdown,
 		samplePerfSummary
 	} from '$lib/shared-mockdata/performance';
 	import { goto } from '$app/navigation';
@@ -15,6 +13,7 @@
 
 	import PerformanceMetricGrid from '$lib/components/organisms/PerformanceMetricGrid.svelte';
 	import PerformancdeChartTabs from '$lib/components/organisms/PerformancdeChartTabs.svelte';
+	import RegimeBreakdownTable from '$lib/components/organisms/RegimeBreakdownTable.svelte';
 
 	let tiles = $state([...defaultMetricTiles]);
 	// let activeChartTab = $state<ChartTab>('equity-curve');
@@ -133,34 +132,7 @@
 	<PerformancdeChartTabs />
 
 	<div class="grid gap-8 lg:grid-cols-2">
-		<!-- Regime Breakdown -->
-		<div class="space-y-4">
-			<h2 class="text-xl font-semibold">Regime Breakdown</h2>
-			<div class="overflow-hidden rounded-xl border bg-card shadow-sm">
-				<Table.Root>
-					<Table.Header>
-						<Table.Row>
-							<Table.Head>Regime</Table.Head>
-							<Table.Head>Return</Table.Head>
-							<Table.Head>Max DD</Table.Head>
-							<Table.Head>Win Rate</Table.Head>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{#each sampleRegimeBreakdown as row (row.regime)}
-							<Table.Row>
-								<Table.Cell class="font-medium">{row.regime}</Table.Cell>
-								<Table.Cell class={row.returnPct > 0 ? 'text-green-400' : 'text-red-400'}>
-									{row.returnPct}%
-								</Table.Cell>
-								<Table.Cell class="text-red-400">{row.maxDrawdown}%</Table.Cell>
-								<Table.Cell>{row.winRate}%</Table.Cell>
-							</Table.Row>
-						{/each}
-					</Table.Body>
-				</Table.Root>
-			</div>
-		</div>
+		<RegimeBreakdownTable />
 
 		<!-- Performance Summary -->
 		<div class="space-y-4">

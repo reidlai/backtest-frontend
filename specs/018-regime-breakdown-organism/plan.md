@@ -6,7 +6,7 @@
 
 ## Summary
 
-Extract the inline Regime Breakdown `<div>` from `src/routes/performance-result/+page.svelte` into a new self-contained Svelte organism component (`RegimeBreakdownTable.svelte`). The organism manages its own local state (seeded from existing mock data), validates rows against the existing `RegimeBreakdownSchema` Zod schema before rendering, and shows a "No data available" message when the array is empty. No props are accepted; mock data is temporary until a future API integration feature replaces it.
+Extract the full inline Regime Breakdown section from `src/routes/performance-result/+page.svelte` into a new self-contained Svelte organism component (`RegimeBreakdownTable.svelte`). The organism encapsulates the outer wrapper div, `<h2>Regime Breakdown</h2>` heading, inner card div, and `<Table.Root>` — replacing all of that markup in the parent page with a single `<RegimeBreakdownTable />` tag. The organism manages its own local state (seeded from existing mock data), validates rows against the existing `RegimeBreakdownSchema` Zod schema before rendering, and shows a "No data available" message when the array is empty. No props are accepted; mock data is temporary until a future API integration feature replaces it.
 
 ## Technical Context
 
@@ -62,18 +62,18 @@ src/
 ├── lib/
 │   ├── components/
 │   │   └── organisms/
-│   │       └── RegimeBreakdownTable.svelte         (NEW)
+│   │       └── RegimeBreakdownTable.svelte         (NEW — full section: wrapper div, h2, card div, Table.Root)
 │   └── schemas/
 │       └── regime-breakdown.schema.ts              (existing, unchanged)
 └── routes/
     └── performance-result/
-        └── +page.svelte                            (UPDATED — replace inline div with <RegimeBreakdownTable />)
+        └── +page.svelte                            (UPDATED — entire outer div replaced with <RegimeBreakdownTable />)
 
 features/
 └── regime-breakdown-organism.feature               (NEW — BDD scenarios)
 ```
 
-**Structure Decision**: Single SvelteKit project; organism placed in `src/lib/components/organisms/` consistent with all existing organisms (e.g., `PerformanceMetricGrid.svelte`, `TradeLotTable.svelte`).
+**Structure Decision**: Single SvelteKit project; organism placed in `src/lib/components/organisms/` consistent with all existing organisms (e.g., `PerformanceMetricGrid.svelte`, `TradeLotTable.svelte`). The organism owns the full visual section including the heading, matching the scope of the inline markup it replaces.
 
 ## Phase 0: Research
 

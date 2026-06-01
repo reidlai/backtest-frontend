@@ -28,6 +28,8 @@
 
 **Derived state**: None required. `rows.length === 0` is evaluated inline in the template.
 
+**Component markup scope**: The organism renders the **full section** — outer `<div class="space-y-4">`, `<h2 class="text-xl font-semibold">Regime Breakdown</h2>`, inner card `<div class="overflow-hidden rounded-xl border bg-card shadow-sm">`, and `<Table.Root>`. The parent page is reduced to a single `<RegimeBreakdownTable />` self-closing tag with no surrounding wrappers.
+
 ---
 
 ## BDD Feature File Contract
