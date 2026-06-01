@@ -10,9 +10,9 @@ Feature: Zod Schema per Organism
 
   @smoke
   Scenario: Schema file exists for every organism
-    Given 16 organism Svelte files exist in "src/lib/components/organisms/"
+    Given 33 organism Svelte files exist in "src/lib/components/organisms/"
     When I list the files in "src/lib/schemas/"
-    Then there are exactly 16 schema files with the ".schema.ts" suffix
+    Then there are exactly 55 schema files with the ".schema.ts" suffix
     And a barrel export file "src/lib/schemas/index.ts" exists
 
   @smoke
@@ -66,4 +66,4 @@ Feature: Zod Schema per Organism
   Scenario: All schemas are re-exported from the index barrel
     Given "src/lib/schemas/index.ts" exists
     When I import from "$lib/schemas"
-    Then all 16 schema exports and their inferred types are available
+    Then all 55 schema exports and their inferred types are available
