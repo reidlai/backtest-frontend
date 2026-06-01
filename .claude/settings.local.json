@@ -96,7 +96,8 @@
       "Bash(gh pr create --title 'feat\\(013\\): extract sentiment events table into SentimentEventsTable organism' --body ' *)",
       "Bash(gh pr create --title 'feat\\(014\\): extract trade lot table into TradeLotTable organism' --body ' *)",
       "Bash(gh pr create --title 'feat\\(015\\): extract setting-billing cards into Zod-validated organism components' --body ' *)",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('pnpm', {}\\), indent=2\\)\\)\")"
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(json.dumps\\(d.get\\('pnpm', {}\\), indent=2\\)\\)\")",
+      "Bash(gh pr create --title 'fix\\(016\\): migrate pnpm workspace config from v10 to v11' --body ' *)"
     ]
   }
 }
