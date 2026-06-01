@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/014-trade-lot-table-organism/plan.md`
+at `specs/015-billing-card-organisms/plan.md`
 
 <!-- SPECKIT END -->
