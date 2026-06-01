@@ -28,7 +28,9 @@ jobs:
           node-version: 24
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        run: |
+          PNPM_VERSION=$(node -e "const p=require('./package.json').packageManager;console.log(p.split('@')[1])")
+          npm install -g pnpm@${PNPM_VERSION}
 
       - name: Get pnpm store path
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
@@ -82,7 +84,9 @@ jobs:
           node-version: 24
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        run: |
+          PNPM_VERSION=$(node -e "const p=require('./package.json').packageManager;console.log(p.split('@')[1])")
+          npm install -g pnpm@${PNPM_VERSION}
 
       - name: Get pnpm store path
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
@@ -166,7 +170,9 @@ jobs:
           node-version: 24
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        run: |
+          PNPM_VERSION=$(node -e "const p=require('./package.json').packageManager;console.log(p.split('@')[1])")
+          npm install -g pnpm@${PNPM_VERSION}
 
       - name: Get pnpm store path
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
