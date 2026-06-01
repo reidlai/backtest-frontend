@@ -100,7 +100,8 @@
       "Bash(gh pr create --title 'fix\\(016\\): migrate pnpm workspace config from v10 to v11' --body ' *)",
       "Bash(pnpm config *)",
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); [print\\(h\\) for h in d.get\\('hooks', {}\\).get\\('PostToolUse', []\\)]\")",
-      "Bash(pnpm approve-builds *)"
+      "Bash(pnpm approve-builds *)",
+      "Bash(gh pr create --repo reidlai/backtest-frontend --base main --head 017-fix-technical-screener-state --title 'fix\\(screener\\): wrap selectedPatterns with $state\\(\\) to restore Svelte 5 reactivity' --body ' *)"
     ]
   }
 }

@@ -13,6 +13,12 @@
 		value: 100 + Math.random() * 20 + Math.sin(i / 5) * 10
 	}));
 
+	// SvelteSet from svelte/reactivity is self-reactive — it uses Svelte's internal signal
+	// protocol directly, so $state() wrapping is unnecessary and would violate the
+	// svelte/no-unnecessary-state-wrap lint rule. Mutations (.add, .delete, .clear) trigger
+	// UI updates automatically.
+	// Unknown pattern IDs from snapshots are implicitly ignored — SvelteSet.add() stores them
+	// but the ScreenerChartPatternPanel only renders known patterns, so stale IDs are harmless.
 	let selectedPatterns = new SvelteSet<string>();
 	let trendIndicator = $state('EMA(200)');
 	let momentumIndicator = $state('RSI(14)');
