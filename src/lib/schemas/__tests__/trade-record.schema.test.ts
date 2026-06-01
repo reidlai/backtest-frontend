@@ -25,7 +25,7 @@ describe('TradeRecordSchema', () => {
 	});
 
 	it('rejects a record missing a required field', () => {
-		const { symbol, ...withoutSymbol } = validTrade;
+		const { symbol: _symbol, ...withoutSymbol } = validTrade;
 		const result = TradeRecordSchema.safeParse(withoutSymbol);
 		expect(result.success).toBe(false);
 	});
