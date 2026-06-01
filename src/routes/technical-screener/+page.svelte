@@ -13,7 +13,10 @@
 		value: 100 + Math.random() * 20 + Math.sin(i / 5) * 10
 	}));
 
-	let selectedPatterns = new SvelteSet<string>();
+	// $state() is required so Svelte 5 tracks mutations (.add, .delete, .clear) and triggers re-renders.
+	// Unknown pattern IDs from snapshots are implicitly ignored — SvelteSet.add() stores them
+	// but the ScreenerChartPatternPanel only renders known patterns, so stale IDs are harmless.
+	let selectedPatterns = $state(new SvelteSet<string>());
 	let trendIndicator = $state('EMA(200)');
 	let momentumIndicator = $state('RSI(14)');
 
