@@ -71,7 +71,7 @@ The organism owns its data state internally so the parent page is not responsibl
 - **FR-004**: The organism MUST render a table with columns: Regime, Return, Max DD, Win Rate — matching the current inline implementation.
 - **FR-005**: Return percentage values MUST be displayed with a green color for positive values and red for negative values.
 - **FR-006**: Max drawdown values MUST be displayed in red.
-- **FR-007**: The parent page (`src/routes/performance-result/+page.svelte`) MUST replace the inline Regime Breakdown `<div>` with the new organism component.
+- **FR-007**: The parent page (`src/routes/performance-result/+page.svelte`) MUST replace the entire inline Regime Breakdown section — the outer `<div class="space-y-4">` containing the `<h2>Regime Breakdown</h2>` heading, the inner card `<div class="overflow-hidden rounded-xl border bg-card shadow-sm">`, and the `<Table.Root>` block — with a single `<RegimeBreakdownTable />` tag. The organism is responsible for rendering the full section including the heading.
 - **FR-008**: The parent page MUST no longer directly import or reference `sampleRegimeBreakdown` if no other section requires it.
 - **FR-009**: When the internal data array is empty, the organism MUST display a "No data available" message in place of the table rows.
 
@@ -95,6 +95,7 @@ The organism owns its data state internally so the parent page is not responsibl
 
 - Q: Does the organism accept an optional data prop or manage data as strictly local state with no props? → A: Zero-props — internal mock data only. Mock data is temporary; API integration is a separate future feature.
 - Q: What should the organism display when the data array is empty? → A: Show a "No data available" message in place of the table rows.
+- Q: Does the organism include just the `<Table.Root>` or the full section (heading + card wrapper + table)? → A: Full section — the organism wraps the outer `<div class="space-y-4">`, the `<h2>Regime Breakdown</h2>` heading, the inner card div, and the table. The parent page is reduced to a single `<RegimeBreakdownTable />` tag. (Resolved via speckit-analyze finding U1.)
 
 ## Assumptions
 

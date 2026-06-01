@@ -10,16 +10,16 @@
 
 **Purpose**: Write the BDD feature file and Storybook story before any implementation. Both are constitutionally required to precede implementation (Rules 6 and 12).
 
-- [ ] T001 [BDD] Create BDD feature file `features/regime-breakdown-organism.feature` with @smoke tag covering: table renders with correct columns, positive/negative return colour coding, empty state "No data available" message, and invalid row exclusion (Constitution Rule 6 — MUST precede implementation)
-- [ ] T002 [STORYBOOK] Create Storybook story `src/lib/components/organisms/RegimeBreakdownTable.stories.ts` with three variants: Default (mock data), EmptyState (empty array), and InvalidRowFiltered (one invalid row injected) (Constitution Rule 12 — MUST precede implementation)
+- [x] T001 [BDD] Create BDD feature file `features/regime-breakdown-organism.feature` with @smoke and @integration tags covering: table renders with correct columns, positive/negative return colour coding, empty state "No data available" message, and invalid row exclusion (Constitution Rule 6 — MUST precede implementation)
+- [x] T002 [STORYBOOK] Create Storybook story `src/lib/components/organisms/RegimeBreakdownTable.stories.ts` with three variants: Default (mock data), EmptyState (empty array), and InvalidRowFiltered (story-level mock override injecting one invalid row); note — organism has zero props so the InvalidRowFiltered variant uses a module-level mock override, not a prop (Constitution Rule 12 — MUST precede implementation)
 
 ---
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 
-**Purpose**: Confirm the existing Zod schema is adequate and no new dependencies are needed. This phase is a verification step — no code changes expected.
+**Purpose**: Confirm the existing Zod schema is adequate and no new dependencies are needed. Verification only — no code changes expected.
 
-- [ ] T003 Verify `src/lib/schemas/regime-breakdown.schema.ts` contains all required fields (`regime`, `returnPct`, `maxDrawdown`, `winRate`, `tradeCount`) and that `safeParse` behaviour is as expected — no changes required
+- [x] T003 Verify `src/lib/schemas/regime-breakdown.schema.ts` contains all required fields (`regime`, `returnPct`, `maxDrawdown`, `winRate`, `tradeCount`) and that `safeParse` behaviour correctly rejects rows with missing required fields — no changes required
 
 **Checkpoint**: Foundation confirmed — organism implementation can begin.
 
@@ -27,30 +27,30 @@
 
 ## Phase 3: User Story 1 — View Regime Breakdown Table (Priority: P1) 🎯 MVP
 
-**Goal**: Extract the inline Regime Breakdown markup into a self-contained organism that renders the table with correct columns and colour-coded values.
+**Goal**: Extract the full inline Regime Breakdown section into a self-contained organism that renders correctly and is dropped into the parent page as a single tag.
 
-**Independent Test**: Navigate to `/performance-result`; confirm Regime Breakdown table renders with columns "Regime", "Return", "Max DD", "Win Rate" and correct row data from mock.
+**Independent Test**: Navigate to `/performance-result`; confirm the Regime Breakdown section renders identically to before — heading "Regime Breakdown", table with columns "Regime", "Return", "Max DD", "Win Rate", correct row data and colour coding, and "No data available" when array is empty.
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Create `src/lib/components/organisms/RegimeBreakdownTable.svelte` — declare `rows` as `$state(sampleRegimeBreakdown.filter((row) => RegimeBreakdownSchema.safeParse(row).success))`, render shadcn-svelte `<Table.Root>` with columns Regime / Return / Max DD / Win Rate; `safeParse` filter is the sole validation gate (no separate step needed)
-- [ ] T005 [US1] Add conditional colour classes in `RegimeBreakdownTable.svelte`: `returnPct > 0` → `text-green-400`, `returnPct <= 0` → `text-red-400`; `maxDrawdown` → always `text-red-400`
-- [ ] T006 [US1] Update `src/routes/performance-result/+page.svelte` — replace the inline Regime Breakdown `<div>` containing the `<h2>Regime Breakdown</h2>` heading and `<Table.Root>` block with `<RegimeBreakdownTable />` and add the import; remove `sampleRegimeBreakdown` import if no longer used by other sections; confirm no prop is passed to the organism
-- [ ] T007 [US1] Add empty-state rendering to `src/lib/components/organisms/RegimeBreakdownTable.svelte`: when `rows.length === 0`, render a single `<Table.Row>` with `<Table.Cell colspan={4}>` containing "No data available" (centred, muted text) (depends on T004)
+- [x] T004 [US1] Create `src/lib/components/organisms/RegimeBreakdownTable.svelte` — the organism renders the full section: outer `<div class="space-y-4">`, `<h2 class="text-xl font-semibold">Regime Breakdown</h2>`, inner card `<div class="overflow-hidden rounded-xl border bg-card shadow-sm">`, and `<Table.Root>` with columns Regime / Return / Max DD / Win Rate; declare `rows` as `$state(sampleRegimeBreakdown.filter((row) => RegimeBreakdownSchema.safeParse(row).success))`; `safeParse` filter is the sole validation gate
+- [x] T005 [US1] Add conditional colour classes in `src/lib/components/organisms/RegimeBreakdownTable.svelte`: `returnPct > 0` → `text-green-400`, `returnPct <= 0` → `text-red-400`; `maxDrawdown` → always `text-red-400` (depends on T004)
+- [x] T006 [US1] Update `src/routes/performance-result/+page.svelte` — remove the entire outer `<div class="space-y-4">` block (the one containing `<h2>Regime Breakdown</h2>` and the inner card div with `<Table.Root>`) and replace it with a single `<RegimeBreakdownTable />` self-closing tag; add `import RegimeBreakdownTable from '$lib/components/organisms/RegimeBreakdownTable.svelte'`; remove `sampleRegimeBreakdown` from the import in the script block if no other section on the page still uses it (depends on T004)
+- [x] T007 [US1] Add empty-state rendering to `src/lib/components/organisms/RegimeBreakdownTable.svelte`: inside `<Table.Body>`, use `{#if rows.length === 0}` to render a single `<Table.Row>` with `<Table.Cell colspan={4} class="text-center text-muted-foreground">No data available</Table.Cell>`, otherwise render the `{#each rows}` block (depends on T004)
 
-**Checkpoint**: User Story 1 complete — table renders identically to before the refactor, colour coding is correct, empty state shows "No data available", and invalid rows are excluded.
+**Checkpoint**: User Story 1 complete — full section renders via organism, parent page reduced to `<RegimeBreakdownTable />`, empty state shows "No data available", invalid rows excluded.
 
 ---
 
 ## Phase 4: User Story 2 — Schema Validation Feedback (Priority: P2)
 
-**Goal**: Invalid rows are silently excluded by the organism's internal Zod validation; the page does not crash.
+**Goal**: Confirm invalid rows are silently excluded by the organism's internal `safeParse` filter without crashing the page.
 
-**Independent Test**: Temporarily replace the mock data initialiser in `RegimeBreakdownTable.svelte` with an array containing one malformed entry (e.g., `{ regime: 'Test' }`) and confirm it is excluded from the rendered rows with no runtime error.
+**Independent Test**: Temporarily replace `sampleRegimeBreakdown` in `RegimeBreakdownTable.svelte` with an array containing one malformed entry (e.g., `{ regime: 'Test' }`); confirm it is excluded from the rendered rows with no runtime error, then restore the original import.
 
 ### Implementation for User Story 2
 
-- [ ] T008 [VERIFY] [US2] Manually verify the `safeParse` filter in `RegimeBreakdownTable.svelte` (added in T004) excludes invalid rows without crashing: temporarily inject `{ regime: 'Test' }` into the data array, confirm it is excluded, then restore mock data (depends on T004)
+- [x] T008 [VERIFY] [US2] Manually verify the `safeParse` filter in `src/lib/components/organisms/RegimeBreakdownTable.svelte` (added in T004) excludes invalid rows without crashing: temporarily inject `{ regime: 'Test' }` into the data array, confirm it is excluded, then restore mock data (depends on T004)
 
 **Checkpoint**: User Story 2 complete — `safeParse` filter confirmed working; invalid rows excluded without crash.
 
@@ -58,13 +58,13 @@
 
 ## Phase 5: User Story 3 — Local State Isolation (Priority: P3)
 
-**Goal**: The parent page no longer owns or imports regime breakdown data; the organism is self-contained and reusable.
+**Goal**: The parent page no longer references regime breakdown data; the organism is fully self-contained.
 
-**Independent Test**: Review `src/routes/performance-result/+page.svelte` script block — `sampleRegimeBreakdown` must not appear (unless another section still uses it); the organism renders without any data prop from the parent.
+**Independent Test**: Review the script block of `src/routes/performance-result/+page.svelte` — `sampleRegimeBreakdown` must not appear in imports or usage (unless another section still requires it); the `<RegimeBreakdownTable />` tag has no attributes or props.
 
 ### Implementation for User Story 3
 
-- [ ] T009 [VERIFY] [US3] Confirm in `src/routes/performance-result/+page.svelte` that `sampleRegimeBreakdown` is absent from imports (if unused after T006) and that `<RegimeBreakdownTable />` has no props — organism is self-contained (depends on T006)
+- [x] T009 [VERIFY] [US3] Confirm in `src/routes/performance-result/+page.svelte` that `sampleRegimeBreakdown` is absent from imports (if unused after T006) and that `<RegimeBreakdownTable />` has no props — organism is fully self-contained (depends on T006)
 
 **Checkpoint**: User Story 3 complete — parent page fully decoupled from regime breakdown data.
 
@@ -74,8 +74,8 @@
 
 **Purpose**: Final BDD review and Storybook smoke test.
 
-- [ ] T010 [P] Review `features/regime-breakdown-organism.feature` and confirm scenario wording aligns with implemented behaviour after T004–T007
-- [ ] T011 Smoke-test the Storybook stories locally (`pnpm storybook`) and confirm all three variants (Default, EmptyState, InvalidRowFiltered) render without error
+- [x] T010 [P] Review `features/regime-breakdown-organism.feature` and confirm all scenario descriptions match the implemented behaviour (full section rendered, heading included, colour coding, empty state, invalid row exclusion) after T004–T007
+- [x] T011 Smoke-test Storybook locally (`pnpm storybook`) and confirm all three variants of `RegimeBreakdownTable.stories.ts` (Default, EmptyState, InvalidRowFiltered) render without error
 
 ---
 
@@ -93,22 +93,22 @@
 ### User Story Dependencies
 
 - **US1 (P1)**: No story dependencies — starts after foundation
-- **US2 (P2)**: Depends on T004 (organism must exist with safeParse filter)
-- **US3 (P3)**: Depends on T006 (page update must be complete)
+- **US2 (P2)**: Depends on T004 (organism must exist with `safeParse` filter)
+- **US3 (P3)**: Depends on T006 (page import must be updated)
 
 ### Within Each Phase
 
-- [BDD] task T001 MUST precede all implementation tasks (Rule 6)
-- [STORYBOOK] task T002 MUST precede all implementation tasks (Rule 12)
-- T004 (organism creation with safeParse) MUST precede T005, T007, T008
-- T006 (page update) MUST precede T009
+- T001 [BDD] MUST precede all implementation tasks (Rule 6)
+- T002 [STORYBOOK] MUST precede all implementation tasks (Rule 12)
+- T004 MUST precede T005, T006, T007, T008
+- T006 MUST precede T009
 
 ### Parallel Opportunities
 
 - T001 and T002 can run in parallel (different files)
 - T002 and T003 can run in parallel
-- T004, T005, T006, T007 can be batched in a single implementation pass (all US1)
-- T008 and T009 can run in parallel (both are verification steps, different focus)
+- T004, T005, T006, T007 can be written in a single implementation pass (all US1, same/adjacent files)
+- T008 and T009 can run in parallel (both verification steps, different files)
 - T010 and T011 can run in parallel
 
 ---
@@ -120,13 +120,13 @@
 1. Complete Phase 1 (T001, T002)
 2. Complete Phase 2 (T003)
 3. Complete Phase 3 (T004, T005, T006, T007)
-4. **Validate**: Open `/performance-result` — table renders identically, empty state works, invalid rows excluded
+4. **Validate**: Open `/performance-result` — full section renders via organism, heading visible, colour coding correct, empty state works
 5. Ship MVP
 
 ### Full Delivery (all stories)
 
 1. MVP above
-2. Phase 4 — T008 (verify safeParse exclusion manually)
+2. Phase 4 — T008 (verify `safeParse` exclusion manually)
 3. Phase 5 — T009 (verify import cleanup)
 4. Phase 6 — T010 BDD review, T011 Storybook smoke
 
@@ -135,7 +135,8 @@
 ## Notes
 
 - `[P]` tasks touch different files — safe to parallelise
-- `[BDD]` and `[STORYBOOK]` tasks are constitutionally mandatory and must precede implementation
-- No new dependencies required — Zod, shadcn-svelte Table, and Svelte 5 `$state` are all already present
-- Mock data (`sampleRegimeBreakdown`) is intentionally temporary; a future API integration feature will replace the organism's data source
+- `[BDD]` and `[STORYBOOK]` tasks are constitutionally mandatory and MUST precede implementation
+- The organism renders the **full section** including the `<h2>Regime Breakdown</h2>` heading — the parent page is reduced to `<RegimeBreakdownTable />` with no surrounding wrappers
+- Mock data (`sampleRegimeBreakdown`) is intentionally temporary; a future API integration feature will replace the organism's internal data source
 - `tradeCount` field is present in the schema and mock data but is NOT rendered in the table — this is intentional and must be preserved
+- The `InvalidRowFiltered` Storybook variant uses a story-level module mock override (not a prop) since the organism accepts zero props
