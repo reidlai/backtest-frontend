@@ -3,7 +3,9 @@
 	import { RegimeBreakdownSchema } from '$lib/schemas/regime-breakdown.schema';
 	import { sampleRegimeBreakdown } from '$lib/shared-mockdata/performance';
 
-	const rows = $state(sampleRegimeBreakdown.filter((row) => RegimeBreakdownSchema.safeParse(row).success));
+	const rows = $state(
+		sampleRegimeBreakdown.filter((row) => RegimeBreakdownSchema.safeParse(row).success)
+	);
 </script>
 
 <div class="space-y-4">
@@ -21,7 +23,9 @@
 			<Table.Body>
 				{#if rows.length === 0}
 					<Table.Row>
-						<Table.Cell colspan={4} class="text-center text-muted-foreground">No data available</Table.Cell>
+						<Table.Cell colspan={4} class="text-center text-muted-foreground"
+							>No data available</Table.Cell
+						>
 					</Table.Row>
 				{:else}
 					{#each rows as row (row.regime)}

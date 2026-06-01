@@ -4,10 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as m from '$lib/paraglide/messages';
-	import {
-		defaultMetricTiles,
-		samplePerfSummary
-	} from '$lib/shared-mockdata/performance';
+	import { defaultMetricTiles, samplePerfSummary } from '$lib/shared-mockdata/performance';
 	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
 
