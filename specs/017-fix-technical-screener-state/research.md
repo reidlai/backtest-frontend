@@ -2,27 +2,30 @@
 
 **Branch**: `017-fix-technical-screener-state` | **Date**: 2026-06-01
 
-## Decision 1: How to make `SvelteSet` reactive in Svelte 5
+## Decision 1: `SvelteSet` is self-reactive — `$state()` wrapping is incorrect
 
-**Decision**: Wrap the `SvelteSet` constructor call with `$state()`:
+**Decision**: Declare `selectedPatterns` without `$state()`:
 
 ```svelte
-let selectedPatterns = $state(new SvelteSet<string>());
+let selectedPatterns = new SvelteSet<string>();
 ```
 
-**Rationale**: In Svelte 5 runes mode, `$state()` is required to declare reactive variables. `SvelteSet` (from `svelte/reactivity`) is a reactive-aware collection, but without `$state()` the variable binding itself is not tracked by the compiler. Wrapping with `$state()` tells the Svelte compiler to track this binding and trigger re-renders when mutations occur (`.add()`, `.delete()`, `.clear()`).
+**Rationale**: `SvelteSet` (and `SvelteMap`, `SvelteURL`, etc.) from `svelte/reactivity` implement Svelte 5's internal signal protocol natively. They are reactive data structures without any `$state()` wrapper. Wrapping them in `$state()` is redundant and is explicitly forbidden by the project's ESLint rule `svelte/no-unnecessary-state-wrap` (eslint-plugin-svelte v3.17+), which treats it as an error and blocks `ci-format-lint`.
+
+The original `vite-plugin-svelte` dev-mode warning (`non_reactive_update` at line 16:5) was a **false positive**: the warning fires when Svelte detects that a variable is mutated without being in `$state`, but `SvelteSet` mutations are tracked internally by the class itself. No code change is needed to resolve the warning — it does not affect runtime correctness and does not appear in production builds.
 
 **Alternatives considered**:
-- Replace `SvelteSet` with a plain `$state(new Set<string>())` — rejected because `SvelteSet` provides fine-grained reactivity on individual mutation methods; a plain `Set` inside `$state` would require a full reassignment to trigger updates.
-- Use a `$derived` reactive array — rejected as unnecessarily complex; the snapshot logic already handles serialisation to/from array.
+- `$state(new SvelteSet<string>())` — **rejected**: violates `svelte/no-unnecessary-state-wrap`, blocks CI.
+- Replace `SvelteSet` with a plain `$state(new Set<string>())` — rejected because a plain `Set` inside `$state` only triggers reactivity on full reassignment, not on `.add()` / `.delete()` / `.clear()` mutations.
+- Use a `$derived` reactive array — rejected as unnecessarily complex.
 
 ---
 
-## Decision 2: Snapshot compatibility after the fix
+## Decision 2: Snapshot compatibility — no changes needed
 
 **Decision**: No changes needed to the snapshot `capture`/`restore` logic.
 
-**Rationale**: `capture` spreads `selectedPatterns` into an array (`[...selectedPatterns]`), which works identically regardless of the `$state` wrapper. `restore` calls `selectedPatterns.clear()` and `.add()`, which are `SvelteSet` mutation methods — these already work; the issue was only that Svelte wasn't tracking the variable binding.
+**Rationale**: `capture` spreads `selectedPatterns` into an array (`[...selectedPatterns]`), which works identically with a plain `SvelteSet`. `restore` calls `selectedPatterns.clear()` and `.add()` — these are `SvelteSet` mutation methods that are reactive by nature.
 
 **Alternatives considered**: Refactoring snapshot to use array-diff — rejected as out of scope.
 

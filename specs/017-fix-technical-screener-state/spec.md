@@ -49,7 +49,7 @@ A user selects chart patterns on the Technical Screener page, navigates away, an
 
 ### Functional Requirements
 
-- **FR-001**: The `selectedPatterns` variable on the Technical Screener page MUST be declared as reactive state so the UI updates correctly when patterns are added or removed
+- **FR-001**: The `selectedPatterns` variable on the Technical Screener page MUST be declared using `SvelteSet` from `svelte/reactivity` (without `$state()` wrapping) so that pattern mutations trigger UI updates correctly via Svelte's internal signal protocol
 - **FR-002**: Selecting or deselecting a chart pattern MUST immediately reflect in the UI without manual refresh
 - **FR-003**: The snapshot capture MUST correctly serialize the current set of selected patterns
 - **FR-004**: The snapshot restore MUST correctly repopulate the reactive set from a previously captured snapshot
@@ -73,7 +73,7 @@ A user selects chart patterns on the Technical Screener page, navigates away, an
 
 ## Assumptions
 
-- The fix scope is limited to the `selectedPatterns` declaration in `src/routes/technical-screener/+page.svelte`
-- `SvelteSet` from `svelte/reactivity` is the correct collection type and does not need to be replaced — only the `$state` wrapper is missing
+- The fix scope is limited to an inline comment clarification in `src/routes/technical-screener/+page.svelte` — the `selectedPatterns` declaration itself (`new SvelteSet<string>()`) was already correct
+- `SvelteSet` from `svelte/reactivity` is self-reactive and must NOT be wrapped in `$state()` — doing so violates the project's `svelte/no-unnecessary-state-wrap` lint rule and blocks CI
 - No other variables on this page have the same reactivity issue
 - The existing snapshot schema (`TechnicalScreenerSchema`) correctly validates the shape of captured state and does not need changes
