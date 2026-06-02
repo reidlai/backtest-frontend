@@ -104,7 +104,10 @@
       "Bash(gh pr create --repo reidlai/backtest-frontend --base main --head 017-fix-technical-screener-state --title 'fix\\(screener\\): wrap selectedPatterns with $state\\(\\) to restore Svelte 5 reactivity' --body ' *)",
       "Bash(node -e \"const pkg = require\\('/Users/reidlai/GitLocal/backtest-frontend/node_modules/svelte/package.json'\\); console.log\\(pkg.version\\)\")",
       "Bash(node -e \"const pkg = require\\('/Users/reidlai/GitLocal/backtest-frontend/node_modules/eslint-plugin-svelte/package.json'\\); console.log\\(pkg.version\\)\")",
-      "Bash(gh pr create --title 'feat\\(018\\): convert Regime Breakdown div into RegimeBreakdownTable organism' --body ' *)"
+      "Bash(gh pr create --title 'feat\\(018\\): convert Regime Breakdown div into RegimeBreakdownTable organism' --body ' *)",
+      "Bash(pnpm test:unit)",
+      "Bash(node_modules/.bin/vitest run *)",
+      "Bash(gh pr create --repo reidlai/backtest-frontend --base main --head 019-fix-browser-extension-error --title 'feat\\(fix-browser-extension-error\\): add BDD acceptance gate and async pattern docs' --body ' *)"
     ]
   }
 }
