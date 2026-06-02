@@ -32,6 +32,43 @@
  *
  * This file is NOT exported from the barrel index intentionally — it is a documentation
  * stub. Import directly if needed during integration work.
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * ASYNC PATTERN REFERENCE (for API migration — see specs/019-fix-browser-extension-error)
+ * ─────────────────────────────────────────────────────────────────────────────
+ *
+ * This app uses MIXED async patterns across organisms (FR-008). Use the correct
+ * pattern for each organism type to avoid leaving message channels unclosed:
+ *
+ * PATTERN A — Fetch-on-mount with AbortController (most organisms):
+ *   Use when: data is fetched automatically when a component mounts.
+ *   Svelte 5 example:
+ *
+ *   let data = $state<DataType | null>(null);
+ *   $effect(() => {
+ *     const controller = new AbortController();
+ *     fetchData({ signal: controller.signal })
+ *       .then((result) => { data = result; })
+ *       .catch((err) => { if (err.name !== 'AbortError') console.error(err); });
+ *     return () => controller.abort();  // cleanup on unmount
+ *   });
+ *
+ *   Key rule: always return the cleanup function from $effect. The AbortError
+ *   thrown on abort MUST be caught and silenced — it is not a real error.
+ *
+ * PATTERN B — Event-driven listener deregistration (some organisms):
+ *   Use when: data is fetched in response to user actions (e.g., button click).
+ *   Svelte 5 example:
+ *
+ *   $effect(() => {
+ *     const handler = (event: CustomEvent) => { ... };
+ *     window.addEventListener('market-data-update', handler);
+ *     return () => window.removeEventListener('market-data-update', handler);
+ *   });
+ *
+ *   Key rule: every addEventListener MUST have a corresponding removeEventListener
+ *   in the $effect cleanup. Failure to deregister is the most common cause of
+ *   the "message channel closed" error pattern in component-level code.
  */
 
 export type AsyncChannelPayload = Record<string, unknown>;
