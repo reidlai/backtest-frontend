@@ -3,7 +3,10 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
-	import { EditMetricModalStateSchema, EditMetricValueSchema } from '$lib/schemas/edit-metric-modal.schema';
+	import {
+		EditMetricModalStateSchema,
+		EditMetricValueSchema
+	} from '$lib/schemas/edit-metric-modal.schema';
 
 	interface Props {
 		open: boolean;

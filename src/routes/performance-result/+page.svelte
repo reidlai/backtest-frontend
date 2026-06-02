@@ -17,9 +17,7 @@
 	let modalOpen = $state(false);
 	let editingTileId = $state<string | null>(null);
 
-	const editingTileInitialValue = $derived(
-		tiles.find((t) => t.id === editingTileId)?.value ?? ''
-	);
+	const editingTileInitialValue = $derived(tiles.find((t) => t.id === editingTileId)?.value ?? '');
 
 	function handleApply(newValue: string) {
 		const index = tiles.findIndex((t) => t.id === editingTileId);
