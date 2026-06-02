@@ -272,6 +272,7 @@ jobs:
           trivyignores: .trivyignore
           ignore-unfixed: true
           limit-severities-for-sarif: true
+          cache: false
 
       - name: Run Trivy vulnerability scanner (LOW, MEDIUM)
         if: always()

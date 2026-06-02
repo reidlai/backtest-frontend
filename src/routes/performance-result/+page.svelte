@@ -1,62 +1,28 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import * as Dialog from '$lib/components/ui/dialog';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
 	import * as m from '$lib/paraglide/messages';
-	import { defaultMetricTiles, samplePerfSummary } from '$lib/shared-mockdata/performance';
+	import { defaultMetricTiles } from '$lib/shared-mockdata/performance';
 	import { goto } from '$app/navigation';
 	import { appState } from '$lib/state/app.svelte';
 
 	import PerformanceMetricGrid from '$lib/components/organisms/PerformanceMetricGrid.svelte';
 	import PerformancdeChartTabs from '$lib/components/organisms/PerformancdeChartTabs.svelte';
 	import RegimeBreakdownTable from '$lib/components/organisms/RegimeBreakdownTable.svelte';
+	import PerformanceSummary from '$lib/components/organisms/PerformanceSummary.svelte';
+	import EditMetricModal from '$lib/components/organisms/EditMetricModal.svelte';
 
 	let tiles = $state([...defaultMetricTiles]);
-	// let activeChartTab = $state<ChartTab>('equity-curve');
 
-	// Edit Modal State
+	// Edit Modal State (owned by parent; internal form state is inside EditMetricModal)
 	let modalOpen = $state(false);
 	let editingTileId = $state<string | null>(null);
-	let editValue = $state('');
 
-	const isValid = $derived(!isNaN(parseFloat(editValue)) && editValue.trim() !== '');
+	const editingTileInitialValue = $derived(tiles.find((t) => t.id === editingTileId)?.value ?? '');
 
-	// Drag handlers
-	// function handleDragStart(index: number) {
-	// 	draggedIndex = index;
-	// }
-
-	// function handleDragOver(e: DragEvent) {
-	// 	e.preventDefault();
-	// }
-
-	// function handleDrop(targetOrder: number) {
-	// 	if (draggedIndex === null) return;
-	// 	const fromIndex = tiles.findIndex((t) => t.order === draggedIndex);
-	// 	const toIndex = tiles.findIndex((t) => t.order === targetOrder);
-
-	// 	if (fromIndex !== -1 && toIndex !== -1 && fromIndex !== toIndex) {
-	// 		const newTiles = [...tiles];
-	// 		const [moved] = newTiles.splice(fromIndex, 1);
-	// 		newTiles.splice(toIndex, 0, moved);
-	// 		// Update orders
-	// 		tiles = newTiles.map((t, i) => ({ ...t, order: i }));
-	// 	}
-	// 	draggedIndex = null;
-	// }
-
-	// function handleDoubleClick(tile: IMetricTile) {
-	// 	editingTileId = tile.id;
-	// 	editValue = tile.value;
-	// 	modalOpen = true;
-	// }
-
-	function handleApply() {
-		if (!isValid) return;
+	function handleApply(newValue: string) {
 		const index = tiles.findIndex((t) => t.id === editingTileId);
 		if (index !== -1) {
-			tiles[index] = { ...tiles[index], value: editValue };
+			tiles[index] = { ...tiles[index], value: newValue };
 		}
 		modalOpen = false;
 	}
@@ -68,13 +34,13 @@
 		const winRate = appState.simulatedMetrics.winRate;
 
 		const trIndex = tiles.findIndex((t) => t.id === 'total-return');
-		if (trIndex !== -1) tiles[trIndex].value = totalReturn;
+		if (trIndex !== -1) tiles[trIndex].value = String(totalReturn);
 
 		const mdIndex = tiles.findIndex((t) => t.id === 'max-drawdown');
-		if (mdIndex !== -1) tiles[mdIndex].value = maxDrawdown;
+		if (mdIndex !== -1) tiles[mdIndex].value = String(maxDrawdown);
 
 		const wrIndex = tiles.findIndex((t) => t.id === 'win-rate');
-		if (wrIndex !== -1) tiles[wrIndex].value = winRate;
+		if (wrIndex !== -1) tiles[wrIndex].value = String(winRate);
 	});
 </script>
 
@@ -86,86 +52,19 @@
 
 	<PerformanceMetricGrid />
 
-	<!-- Charts -->
-	<!-- <div class="rounded-xl border bg-card p-6 shadow-sm">
-		<Tabs.Root value={activeChartTab} onValueChange={(v) => (activeChartTab = v as ChartTab)}>
-			<div class="mb-6 flex items-center justify-between">
-				<Tabs.List>
-					<Tabs.Trigger value="equity-curve">Equity Curve</Tabs.Trigger>
-					<Tabs.Trigger value="drawdown">Drawdown</Tabs.Trigger>
-					<Tabs.Trigger value="benchmark-overlay">Benchmark Overlay</Tabs.Trigger>
-					<Tabs.Trigger value="monthly-heatmap">Monthly Heatmap</Tabs.Trigger>
-				</Tabs.List>
-			</div>
-
-			<div class="h-[400px] w-full">
-				{#if activeChartTab === 'equity-curve'}
-					<Chart
-						data={sampleBacktestResult.equityCurve}
-						x="date"
-						xScale={scaleTime()}
-						y="value"
-						yDomain={[0, null]}
-						padding={{ left: 60, bottom: 40 }}
-					>
-						<Axis placement="bottom" grid />
-						<Axis placement="left" grid />
-						<Spline class="stroke-primary stroke-2" />
-						<Tooltip.Root let:data>
-							<Tooltip.Header>{data.date}</Tooltip.Header>
-							<Tooltip.Item label="Equity" value="${data.value.toLocaleString()}" />
-						</Tooltip.Root>
-					</Chart>
-				{:else}
-					<div
-						class="flex h-full items-center justify-center rounded border border-dashed text-muted-foreground"
-					>
-						Chart tab "{activeChartTab}" implementation placeholder
-					</div>
-				{/if}
-			</div>
-		</Tabs.Root>
-		</div> -->
 	<PerformancdeChartTabs />
 
 	<div class="grid gap-8 lg:grid-cols-2">
 		<RegimeBreakdownTable />
 
-		<!-- Performance Summary -->
-		<div class="space-y-4">
-			<h2 class="text-xl font-semibold">Statistics Summary</h2>
-			<div class="h-full rounded-xl border bg-card p-4 shadow-sm">
-				<div class="grid grid-cols-2 gap-x-8 gap-y-2">
-					{#each samplePerfSummary as stat (stat.label)}
-						<div class="flex justify-between border-b border-muted py-1">
-							<span class="text-sm text-muted-foreground">{stat.label}</span>
-							<span class="text-sm font-semibold">{stat.value}</span>
-						</div>
-					{/each}
-				</div>
-			</div>
-		</div>
+		<PerformanceSummary />
 	</div>
 </div>
 
-<!-- Edit Modal -->
-<Dialog.Root bind:open={modalOpen}>
-	<Dialog.Content>
-		<Dialog.Header>
-			<Dialog.Title>Edit Metric Value</Dialog.Title>
-		</Dialog.Header>
-		<div class="grid gap-4 py-4">
-			<div class="grid gap-2">
-				<Label for="value">New Value</Label>
-				<Input id="value" bind:value={editValue} class={!isValid ? 'border-destructive' : ''} />
-				{#if !isValid && editValue !== ''}
-					<p class="text-xs text-destructive">Please enter a valid numeric value.</p>
-				{/if}
-			</div>
-		</div>
-		<Dialog.Footer>
-			<Button variant="outline" onclick={() => (modalOpen = false)}>Cancel</Button>
-			<Button disabled={!isValid} onclick={handleApply}>Apply</Button>
-		</Dialog.Footer>
-	</Dialog.Content>
-</Dialog.Root>
+<EditMetricModal
+	open={modalOpen}
+	tileId={editingTileId}
+	initialValue={editingTileInitialValue}
+	onApply={handleApply}
+	onClose={() => (modalOpen = false)}
+/>

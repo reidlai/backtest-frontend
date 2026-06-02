@@ -53,3 +53,5 @@ export * from './screener-preview-panel.schema';
 export * from './token-usage-card.schema';
 export * from './backtest-runs-card.schema';
 export * from './system-status-card.schema';
+export * from './performance-summary.schema';
+export * from './edit-metric-modal.schema';
