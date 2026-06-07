@@ -109,7 +109,8 @@
       "Bash(node_modules/.bin/vitest run *)",
       "Bash(gh pr create --repo reidlai/backtest-frontend --base main --head 019-fix-browser-extension-error --title 'feat\\(fix-browser-extension-error\\): add BDD acceptance gate and async pattern docs' --body ' *)",
       "Bash(gh pr create --title 'feat: extract PerformanceSummary and EditMetricModal into Svelte 5 organisms with Zod schemas' --body ' *)",
-      "Bash(.specify/scripts/bash/create-new-feature.sh --json \"Use src/lib/rxjs/ folder for ReactiveX \\(RxJS\\) integrating zodios api client and Behaviour Subject to update all states declared in src/lib/state\")"
+      "Bash(.specify/scripts/bash/create-new-feature.sh --json \"Use src/lib/rxjs/ folder for ReactiveX \\(RxJS\\) integrating zodios api client and Behaviour Subject to update all states declared in src/lib/state\")",
+      "Bash(gh pr *)"
     ]
   }
 }
