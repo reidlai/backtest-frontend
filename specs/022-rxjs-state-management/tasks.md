@@ -118,6 +118,8 @@ T015 → T016 → T017           (US3 sequential)
 T018 → T019, T020, T021, T022, T023 → T024
 ```
 
+> ⚠️ **Branch note**: T010, T013, and T016 changes to `src/routes/+layout.svelte` may be co-developed on a companion branch (e.g., `fix/jwt-bearer-auth`). Before merging the 022 feature PR, confirm all layout changes are present on `022-rxjs-state-management` (cherry-pick if needed). Constitution Rule 1 requires the final merge to originate from the correctly named branch.
+
 > ⚠️ **Cross-phase file conflict**: T010, T013, and T016 all modify `src/routes/+layout.svelte`.
 > These tasks MUST be executed sequentially in order (T010 → T013 → T016), even if US1, US2,
 > and US3 streams are authored in parallel. Do NOT begin T013 until T010 is merged; do NOT

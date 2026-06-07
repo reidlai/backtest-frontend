@@ -152,7 +152,10 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/strategies)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/backtest-runs)",
       "Bash(gh pr create --title 'fix\\(zodios\\): inject JWT Bearer token on all API requests' --body ' *)",
-      "Bash(gh pr *)"
+      "Bash(gh pr *)",
+      "Bash(npx svelte-check *)",
+      "Bash(npx vitest *)",
+      "Bash(npx eslint *)"
     ]
   },
   "mcpServers": {}

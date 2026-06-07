@@ -70,7 +70,7 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 - **FR-001**: System MUST add a Zodios API client endpoint for `GET /v1/market-metrics` (collection, alias `listMarketMetrics`) and `GET /v1/market-metrics/{symbol}` (model, alias `getMarketMetric`). The RxJS stream layer wraps the collection endpoint only (`listMarketMetrics`); `getMarketMetric` is registered in the Zodios client for future use but has no dedicated stream or Svelte state in this feature.
 - **FR-002**: System MUST define a Zod schema for `MarketMetricResult` and `MarketMetricCollectionResult` matching the OpenAPI spec (symbol, name, value, change, change_pct, as_of, stale fields).
 - **FR-003**: System MUST implement a `src/lib/rxjs/` directory containing RxJS BehaviorSubject-based observable streams for market metrics, strategies, and backtest runs.
-- **FR-004**: Each resource (market metrics, strategies, backtest runs) MUST have its own BehaviorSubject holding the latest API response payload or null on initialisation.
+- **FR-004**: Each resource (market metrics, strategies, backtest runs) MUST have three BehaviorSubjects: `data$` holding the latest API response payload or null, `error$` holding the latest error or null, and `loading$` holding the current fetch status — all initialised on module load.
 - **FR-005**: Each BehaviorSubject MUST expose a `refresh()` trigger function that calls the appropriate Zodios client method using `switchMap` to cancel in-flight requests. The initial fetch MUST NOT fire on module import; it fires only when `refresh()` is explicitly called (e.g., from `onMount` or the app entry point).
 - **FR-006**: Subscribers MUST receive the last emitted value immediately upon subscription (BehaviorSubject replay semantics).
 - **FR-007**: System MUST create a market-metric state module at `src/lib/state/market-metric.svelte.ts` that subscribes to the RxJS stream and writes API response data into Svelte 5 rune-based `$state`.
@@ -89,7 +89,7 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 
 ### Measurable Outcomes
 
-- **SC-001**: All five market metric tiles display live values on initial page load with no manual trigger required.
+- **SC-001**: All five market metric tiles display live values on initial page load; the fetch is triggered automatically by the `onMount`-level `refreshMarketMetrics()` call in the layout entry point (not on module import).
 - **SC-002**: A second component subscribing to the same BehaviorSubject receives the cached value without issuing a second network request.
 - **SC-003**: A 401 API response causes the BehaviorSubject error stream to emit before the next macrotask (within the same microtask flush); no unhandled promise rejection reaches the console.
 - **SC-004**: Rapid successive refresh calls result in exactly one completed network request (earlier in-flight requests are cancelled).
@@ -100,7 +100,7 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 
 ### Session 2026-06-07
 
-- Q: After a fetch error, should the stream auto-retry or wait for a manual refresh call? → A: Error state persists; only an explicit `refresh()` call clears it and re-fetches.
+- Q: After a fetch error, should the stream auto-retry or wait for a manual refresh call? → A: Error state persists; only an explicit `refresh()` call clears it and re-fetches. (See also Edge Cases — no-auto-retry rule is authoritative there.)
 - Q: When should the initial API fetch be triggered for each resource stream? → A: Fetch fires only when an explicit `refresh()` / `init()` is called from the app entry point or `onMount` hook — not on module import.
 - Analysis remediation (I1): FR-008 rewritten — subscription glue lives in layout, not in state modules, to preserve RxJS-free constraint on `src/lib/state/`.
 - Analysis remediation (I2): FR-001 clarified — `getMarketMetric` registered in Zodios but has no RxJS stream in this feature scope.
