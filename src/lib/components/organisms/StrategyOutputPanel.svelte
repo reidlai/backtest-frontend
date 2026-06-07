@@ -10,22 +10,44 @@
 
 	let { result = null, isLoading = false, error = null }: Props = $props();
 
+	/** Build equity curve data for layerchart from the OpenAPI equity_curve arrays. */
+	const equityCurveData = $derived(
+		result
+			? (result.equity_curve.timestamps ?? []).map((ts: string, i: number) => ({
+					date: new Date(ts),
+					value: result.equity_curve.equity_values[i] ?? 0
+				}))
+			: []
+	);
+
 	const metrics = $derived(
 		result
 			? [
 					{
 						id: 'total-return',
 						label: 'Total Return',
-						value: `${(result.totalReturn * 100).toFixed(2)}%`
+						value: `${(result.performance_metrics.total_return_pct * 100).toFixed(2)}%`
 					},
-					{ id: 'sharpe', label: 'Sharpe Ratio', value: result.sharpeRatio.toFixed(2) },
+					{
+						id: 'sharpe',
+						label: 'Sharpe Ratio',
+						value: result.performance_metrics.sharpe_ratio.toFixed(2)
+					},
 					{
 						id: 'max-drawdown',
 						label: 'Max Drawdown',
-						value: `${(result.maxDrawdown * 100).toFixed(2)}%`
+						value: `${(result.performance_metrics.max_drawdown_pct * 100).toFixed(2)}%`
 					},
-					{ id: 'win-rate', label: 'Win Rate', value: `${(result.winRate * 100).toFixed(1)}%` },
-					{ id: 'profit-factor', label: 'Profit Factor', value: result.profitFactor.toFixed(2) }
+					{
+						id: 'win-rate',
+						label: 'Win Rate',
+						value: `${(result.performance_metrics.win_rate * 100).toFixed(1)}%`
+					},
+					{
+						id: 'profit-factor',
+						label: 'Profit Factor',
+						value: result.performance_metrics.profit_factor.toFixed(2)
+					}
 				]
 			: []
 	);
@@ -33,7 +55,7 @@
 
 <div class="space-y-4">
 	{#if isLoading}
-		<!-- Loading state (T016) -->
+		<!-- Loading state -->
 		<div class="rounded-xl border bg-card p-6 shadow-sm">
 			<div class="mb-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
 				{#each [1, 2, 3, 4, 5] as i (i)}
@@ -48,15 +70,15 @@
 			</div>
 		</div>
 	{:else if error}
-		<!-- Error state (T017) -->
+		<!-- Error state -->
 		<div class="rounded-xl border border-destructive/30 bg-destructive/5 p-6 shadow-sm">
 			<p class="text-sm font-medium text-destructive">Backtest Error</p>
 			<p class="mt-1 text-sm text-destructive/80">{error}</p>
 		</div>
 	{:else if result}
-		<!-- Result state (T018–T020) -->
+		<!-- Result state -->
 		<div class="rounded-xl border bg-card p-6 shadow-sm">
-			<!-- Performance metrics (T018) -->
+			<!-- Performance metrics -->
 			<h2 class="mb-4 text-xl font-semibold">Performance Metrics</h2>
 			<div class="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-5">
 				{#each metrics as metric (metric.id)}
@@ -67,11 +89,11 @@
 				{/each}
 			</div>
 
-			<!-- Equity curve chart (T019) -->
+			<!-- Equity curve chart -->
 			<h3 class="mb-2 text-base font-semibold">Equity Curve</h3>
 			<div class="mb-6 h-[280px] w-full">
 				<Chart
-					data={result.equityCurve}
+					data={equityCurveData}
 					x="date"
 					xScale={scaleTime()}
 					y="value"
@@ -88,35 +110,35 @@
 				</Chart>
 			</div>
 
-			<!-- Trade summary table (T020) — uses sampleTrades; BacktestResultSchema has no trades field -->
+			<!-- Trade summary table -->
 			<h3 class="mb-2 text-base font-semibold">Trade Summary</h3>
 			<Table.Root>
 				<Table.Header>
 					<Table.Row>
 						<Table.Head>Symbol</Table.Head>
-						<Table.Head>Direction</Table.Head>
-						<Table.Head>Entry Date</Table.Head>
-						<Table.Head>Exit Date</Table.Head>
-						<Table.Head class="text-right">Net P&L</Table.Head>
+						<Table.Head>Side</Table.Head>
+						<Table.Head>Entry Time</Table.Head>
+						<Table.Head>Exit Time</Table.Head>
+						<Table.Head class="text-right">PnL ($)</Table.Head>
 						<Table.Head class="text-right">Return %</Table.Head>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{#each sampleTrades as trade (trade.tradeId)}
+					{#each sampleTrades as trade (trade.trade_id)}
 						<Table.Row>
 							<Table.Cell class="font-medium">{trade.symbol}</Table.Cell>
-							<Table.Cell>{trade.direction}</Table.Cell>
-							<Table.Cell>{trade.entryDate}</Table.Cell>
-							<Table.Cell>{trade.exitDate}</Table.Cell>
-							<Table.Cell class="text-right">${trade.netPnl.toFixed(2)}</Table.Cell>
-							<Table.Cell class="text-right">{trade.returnPct.toFixed(2)}%</Table.Cell>
+							<Table.Cell>{trade.side}</Table.Cell>
+							<Table.Cell>{trade.entry_timestamp}</Table.Cell>
+							<Table.Cell>{trade.exit_timestamp}</Table.Cell>
+							<Table.Cell class="text-right">${trade.pnl_absolute.toFixed(2)}</Table.Cell>
+							<Table.Cell class="text-right">{trade.pnl_pct.toFixed(2)}%</Table.Cell>
 						</Table.Row>
 					{/each}
 				</Table.Body>
 			</Table.Root>
 		</div>
 	{:else}
-		<!-- Empty state (T015) -->
+		<!-- Empty state -->
 		<div
 			class="flex h-full min-h-[400px] items-center justify-center rounded-xl border border-dashed bg-muted/20 p-12"
 		>

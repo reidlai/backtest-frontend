@@ -5,7 +5,7 @@
 	import { strategyState } from '$lib/state/strategy.svelte';
 	import { universeCapitalConfigState } from '$lib/state/universe-capital-config.svelte';
 	import { scheduleExecutionConfigState } from '$lib/state/schedule-execution-config.svelte';
-	import { orderTypesConfigState } from '$lib/state/order-types-config.svelte';
+	import { orderTypesConfigState } from '$lib/state/order-types-config';
 	import { sampleTrades, tradesToCsv } from '$lib/shared-mockdata/trades';
 
 	function handleNewStrategy() {

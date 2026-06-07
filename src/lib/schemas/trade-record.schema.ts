@@ -1,20 +1,9 @@
-import { z } from 'zod';
-
-export const TradeDirectionSchema = z.enum(['Long', 'Short']);
-
-export const TradeRecordSchema = z.object({
-	tradeId: z.string(),
-	symbol: z.string(),
-	direction: TradeDirectionSchema,
-	entryDate: z.string(),
-	entryPrice: z.number(),
-	exitDate: z.string(),
-	exitPrice: z.number(),
-	quantity: z.number(),
-	commission: z.number(),
-	slippage: z.number(),
-	netPnl: z.number(),
-	returnPct: z.number(),
-	holdingDays: z.number(),
-	exitReason: z.string()
-});
+/**
+ * Re-exports the canonical TradeRecord schema from src/lib/zodios/schemas/.
+ * Import paths using '$lib/schemas/trade-record.schema' continue to work.
+ *
+ * Migration note: fields updated from camelCase to snake_case per OpenAPI spec.
+ * Removed: commission, slippage, holdingDays, direction (→ side), tradeId (→ trade_id)
+ * Added: exit_reason (optional), symbol retained, quantity retained
+ */
+export { TradeRecordSchema, type TradeRecord } from '$lib/zodios/schemas/trade-record.schema.js';

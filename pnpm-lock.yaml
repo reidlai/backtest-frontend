@@ -14,6 +14,9 @@ importers:
       '@fontsource-variable/inter':
         specifier: ^5.2.8
         version: 5.2.8
+      '@zodios/core':
+        specifier: 11.0.0-beta.19
+        version: 11.0.0-beta.19(zod@4.4.3)
       bits-ui:
         specifier: ^2.18.1
         version: 2.18.1(@internationalized/date@3.12.1)(@sveltejs/kit@2.60.1(@sveltejs/vite-plugin-svelte@7.1.2(svelte@5.55.7(@typescript-eslint/types@8.59.3))(vite@8.0.13(@types/node@24.12.4)(esbuild@0.27.7)(jiti@1.21.7)))(svelte@5.55.7(@typescript-eslint/types@8.59.3))(typescript@6.0.3)(vite@8.0.13(@types/node@24.12.4)(esbuild@0.27.7)(jiti@1.21.7)))(svelte@5.55.7(@typescript-eslint/types@8.59.3))
@@ -1620,6 +1623,20 @@ packages:
 
   '@webcontainer/env@1.1.1':
     resolution: {integrity: sha512-6aN99yL695Hi9SuIk1oC88l9o0gmxL1nGWWQ/kNy81HigJ0FoaoTXpytCj6ItzgyCEwA9kF1wixsTuv5cjsgng==}
+
+  '@zodios/core@11.0.0-beta.19':
+    resolution: {integrity: sha512-zvOzf9Q32DMvyr2su1NSYlR2za7p3l55hMFVNdx3OiT0GZVzkftAVfk1TPG8oSad+rYvo1KRbX5ShXMSkuAs1Q==}
+    peerDependencies:
+      fp-ts: 2.x
+      io-ts: 2.x
+      zod: ^3.x
+    peerDependenciesMeta:
+      fp-ts:
+        optional: true
+      io-ts:
+        optional: true
+      zod:
+        optional: true
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -4664,6 +4681,10 @@ snapshots:
       tinyrainbow: 3.1.0
 
   '@webcontainer/env@1.1.1': {}
+
+  '@zodios/core@11.0.0-beta.19(zod@4.4.3)':
+    optionalDependencies:
+      zod: 4.4.3
 
   acorn-jsx@5.3.2(acorn@8.16.0):
     dependencies:

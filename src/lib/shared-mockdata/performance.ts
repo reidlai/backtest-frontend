@@ -1,15 +1,17 @@
 import { z } from 'zod';
 import {
-	BacktestResultSchema,
 	MetricTileSchema,
+	PerfSummaryItemSchema,
 	RegimeBreakdownSchema,
 	TimeSeriesPointSchema
 } from '$lib/schemas';
+import { BacktestResultResourceSchema } from '$lib/zodios/schemas/backtest-result.schema';
 
-type BacktestResult = z.infer<typeof BacktestResultSchema>;
 type MetricTile = z.infer<typeof MetricTileSchema>;
+type PerfSummaryItem = z.infer<typeof PerfSummaryItemSchema>;
 type RegimeBreakdown = z.infer<typeof RegimeBreakdownSchema>;
 type TimeSeriesPoint = z.infer<typeof TimeSeriesPointSchema>;
+type BacktestResultResource = z.infer<typeof BacktestResultResourceSchema>;
 
 const generateTimeSeries = (
 	startValue: number,
@@ -42,34 +44,41 @@ const generateDrawdown = (equityCurve: TimeSeriesPoint[]): TimeSeriesPoint[] => 
 	});
 };
 
-const equityCurve = generateTimeSeries(100000, 48, 0.05);
+const legacyEquityCurve = generateTimeSeries(100000, 48, 0.05);
 
-export const sampleBacktestResult: BacktestResult = {
-	totalReturn: 42.8,
-	netProfit: 42800,
-	maxDrawdown: -18.2,
-	sharpeRatio: 1.84,
-	winRate: 58.3,
-	profitFactor: 1.92,
-	volatility: 14.6,
-	exposureTime: 73.2,
-	equityCurve: equityCurve,
-	drawdownSeries: generateDrawdown(equityCurve),
-	monthlyReturns: [
-		{ month: 'Jan', value: 2.4 },
-		{ month: 'Feb', value: -1.2 },
-		{ month: 'Mar', value: 3.5 },
-		{ month: 'Apr', value: 0.8 },
-		{ month: 'May', value: 4.2 },
-		{ month: 'Jun', value: -2.1 },
-		{ month: 'Jul', value: 1.5 },
-		{ month: 'Aug', value: 0.5 },
-		{ month: 'Sep', value: -3.4 },
-		{ month: 'Oct', value: 2.8 },
-		{ month: 'Nov', value: 5.1 },
-		{ month: 'Dec', value: 1.2 }
-	],
-	benchmarkSeries: generateTimeSeries(100000, 48, 0.04)
+// Derive arrays for the OpenAPI equity_curve shape from the legacy time-series
+const equityTimestamps = legacyEquityCurve.map((p) => `${p.date}T00:00:00Z`);
+const equityValues = legacyEquityCurve.map((p) => p.value);
+const legacyDrawdowns = generateDrawdown(legacyEquityCurve);
+
+/**
+ * Sample BacktestResultResource shaped mock, conforming to the OpenAPI
+ * `BacktestResultResourceSchema` (snake_case fields, sub-schemas).
+ * Used by Storybook stories for StrategyOutputPanel.
+ */
+export const sampleBacktestResult: BacktestResultResource = {
+	id: '550e8400-e29b-41d4-a716-446655440002',
+	run_id: '550e8400-e29b-41d4-a716-446655440000',
+	label: 'US RSI Mean-Reversion (2020–2024)',
+	created_at: '2024-12-31T23:59:59Z',
+	performance_metrics: {
+		total_return_pct: 0.428,
+		annualized_return_pct: 0.184,
+		max_drawdown_pct: 0.182,
+		sharpe_ratio: 1.84,
+		sortino_ratio: 2.45,
+		win_rate: 0.583,
+		profit_factor: 1.92,
+		total_trades: 41
+	},
+	equity_curve: {
+		timestamps: equityTimestamps,
+		equity_values: equityValues,
+		cash_balances: equityValues.map((v) => v * 0.1),
+		drawdowns: legacyDrawdowns.map((p) => p.value / 100)
+	},
+	execution_log: [],
+	signal_history: []
 };
 
 export const defaultMetricTiles: MetricTile[] = [
@@ -90,7 +99,7 @@ export const sampleRegimeBreakdown: RegimeBreakdown[] = [
 	{ regime: 'Low Volatility', returnPct: 4.5, maxDrawdown: -2.1, winRate: 58.2, tradeCount: 6 }
 ];
 
-export const samplePerfSummary = [
+export const samplePerfSummary: PerfSummaryItem[] = [
 	{ label: 'Total Trades', value: '41' },
 	{ label: 'Avg Trade Net Profit', value: '$1,043.90' },
 	{ label: 'Avg Win', value: '$2,842.15' },
