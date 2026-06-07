@@ -82,6 +82,15 @@ setFetcherHook({
 
 		// Build fetch init
 		const headers: Record<string, string> = { ...(config.headers ?? {}) };
+
+		// Inject JWT Bearer token when available.
+		// Token is read from PUBLIC_BACKTEST_EAPI_TOKEN (runtime env via $env/dynamic/public).
+		// The backend validates token presence only (demo-level); any non-empty value works.
+		const token = env.PUBLIC_BACKTEST_EAPI_TOKEN;
+		if (token) {
+			headers['Authorization'] = `Bearer ${token}`;
+		}
+
 		const init: RequestInit = {
 			method: (config.method ?? 'GET').toUpperCase(),
 			headers
