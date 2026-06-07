@@ -13,6 +13,7 @@ import { z } from 'zod';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore — ZodiosCore v11 beta; AnyZodiosFetcherProvider generic not fully exposed
 import { ZodiosCore, setFetcherHook } from '@zodios/core';
+import { env } from '$env/dynamic/public';
 import {
 	ActionResponseSchema,
 	BacktestResultResourceSchema,
@@ -290,13 +291,12 @@ const backtestEapiEndpoints = [
 // ── Singleton client ───────────────────────────────────────────────────────────
 
 /**
- * Base URL for backtest-eapi. Reads from PUBLIC_BACKTEST_EAPI_URL at module
- * initialisation time; falls back to localhost:8080 for local development.
+ * Base URL for backtest-eapi. Reads PUBLIC_BACKTEST_EAPI_URL from the runtime
+ * environment via SvelteKit's $env/dynamic/public — works for both local dev
+ * (.env file) and Docker containers (passed via -e / docker-compose environment:).
+ * Falls back to localhost:8080 when the variable is unset.
  */
-const baseUrl: string =
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	(typeof import.meta !== 'undefined' && (import.meta as any).env?.PUBLIC_BACKTEST_EAPI_URL) ||
-	'http://localhost:8080';
+const baseUrl: string = env.PUBLIC_BACKTEST_EAPI_URL || 'http://localhost:8080';
 
 /**
  * Singleton Zodios client for backtest-eapi.
