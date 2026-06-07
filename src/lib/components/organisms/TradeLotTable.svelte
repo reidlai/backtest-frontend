@@ -24,52 +24,48 @@
 <div class="overflow-hidden rounded-xl border bg-card shadow-sm">
 	{#if validatedTrades.length > 0}
 		<div class="overflow-x-auto">
-			<Table.Root class="min-w-[1200px]">
+			<Table.Root class="min-w-[1000px]">
 				<Table.Header>
 					<Table.Row>
 						<Table.Head>Trade ID</Table.Head>
 						<Table.Head>Symbol</Table.Head>
-						<Table.Head>L/S</Table.Head>
-						<Table.Head>Entry Date</Table.Head>
+						<Table.Head>Side</Table.Head>
+						<Table.Head>Entry Time</Table.Head>
 						<Table.Head>Entry Price</Table.Head>
-						<Table.Head>Exit Date</Table.Head>
+						<Table.Head>Exit Time</Table.Head>
 						<Table.Head>Exit Price</Table.Head>
 						<Table.Head>Qty</Table.Head>
-						<Table.Head>Comm.</Table.Head>
-						<Table.Head>Slip.</Table.Head>
-						<Table.Head>Net PnL</Table.Head>
+						<Table.Head>PnL ($)</Table.Head>
 						<Table.Head>Return %</Table.Head>
-						<Table.Head>Days</Table.Head>
 						<Table.Head>Exit Reason</Table.Head>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
-					{#each validatedTrades as trade (trade.tradeId)}
+					{#each validatedTrades as trade (trade.trade_id)}
 						<Table.Row>
-							<Table.Cell class="font-mono text-xs">{trade.tradeId}</Table.Cell>
+							<Table.Cell class="font-mono text-xs">{trade.trade_id}</Table.Cell>
 							<Table.Cell class="font-bold">{trade.symbol}</Table.Cell>
 							<Table.Cell>
-								<span class={trade.direction === 'Long' ? 'text-blue-400' : 'text-orange-400'}>
-									{trade.direction}
+								<span class={trade.side === 'LONG' ? 'text-blue-400' : 'text-orange-400'}>
+									{trade.side}
 								</span>
 							</Table.Cell>
-							<Table.Cell>{trade.entryDate}</Table.Cell>
-							<Table.Cell>${trade.entryPrice}</Table.Cell>
-							<Table.Cell>{trade.exitDate}</Table.Cell>
-							<Table.Cell>${trade.exitPrice}</Table.Cell>
+							<Table.Cell>{trade.entry_timestamp}</Table.Cell>
+							<Table.Cell>${trade.entry_price}</Table.Cell>
+							<Table.Cell>{trade.exit_timestamp}</Table.Cell>
+							<Table.Cell>${trade.exit_price}</Table.Cell>
 							<Table.Cell>{trade.quantity}</Table.Cell>
-							<Table.Cell>${trade.commission}</Table.Cell>
-							<Table.Cell>${trade.slippage}</Table.Cell>
 							<Table.Cell
-								class={trade.netPnl > 0 ? 'font-semibold text-green-400' : 'text-red-400'}
+								class={trade.pnl_absolute > 0 ? 'font-semibold text-green-400' : 'text-red-400'}
 							>
-								${trade.netPnl.toLocaleString()}
+								${trade.pnl_absolute.toLocaleString()}
 							</Table.Cell>
-							<Table.Cell class={trade.returnPct > 0 ? 'text-green-400' : 'text-red-400'}>
-								{trade.returnPct}%
+							<Table.Cell class={trade.pnl_pct > 0 ? 'text-green-400' : 'text-red-400'}>
+								{trade.pnl_pct}%
 							</Table.Cell>
-							<Table.Cell>{trade.holdingDays}</Table.Cell>
-							<Table.Cell class="text-xs text-muted-foreground">{trade.exitReason}</Table.Cell>
+							<Table.Cell class="text-xs text-muted-foreground"
+								>{trade.exit_reason ?? '—'}</Table.Cell
+							>
 						</Table.Row>
 					{/each}
 				</Table.Body>
