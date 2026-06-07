@@ -21,6 +21,6 @@
 <Story
 	name="WithInvalidRecords"
 	args={{
-		trades: [sampleTrades[0], { tradeId: 'bad', symbol: 123, direction: 'Unknown' }]
+		trades: [sampleTrades[0], { trade_id: 'bad', symbol: 123, side: 'UNKNOWN' }]
 	}}
 />

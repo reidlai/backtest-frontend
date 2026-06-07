@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { Label } from '$lib/components/ui/label';
-	import { orderTypesConfigState } from '$lib/state/order-types-config.svelte';
+	import { orderTypesConfigState } from '$lib/state/order-types-config';
 	import type { OrderType } from '$lib/schemas/order-types-config.schema';
 
 	const orderTypes: OrderType[] = [

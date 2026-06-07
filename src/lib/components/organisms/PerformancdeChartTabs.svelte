@@ -5,9 +5,35 @@
 	import { sampleBacktestResult } from '$lib/shared-mockdata/performance';
 	import { scaleTime } from 'd3';
 	import { PerformanceChartTabsSchema } from '$lib/schemas';
+	import type { PerformanceMetrics, EquityCurve, TradeRecord, SignalRecord } from '$lib/zodios';
+
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	let {
+		performanceMetrics: _performanceMetrics = null,
+		equityCurve = null,
+		executionLog: _executionLog = null,
+		signalHistory: _signalHistory = null
+	}: {
+		performanceMetrics?: PerformanceMetrics | null;
+		equityCurve?: EquityCurve | null;
+		executionLog?: TradeRecord[] | null;
+		signalHistory?: SignalRecord[] | null;
+	} = $props();
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	let state = $state<z.infer<typeof PerformanceChartTabsSchema>>(
 		PerformanceChartTabsSchema.parse({})
+	);
+
+	// Use equityCurve prop if provided; fall back to sampleBacktestResult.equity_curve
+	const activeEquityCurve = $derived(equityCurve ?? sampleBacktestResult.equity_curve);
+
+	// Convert OpenAPI equity_curve arrays to { date, value }[] for layerchart
+	const equityCurveData = $derived(
+		(activeEquityCurve.timestamps ?? []).map((ts: string, i: number) => ({
+			date: new Date(ts),
+			value: activeEquityCurve.equity_values[i] ?? 0
+		}))
 	);
 </script>
 
@@ -28,7 +54,7 @@
 		<div class="h-[400px] w-full">
 			{#if state.activeChartTab === 'equity-curve'}
 				<Chart
-					data={sampleBacktestResult.equityCurve}
+					data={equityCurveData}
 					x="date"
 					xScale={scaleTime()}
 					y="value"
