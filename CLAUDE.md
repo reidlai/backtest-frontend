@@ -2,6 +2,6 @@
 
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan
-at `specs/021-zodios-api-client/plan.md`
+at `specs/022-rxjs-state-management/plan.md`
 
 <!-- SPECKIT END -->

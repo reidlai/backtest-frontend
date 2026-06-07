@@ -1,3 +1,11 @@
+// ── Market Metric schemas ──────────────────────────────────────────────────────
+export {
+	MarketMetricResultSchema,
+	MarketMetricCollectionResultSchema,
+	type MarketMetricResult,
+	type MarketMetricCollectionResult
+} from './schemas/market-metric.schema.js';
+
 // ── Response schemas ───────────────────────────────────────────────────────────
 export { ErrorResponseSchema, type ErrorResponse } from './schemas/error-response.schema.js';
 export { HealthResponseSchema, type HealthResponse } from './schemas/health.schema.js';

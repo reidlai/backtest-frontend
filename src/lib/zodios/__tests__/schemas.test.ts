@@ -354,3 +354,73 @@ describe('StrategyServicePatchRequestBodySchema', () => {
 		expect(result.name).toBe('New Name');
 	});
 });
+
+// ── Market Metric Schemas ─────────────────────────────────────────────────────
+
+import {
+	MarketMetricResultSchema,
+	MarketMetricCollectionResultSchema
+} from '$lib/zodios/schemas/market-metric.schema.js';
+
+const marketMetricExample = {
+	symbol: 'VIX',
+	name: 'CBOE Volatility Index',
+	value: 14.25,
+	change: -0.35,
+	change_pct: -2.4,
+	as_of: '2026-06-07T20:00:00Z',
+	stale: false
+};
+
+describe('MarketMetricResultSchema', () => {
+	it('parses a valid MarketMetricResult (OpenAPI example payload)', () => {
+		const result = MarketMetricResultSchema.parse(marketMetricExample);
+		expect(result.symbol).toBe('VIX');
+		expect(result.value).toBe(14.25);
+		expect(result.change).toBe(-0.35);
+		expect(result.change_pct).toBe(-2.4);
+		expect(result.stale).toBe(false);
+		expect(result.as_of).toBe('2026-06-07T20:00:00Z');
+	});
+
+	it('throws ZodError when required field symbol is missing', () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { symbol: _symbol, ...withoutSymbol } = marketMetricExample;
+		expect(() => MarketMetricResultSchema.parse(withoutSymbol)).toThrow();
+	});
+
+	it('throws ZodError when value is a string instead of number', () => {
+		expect(() =>
+			MarketMetricResultSchema.parse({ ...marketMetricExample, value: '14.25' })
+		).toThrow();
+	});
+});
+
+describe('MarketMetricCollectionResultSchema', () => {
+	it('parses a valid collection with five items', () => {
+		const payload = {
+			items: [
+				marketMetricExample,
+				{ ...marketMetricExample, symbol: 'SP500', name: 'S&P 500' },
+				{ ...marketMetricExample, symbol: 'NDX100', name: 'Nasdaq 100' },
+				{ ...marketMetricExample, symbol: 'HSI', name: 'Hang Seng Index' },
+				{ ...marketMetricExample, symbol: 'US10Y', name: 'US 10-Year Treasury' }
+			],
+			as_of: '2026-06-07T20:00:00Z'
+		};
+		const result = MarketMetricCollectionResultSchema.parse(payload);
+		expect(result.items).toHaveLength(5);
+		expect(result.as_of).toBe('2026-06-07T20:00:00Z');
+	});
+
+	it('throws ZodError when items is missing', () => {
+		expect(() =>
+			MarketMetricCollectionResultSchema.parse({ as_of: '2026-06-07T20:00:00Z' })
+		).toThrow();
+	});
+
+	it('parses stale:true correctly', () => {
+		const result = MarketMetricResultSchema.parse({ ...marketMetricExample, stale: true });
+		expect(result.stale).toBe(true);
+	});
+});
