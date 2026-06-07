@@ -263,6 +263,8 @@ jobs:
 
       - name: Run Trivy vulnerability scanner (HIGH, CRITICAL)
         uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: sarif
@@ -272,11 +274,12 @@ jobs:
           trivyignores: .trivyignore
           ignore-unfixed: true
           limit-severities-for-sarif: true
-          cache: false
 
       - name: Run Trivy vulnerability scanner (LOW, MEDIUM)
         if: always()
         uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           image-ref: ${{ needs.build.outputs.image-name }}
           format: table
