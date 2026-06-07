@@ -74,6 +74,10 @@ Feature: Zodios API Client with OpenAPI-Derived Zod Schemas
     Then the component re-renders with the new value
 
   Scenario: State modules compile without RxJS dependency
+    # Note (feature 022): RxJS BehaviorSubject streams live in src/lib/rxjs/ (the approved
+    # import boundary). State modules in src/lib/state/ remain RxJS-free singletons whose
+    # $state properties are written to by layout-level subscription glue. This scenario
+    # continues to hold after feature 022 is implemented.
     When the state module files are compiled
     Then no RxJS or Observable import is present in any file under src/lib/state/
 

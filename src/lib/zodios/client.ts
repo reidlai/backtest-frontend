@@ -18,6 +18,8 @@ import {
 	BacktestResultResourceSchema,
 	BacktestRunResultSchema,
 	HealthResponseSchema,
+	MarketMetricCollectionResultSchema,
+	MarketMetricResultSchema,
 	PagedBacktestResultResourceSchema,
 	PagedBacktestRunResultSchema,
 	PagedStrategyResultSchema,
@@ -103,6 +105,25 @@ setFetcherHook({
 // ── Endpoint definitions (all 15 from OpenAPI spec) ───────────────────────────
 
 const backtestEapiEndpoints = [
+	// ─── Market Metrics (collection) ──────────────────────────────────────────
+	{
+		method: 'get' as const,
+		path: '/v1/market-metrics',
+		alias: 'listMarketMetrics',
+		description: 'Returns all five canonical market indicator snapshots.',
+		response: MarketMetricCollectionResultSchema
+	},
+
+	// ─── Market Metrics (model) ────────────────────────────────────────────────
+	{
+		method: 'get' as const,
+		path: '/v1/market-metrics/:symbol',
+		alias: 'getMarketMetric',
+		description: 'Returns a single market indicator by canonical symbol.',
+		response: MarketMetricResultSchema,
+		parameters: [{ name: 'symbol', type: 'Path' as const, schema: z.string() }]
+	},
+
 	// ─── Health ────────────────────────────────────────────────────────────────
 	{
 		method: 'get' as const,
