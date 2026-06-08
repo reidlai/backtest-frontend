@@ -55,7 +55,9 @@
 
 		// Backtest Queue = pending | running runs
 		const allRuns = backtestRunState.list?.items ?? [];
-		const queueCount = allRuns.filter((r) => r.status === 'pending' || r.status === 'running').length;
+		const queueCount = allRuns.filter(
+			(r) => r.status === 'pending' || r.status === 'running'
+		).length;
 		const queueDelta = queueCount - _prevQueueCount;
 		_prevQueueCount = queueCount;
 
@@ -107,18 +109,24 @@
 
 <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 	{#if marketMetricState.loading}
-		{#each { length: 5 } as _, i (i)}
+		{#each [0, 1, 2, 3, 4] as i (i)}
 			<div class="h-24 animate-pulse rounded-lg bg-muted" aria-hidden="true"></div>
 		{/each}
 	{:else if marketMetricState.error}
-		<div class="col-span-full rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+		<div
+			class="col-span-full rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+		>
 			Failed to load market metrics — <button
 				class="underline underline-offset-2"
-				onclick={() => { import('$lib/rxjs/market-metrics.stream.js').then(m => m.refreshMarketMetrics()); }}
-			>retry</button>
+				onclick={() => {
+					import('$lib/rxjs/market-metrics.stream.js').then((m) => m.refreshMarketMetrics());
+				}}>retry</button
+			>
 		</div>
 	{:else if state.metrics.length === 0}
-		<div class="col-span-full rounded-lg border border-dashed px-4 py-3 text-sm text-muted-foreground">
+		<div
+			class="col-span-full rounded-lg border border-dashed px-4 py-3 text-sm text-muted-foreground"
+		>
 			No market metrics available.
 		</div>
 	{:else}
