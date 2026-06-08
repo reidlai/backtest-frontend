@@ -1,7 +1,7 @@
 resource "google_cloud_run_v2_service" "frontend" {
-  name     = var.service_name
-  location = var.region
-  deletion_protection=false
+  name                = var.service_name
+  location            = var.region
+  deletion_protection = false
   template {
     scaling {
       min_instance_count = var.min_instances
