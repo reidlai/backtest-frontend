@@ -159,7 +159,8 @@
       "Bash(CLAUDE_CODE_TMPDIR=/tmp grep \"MetricCategorySchema\" src/lib/schemas/index.ts)",
       "Bash(CLAUDE_CODE_TMPDIR=/tmp grep \"market-metric\" src/lib/schemas/index.ts)",
       "Bash(CLAUDE_CODE_TMPDIR=/tmp npx svelte-check --tsconfig ./tsconfig.json)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(xargs ls -la)"
     ]
   },
   "mcpServers": {}
