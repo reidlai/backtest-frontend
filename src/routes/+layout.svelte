@@ -36,6 +36,8 @@
 	} from '$lib/rxjs/backtest-runs.stream.js';
 	import { backtestRunState } from '$lib/state/backtest-run.svelte.js';
 	import type { ErrorResponse } from '$lib/zodios';
+	import { useMockData } from '$lib/env.js';
+	import { sampleMarketMetricCollection } from '$lib/shared-mockdata/market.js';
 
 	type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
@@ -67,6 +69,16 @@
 	let _subs: { unsubscribe(): void }[] = [];
 
 	onMount(() => {
+		if (useMockData) {
+			// Mock mode: seed the three RxJS-backed state modules from shared-mockdata.
+			// Organisms that don't yet have RxJS streams continue using their own mock imports.
+			marketMetricState.data = sampleMarketMetricCollection;
+			// strategyListState and backtestRunState remain null — their organisms
+			// are responsible for their own mock seeding until API integration is complete.
+			return;
+		}
+
+		// API mode: wire RxJS streams → Svelte $state and trigger initial fetches.
 		// Collect subscriptions in _subs so they can be disposed in onDestroy to prevent memory leaks
 		_subs.push(
 			// US1 — Market Metrics

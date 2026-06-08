@@ -89,7 +89,7 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 
 ### Measurable Outcomes
 
-- **SC-001**: All five market metric tiles display live values on initial page load; the fetch is triggered automatically by the `onMount`-level `refreshMarketMetrics()` call in the layout entry point (not on module import).
+- **SC-001**: All five market metric tiles display live values on initial page load; the fetch is triggered automatically by the `onMount`-level `refreshMarketMetrics()` call in the layout entry point (not on module import). While the fetch is in-flight (`marketMetricState.loading === true`), five skeleton placeholder cards are shown. If the fetch fails (`marketMetricState.error !== null`), an inline error banner with a retry affordance is rendered in place of the tiles; clicking retry calls `refreshMarketMetrics()`. If the API returns an empty collection, a "no data available" message is shown.
 - **SC-002**: A second component subscribing to the same BehaviorSubject receives the cached value without issuing a second network request.
 - **SC-003**: A 401 API response causes the BehaviorSubject error stream to emit before the next macrotask (within the same microtask flush); no unhandled promise rejection reaches the console.
 - **SC-004**: Rapid successive refresh calls result in exactly one completed network request (earlier in-flight requests are cancelled).

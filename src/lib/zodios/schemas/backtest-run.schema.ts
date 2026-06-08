@@ -24,7 +24,7 @@ export const BacktestRunResultSchema = z.object({
 	id: z.string().uuid(),
 	strategy_ids: z.array(z.string()),
 	strategy_versions: z.array(z.string()),
-	status: z.string(),
+	status: z.enum(['pending', 'running', 'completed', 'failed']),
 	config: BacktestConfigSchema,
 	start_time: z.string().optional(),
 	end_time: z.string().optional()
