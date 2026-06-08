@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { MarketMetricSchema, MarketRegimeSchema, ScreenerResultSchema } from '$lib/schemas';
+import type { MarketMetricCollectionResult } from '$lib/zodios';
 
 type MarketMetric = z.infer<typeof MarketMetricSchema>;
 type MarketRegime = z.infer<typeof MarketRegimeSchema>;
@@ -236,3 +237,16 @@ export const sampleScreenerResults: ScreenerResult[] = [
 		score: 80
 	}
 ];
+
+// API-shape seed for marketMetricState when PUBLIC_USE_MOCK_DATA=true.
+// Values mirror sampleMarketMetrics (UI shape) so both modes show identical data.
+export const sampleMarketMetricCollection: MarketMetricCollectionResult = {
+	as_of: new Date().toISOString(),
+	items: [
+		{ symbol: 'SP500', name: 'S&P 500', value: 5234.18, change: 62.05, change_pct: 1.2, as_of: new Date().toISOString(), stale: false },
+		{ symbol: 'NDX100', name: 'NASDAQ 100', value: 18345.62, change: 270.83, change_pct: 1.5, as_of: new Date().toISOString(), stale: false },
+		{ symbol: 'HSI', name: 'Hang Seng Index', value: 16723.10, change: -134.26, change_pct: -0.8, as_of: new Date().toISOString(), stale: false },
+		{ symbol: 'VIX', name: 'CBOE Volatility Index', value: 14.25, change: -0.35, change_pct: -2.4, as_of: new Date().toISOString(), stale: false },
+		{ symbol: 'US10Y', name: 'US 10-Year Treasury Yield', value: 4.32, change: 0.05, change_pct: 0.05, as_of: new Date().toISOString(), stale: false }
+	]
+};
