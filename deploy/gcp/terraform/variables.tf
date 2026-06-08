@@ -51,12 +51,6 @@ variable "env_vars" {
   default     = {}
 }
 
-variable "github_token" {
-  description = "GitHub Personal Access Token with `read:packages` scope; consumed by the Artifact Registry remote repository to authenticate to GHCR. Supplied via terraform.tfvars (gitignored). Never committed."
-  type        = string
-  sensitive   = true
-}
-
 variable "artifact_registry_repo" {
   description = "Name of the Artifact Registry remote repository used to proxy ghcr.io images."
   type        = string

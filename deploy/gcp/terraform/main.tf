@@ -1,7 +1,7 @@
 resource "google_cloud_run_v2_service" "frontend" {
-  name     = var.service_name
-  location = var.region
-
+  name                = var.service_name
+  location            = var.region
+  deletion_protection = false
   template {
     scaling {
       min_instance_count = var.min_instances
@@ -34,5 +34,5 @@ resource "google_cloud_run_v2_service" "frontend" {
 
   ingress = "INGRESS_TRAFFIC_ALL"
 
-  depends_on = [google_project_service.cloudrun_api, google_artifact_registry_repository.ghcr_proxy]
+  depends_on = [google_project_service.cloudrun_api, google_artifact_registry_repository.backtest-frontend]
 }

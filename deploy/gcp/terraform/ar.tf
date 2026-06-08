@@ -1,4 +1,4 @@
-resource "google_artifact_registry_repository" "ghcr_proxy" {
+resource "google_artifact_registry_repository" "backtest-frontend" {
   project       = var.project_id
   location      = var.region
   repository_id = var.artifact_registry_repo
@@ -15,14 +15,14 @@ resource "google_artifact_registry_repository" "ghcr_proxy" {
     upstream_credentials {
       username_password_credentials {
         username                = "reidlai"
-        password_secret_version = google_secret_manager_secret_version.github_token.name
+        password_secret_version = data.google_secret_manager_secret_version.github_token.name
       }
     }
   }
 
   depends_on = [
     google_project_service.artifactregistry_api,
-    google_secret_manager_secret_version.github_token,
+    data.google_secret_manager_secret_version.github_token,
     google_secret_manager_secret_iam_member.ar_secret_accessor,
   ]
 }
