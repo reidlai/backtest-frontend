@@ -18,7 +18,7 @@ const mockRun = {
 	id: 'run-001',
 	strategy_ids: ['550e8400-e29b-41d4-a716-446655440001'],
 	strategy_versions: ['2026-06-04T10:30:45.123456789Z'],
-	status: 'completed',
+	status: 'completed' as const,
 	config: {} as never
 };
 
@@ -72,7 +72,7 @@ describe('backtest-runs stream', () => {
 	it('refresh() after creation emits updated list with new run', async () => {
 		const updatedPaged: PagedBacktestRunResult = {
 			total: 2,
-			items: [mockRun, { ...mockRun, id: 'run-002', status: 'pending' }]
+			items: [mockRun, { ...mockRun, id: 'run-002', status: 'pending' as const }]
 		};
 		vi.mocked(apiClient.listBacktestRuns)
 			.mockResolvedValueOnce(mockPaged)
