@@ -25,7 +25,15 @@ memory = "512Mi"
 # Non-sensitive environment variables injected into the container at runtime
 # Remove the block entirely if no env vars are needed
 env_vars = {
-  # PUBLIC_API_URL = "https://api.example.com"
+  # Required: backend API base URL (no trailing slash)
+  PUBLIC_BACKTEST_EAPI_URL = "https://backtest-eapi-<project-number>.<region>.run.app"
+
+  # Required: bearer token the frontend passes to the eAPI
+  PUBLIC_BACKTEST_EAPI_TOKEN = "<your-api-token>"
+
+  # Set to "true" to serve mock data instead of live API calls.
+  # Must be "false" (or omitted) in production so the app hits the real eAPI.
+  PUBLIC_USE_MOCK_DATA = "false"
 }
 
 # Artifact Registry remote repository name (proxies ghcr.io)
