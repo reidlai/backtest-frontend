@@ -214,7 +214,7 @@ jobs:
         run: echo "tag=build-$(date -u +'%Y%m%d%H%M')" >> "$GITHUB_OUTPUT"
       - name: Build Docker image
         run: |
-          docker build \
+          docker build -f deploy/docker/Dockerfile \
             -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.tag.outputs.tag }} \
             -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
             .
