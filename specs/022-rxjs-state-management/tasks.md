@@ -44,9 +44,10 @@
 - [x] T008 [US1] Create `src/lib/rxjs/market-metrics.stream.ts` — implement internal `Subject<void>` refresh trigger; `BehaviorSubject<MarketMetricCollectionResult | null>` (`data$`); `BehaviorSubject<Error | null>` (`error$`); `BehaviorSubject<boolean>` (`loading$`); wire `switchMap(() => from(apiClient.listMarketMetrics()).pipe(catchError(...)))` pipeline; export `refresh()` function and the three subjects
 - [x] T009 [US1] Create `src/lib/state/market-metric.svelte.ts` — `MarketMetricState` class with `data: MarketMetricCollectionResult | null = $state(null)`, `loading: boolean = $state(false)`, `error: Error | null = $state(null)`; export singleton `marketMetricState`
 - [x] T010 [US1] Add subscription glue in `src/routes/+layout.svelte` (inside `onMount`) — subscribe `marketMetricsData$` → `marketMetricState.data`, `marketMetricsError$` → `marketMetricState.error`, `marketMetricsLoading$` → `marketMetricState.loading`; call `refreshMarketMetrics()`; unsubscribe all in `onDestroy`
-- [x] T011 [US1] Write unit tests in `src/lib/rxjs/__tests__/market-metrics.stream.test.ts` — assert `data$` starts as `null`; mock `apiClient.listMarketMetrics` and assert `refresh()` emits result to `data$`; assert 401 error emits on `error$` while `data$` retains last good value; assert `loading$` transitions `false → true → false`; assert rapid double-`refresh()` results in only one emission (switchMap cancellation). **Testing approach**: use `vi.fn()` mocks with `firstValueFrom` for synchronous value assertions; use `rxjs/testing` `TestScheduler` for marble-based timing assertions on `loading$` and switchMap cancellation. Document chosen approach in `src/lib/rxjs/__tests__/README.md`.
+- [x] T011 [US1] Write unit tests in `src/lib/rxjs/__tests__/market-metrics.stream.test.ts` — assert `data$` starts as `null`; mock `apiClient.listMarketMetrics` and assert `refresh()` emits result to `data$`; assert 401 error emits on `error$` while `data$` retains last good value; assert `loading$` transitions `false → true → false`; assert rapid double-`refresh()` results in only one emission (switchMap cancellation); **assert a second subscription to `marketMetricsData$` receives the last emitted value without triggering a new mock call** (BehaviorSubject replay — SC-002 parity). **Testing approach**: use `vi.fn()` mocks with `firstValueFrom` for synchronous value assertions; use `rxjs/testing` `TestScheduler` for marble-based timing assertions on `loading$` and switchMap cancellation. Document chosen approach in `src/lib/rxjs/__tests__/README.md`.
+- [ ] T011b [US1] Update `src/lib/components/organisms/DashboardMetricGrid.svelte` to render states driven by `marketMetricState` — show five skeleton placeholder cards while `marketMetricState.loading === true`; show an inline error banner with a retry button (calls `refreshMarketMetrics()`) when `marketMetricState.error !== null`; show a "no data available" message when `marketMetricState.data` is an empty collection (SC-001).
 
-**Checkpoint**: US1 independently functional — market metrics tiles render live data; error state preserved on API failure; `src/lib/state/` files import no RxJS symbols.
+**Checkpoint**: US1 independently functional — market metrics tiles render live data with skeleton/error/empty states; error state preserved on API failure; `src/lib/state/` files import no RxJS symbols.
 
 ---
 
@@ -76,7 +77,7 @@
 
 - [x] T015 [US3] Create `src/lib/rxjs/backtest-runs.stream.ts` — same three-BehaviorSubject pattern; wire `switchMap(() => from(apiClient.listBacktestRuns()).pipe(catchError(...)))`; export `refresh()` as `refreshBacktestRuns` and subjects as `backtestRunsData$`, `backtestRunsError$`, `backtestRunsLoading$`
 - [x] T016 [US3] Add subscription glue in `src/routes/+layout.svelte` (inside the existing `onMount` block) — subscribe `backtestRunsData$` → `backtestRunState.list`, `backtestRunsError$` → `backtestRunState.error`, `backtestRunsLoading$` → `backtestRunState.loading`; call `refreshBacktestRuns()`; add unsubscribe to `onDestroy`
-- [x] T017 [US3] Write unit tests in `src/lib/rxjs/__tests__/backtest-runs.stream.test.ts` — assert `data$` starts as `null`; mock `apiClient.listBacktestRuns` and assert `refresh()` emits `PagedBacktestRunResult`; assert 401 error emits on `error$` with status 401; assert switchMap cancellation on rapid refresh
+- [x] T017 [US3] Write unit tests in `src/lib/rxjs/__tests__/backtest-runs.stream.test.ts` — assert `data$` starts as `null`; mock `apiClient.listBacktestRuns` and assert `refresh()` emits `PagedBacktestRunResult`; assert 401 error emits on `error$` with status 401; assert switchMap cancellation on rapid refresh; **assert a second subscription to `backtestRunsData$` receives the last emitted value without triggering a new mock call** (BehaviorSubject replay — SC-002 parity)
 
 **Checkpoint**: US3 independently functional — backtest runs list reactive; state module unchanged; all three streams share the same structural pattern.
 
@@ -118,7 +119,7 @@ T015 → T016 → T017           (US3 sequential)
 T018 → T019, T020, T021, T022, T023 → T024
 ```
 
-> ⚠️ **Branch note**: T010, T013, and T016 changes to `src/routes/+layout.svelte` may be co-developed on a companion branch (e.g., `fix/jwt-bearer-auth`). Before merging the 022 feature PR, confirm all layout changes are present on `022-rxjs-state-management` (cherry-pick if needed). Constitution Rule 1 requires the final merge to originate from the correctly named branch.
+> **Branch note**: T010, T013, and T016 all modify `src/routes/+layout.svelte`. The companion branch `fix/jwt-bearer-auth` (PR #95) is now merged; confirm all layout changes are present on `022-rxjs-state-management` before opening the feature PR. Constitution Rule 1 requires the final merge to originate from the correctly named branch.
 
 > ⚠️ **Cross-phase file conflict**: T010, T013, and T016 all modify `src/routes/+layout.svelte`.
 > These tasks MUST be executed sequentially in order (T010 → T013 → T016), even if US1, US2,

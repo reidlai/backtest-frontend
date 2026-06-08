@@ -37,9 +37,5 @@ env_vars = {
 }
 
 # Artifact Registry remote repository name (proxies ghcr.io)
-artifact_registry_repo = "ghcr-proxy"
-
-# GitHub Personal Access Token with read:packages scope
-# Used by Artifact Registry to authenticate to ghcr.io for private image pulls
-# This value is stored in GCP Secret Manager by Terraform — never commit it
-github_token = "<your-github-pat-with-read-packages-scope>"
+# The secret ar-github-token must be pre-created in Secret Manager before applying.
+artifact_registry_repo = "backend-frontend"

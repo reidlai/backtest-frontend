@@ -23,6 +23,7 @@
 	</div>
 
 	<DashboardMetricGrid />
+
 	<div class="grid gap-8 lg:grid-cols-2">
 		<AIResearchBox bind:aiText />
 		<FunctionGateways />
