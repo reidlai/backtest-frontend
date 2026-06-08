@@ -12,6 +12,7 @@
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	import { onMount, onDestroy } from 'svelte';
+
 	// ── RxJS stream imports (feature 022) ────────────────────────────────────────
 	import {
 		marketMetricsData$,
@@ -34,8 +35,26 @@
 		refreshBacktestRuns
 	} from '$lib/rxjs/backtest-runs.stream.js';
 	import { backtestRunState } from '$lib/state/backtest-run.svelte.js';
+	import type { ErrorResponse } from '$lib/zodios';
 
 	type ChatMessage = z.infer<typeof ChatMessageSchema>;
+
+	// Adapts a native Error (from RxJS catchError) to the RFC 7807 ErrorResponse
+	// shape expected by strategy and backtest-run state modules.
+	function toErrorResponse(e: Error | null): ErrorResponse | null {
+		if (!e) return null;
+		const status =
+			typeof (e as unknown as { status?: number }).status === 'number'
+				? (e as unknown as { status: number }).status
+				: 500;
+		return {
+			type: 'urn:error:stream',
+			title: e.name || 'Error',
+			status,
+			detail: e.message,
+			instance: 'urn:request:unknown'
+		};
+	}
 
 	let { children } = $props();
 
@@ -48,6 +67,7 @@
 	let _subs: { unsubscribe(): void }[] = [];
 
 	onMount(() => {
+		// Collect subscriptions in _subs so they can be disposed in onDestroy to prevent memory leaks
 		_subs.push(
 			// US1 — Market Metrics
 			marketMetricsData$.subscribe((d) => {
@@ -64,9 +84,7 @@
 				strategyListState.data = d;
 			}),
 			strategiesError$.subscribe((e) => {
-				// Error type from stream (Error | null) is adapted to ErrorResponse | null.
-				// Existing state module type is unchanged per FR-008; cast via unknown.
-				strategyListState.error = e as unknown as typeof strategyListState.error;
+				strategyListState.error = toErrorResponse(e);
 			}),
 			strategiesLoading$.subscribe((l) => {
 				strategyListState.loading = l;
@@ -76,25 +94,31 @@
 				backtestRunState.list = d;
 			}),
 			backtestRunsError$.subscribe((e) => {
-				// Same error type adaptation as strategies above.
-				backtestRunState.error = e as unknown as typeof backtestRunState.error;
+				backtestRunState.error = toErrorResponse(e);
 			}),
 			backtestRunsLoading$.subscribe((l) => {
 				backtestRunState.loading = l;
 			})
 		);
+
+		// Trigger initial fetches for all streams
 		refreshMarketMetrics();
 		refreshStrategies();
 		refreshBacktestRuns();
 	});
 
 	onDestroy(() => {
+		// Clean up subscriptions to prevent memory leaks
 		_subs.forEach((s) => s.unsubscribe());
 		_subs = [];
 	});
 
+	// Layout snapshot to restore chat state when returning to routes under this layout via browser history navigation.
 	export const snapshot: Snapshot = {
+		// Save only last 50 messages to prevent excessive memory usage
 		capture: () => ({ messages: messages.slice(-50), chatInput }),
+
+		// Restore chat messages and input
 		restore: (value: unknown) => {
 			const result = AIChatPanelSchema.safeParse(value);
 			if (result.success) {
@@ -105,6 +129,7 @@
 	};
 </script>
 
+<!-- Inject elements (like the favicon link) directly into the HTML <head> -->
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
@@ -124,7 +149,11 @@
 
 <Toaster position="top-right" />
 
-<!-- SEO Locale links -->
+<!-- 
+	SEO Locale links: Renders hidden links for each supported language. 
+	This allows search engine crawlers to discover and index all localized versions 
+	of the current page during server-side rendering (SSR). 
+-->
 <div style="display:none" aria-hidden="true">
 	{#each locales as locale (locale)}
 		<a href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}>{locale}</a>

@@ -146,7 +146,16 @@
       "Bash(gh pr create --title 'feat\\(021\\): Zodios API client, OpenAPI Zod schemas, state modules & organism refactors' --body ' *)",
       "Bash(python3 -c \"import sys,json; p=json.load\\(sys.stdin\\); [print\\(k,v\\) for k,v in {**p.get\\('dependencies',{}\\), **p.get\\('devDependencies',{}\\)}.items\\(\\) if any\\(x in k for x in ['rxjs','zod','svelte','zodios','vitest']\\)]\")",
       "Bash(gh pr create --title 'feat\\(022\\): RxJS BehaviorSubject state management for market metrics, strategies and backtest runs' --body ' *)",
-      "Bash(pnpm tsc *)"
+      "Bash(pnpm tsc *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/market-metrics)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/health)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/strategies)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/v1/backtest-runs)",
+      "Bash(gh pr create --title 'fix\\(zodios\\): inject JWT Bearer token on all API requests' --body ' *)",
+      "Bash(gh pr *)",
+      "Bash(npx svelte-check *)",
+      "Bash(npx vitest *)",
+      "Bash(npx eslint *)"
     ]
   },
   "mcpServers": {}

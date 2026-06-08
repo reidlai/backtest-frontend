@@ -31,6 +31,12 @@ import {
 	StrategyServicePatchRequestBodySchema
 } from './index.js';
 
+// ── Runtime base URL ──────────────────────────────────────────────────────────
+// Declared before setFetcherHook so the fetch closure can capture it.
+// Reads PUBLIC_BACKTEST_EAPI_URL at module initialisation via $env/dynamic/public;
+// falls back to localhost:8080 for local development when the variable is unset.
+const baseUrl: string = env.PUBLIC_BACKTEST_EAPI_URL || 'http://localhost:8080';
+
 // ── Native-fetch FetcherProvider type ────────────────────────────────────────
 
 /**
@@ -63,8 +69,10 @@ interface NativeFetchProvider {
 
 setFetcherHook({
 	fetch(config: NativeFetchProvider['config']): Promise<NativeFetchProvider['response']> {
-		// Build URL: base + path (trailing slash already stripped in spec)
-		let url = (config.baseURL ?? '') + config.url;
+		// Build URL using the captured baseUrl closure variable.
+		// ZodiosCore v11 beta does not reliably populate config.baseURL in the
+		// fetcher config, so we capture the value at hook-registration time instead.
+		let url = baseUrl + config.url;
 
 		// Interpolate :param placeholders (e.g. /v1/strategies/:id)
 		for (const [key, value] of Object.entries(config.params ?? {})) {
@@ -82,6 +90,15 @@ setFetcherHook({
 
 		// Build fetch init
 		const headers: Record<string, string> = { ...(config.headers ?? {}) };
+
+		// Inject JWT Bearer token when available.
+		// Token is read from PUBLIC_BACKTEST_EAPI_TOKEN (runtime env via $env/dynamic/public).
+		// The backend validates token presence only (demo-level); any non-empty value works.
+		const token = env.PUBLIC_BACKTEST_EAPI_TOKEN;
+		if (token) {
+			headers['Authorization'] = `Bearer ${token}`;
+		}
+
 		const init: RequestInit = {
 			method: (config.method ?? 'GET').toUpperCase(),
 			headers
@@ -289,14 +306,6 @@ const backtestEapiEndpoints = [
 ] as const;
 
 // ── Singleton client ───────────────────────────────────────────────────────────
-
-/**
- * Base URL for backtest-eapi. Reads PUBLIC_BACKTEST_EAPI_URL from the runtime
- * environment via SvelteKit's $env/dynamic/public — works for both local dev
- * (.env file) and Docker containers (passed via -e / docker-compose environment:).
- * Falls back to localhost:8080 when the variable is unset.
- */
-const baseUrl: string = env.PUBLIC_BACKTEST_EAPI_URL || 'http://localhost:8080';
 
 /**
  * Singleton Zodios client for backtest-eapi.
