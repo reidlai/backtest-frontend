@@ -16,6 +16,7 @@ Add two new Zodios API client endpoints for `GET /v1/market-metrics` (collection
 - `@zodios/core` 11.0.0-beta.19 (existing)
 - `zod` ^4.4.3 (existing)
 - `rxjs` ^7.8.1 (new — to be added to `package.json`)
+- `pino` ^8.x (new — browser bundle via `pino/browser`; level from `PUBLIC_LOG_LEVEL`)
 - `svelte` ^5.55.2 (existing)
 - `vitest` ^4.1.3 (existing)
 
@@ -78,6 +79,7 @@ src/lib/
 │   ├── market-metrics.stream.ts             ← NEW: BehaviorSubject stream for market metrics
 │   ├── strategies.stream.ts                 ← NEW: BehaviorSubject stream for strategies
 │   ├── backtest-runs.stream.ts              ← NEW: BehaviorSubject stream for backtest runs
+│   ├── logger.ts                            ← NEW: pino browser logger (level from PUBLIC_LOG_LEVEL)
 │   └── index.ts                             ← NEW: barrel export
 └── state/
     └── market-metric.svelte.ts              ← NEW: Svelte $state module for market metrics
@@ -156,6 +158,27 @@ src/lib/rxjs/__tests__/
 13. BDD feature file `features/rxjs-state-management.feature` already created (Phase 1 artifact)
 
 14. Update `features/zodios-api-client.feature` Scenario "State modules compile without RxJS dependency" — add clarifying comment that `src/lib/rxjs/` is the approved import location; `src/lib/state/` remains RxJS-free
+
+### Phase G: Pino Logging (FR-011)
+
+**Browser constraint**: Use `pino/browser` which delegates to `console.*` — no server-side structured JSON in browser context. Level is read at build time from SvelteKit's `$env/static/public` `PUBLIC_LOG_LEVEL`; falls back to `'info'`.
+
+16. Install pino: `pnpm add pino`
+
+17. Create `src/lib/rxjs/logger.ts`:
+    ```ts
+    import pino from 'pino/browser';
+    import { PUBLIC_LOG_LEVEL } from '$env/static/public';
+    export const logger = pino({ level: PUBLIC_LOG_LEVEL ?? 'info' });
+    ```
+
+18. Update each `*.stream.ts` — inside the `switchMap` pipeline:
+    - `tap((result) => { logger.debug({ resource: '<name>', count: result.items?.length ?? 1 }, 'fetch ok'); ... })`
+    - `catchError((err) => { logger.warn({ resource: '<name>', message: err.message }, 'fetch error'); ... })`
+
+19. Add `PUBLIC_LOG_LEVEL=info` to `.env.example`; add `PUBLIC_LOG_LEVEL` documentation note to `quickstart.md`.
+
+**Env var note**: `PUBLIC_LOG_LEVEL` MUST be prefixed `PUBLIC_` to be exposed to the browser bundle via SvelteKit's `$env/static/public`. Do NOT use bare `LOG_LEVEL` — it is server-only and will be `undefined` in the browser.
 
 ### Phase F: Zod Schema Tests
 
