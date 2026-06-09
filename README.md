@@ -117,6 +117,59 @@ cd deploy/gcp/terraform/bootstrap && tofu destroy
 | AR cannot pull from GHCR            | Expired GitHub token             | Rotate PAT; run `tofu apply` to update Secret Manager   |
 | `tofu plan` shows drift after apply | Non-deterministic GCP attributes | Run `tofu apply` again; resolves on second apply        |
 
+## Run Locally with Docker
+
+Pull and run a published image from GHCR without a local build toolchain.
+
+### Prerequisites
+
+| Requirement                     | Notes                                                                                                                                  |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Docker ≥ 24                     | `docker --version` to confirm                                                                                                          |
+| GHCR read access                | Public repo — no `docker login` required for public images; authenticate with a GitHub PAT (`read:packages`) if the package is private |
+| A running backtest-eapi backend | Obtain the service URL from your Cloud Run console or `tofu apply` output                                                              |
+
+### Find an available image tag
+
+Browse published tags on the [GHCR packages page](https://github.com/reidlai/backtest-frontend/pkgs/container/backtest-frontend) or retrieve the latest tag from CI output.
+
+Tags follow the format `build-YYYYMMDDHHMI` (e.g. `build-202606090136`) or a semver tag (e.g. `v1.2.3`).
+
+### Run
+
+```bash
+docker run -p 3000:3000 \
+  -e PUBLIC_USE_MOCK_DATA="false" \
+  -e PUBLIC_LOG_LEVEL="info" \
+  -e PUBLIC_BACKTEST_EAPI_URL="https://<your-backtest-eapi-url>" \
+  -e PUBLIC_BACKTEST_EAPI_TOKEN="<your-token>" \
+  ghcr.io/reidlai/backtest-frontend:<IMAGE_TAG>
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+> **Security**: Never commit a real token to source control. Treat
+> `PUBLIC_BACKTEST_EAPI_TOKEN` as a secret — supply it via `-e` at runtime only.
+
+### Environment variable reference
+
+| Variable                     | Required | Default | Description                                                                                                                          |
+| ---------------------------- | -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `PUBLIC_BACKTEST_EAPI_URL`   | ✅       | —       | Base URL of the backtest-eapi backend (no trailing slash). Obtain from Cloud Run console or `tofu apply` `service_url` output.       |
+| `PUBLIC_BACKTEST_EAPI_TOKEN` | ✅       | —       | Bearer token for backend authentication. Any non-empty string works against the demo backend; use a signed JWT in production.        |
+| `PUBLIC_USE_MOCK_DATA`       |          | `true`  | Set to `false` to fetch live data from the backend. Leave as `true` to use bundled sample data (no backend required).                |
+| `PUBLIC_LOG_LEVEL`           |          | `info`  | Pino log level for RxJS stream logging and server startup diagnostics. Valid values: `debug` · `info` · `warn` · `error` · `silent`. |
+
+### Troubleshooting
+
+| Problem                                    | Likely Cause                        | Fix                                                                                                                          |
+| ------------------------------------------ | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `docker: Error response: manifest unknown` | Invalid image tag                   | Check the [GHCR packages page](https://github.com/reidlai/backtest-frontend/pkgs/container/backtest-frontend) for valid tags |
+| `docker: permission denied`                | Private package, not authenticated  | `echo $GITHUB_TOKEN \| docker login ghcr.io -u <github-username> --password-stdin`                                           |
+| Browser shows empty tiles, no data         | `PUBLIC_USE_MOCK_DATA` still `true` | Pass `-e PUBLIC_USE_MOCK_DATA="false"`                                                                                       |
+| API calls return 401                       | Token missing or incorrect          | Verify `PUBLIC_BACKTEST_EAPI_TOKEN` is set and non-empty                                                                     |
+| No server startup log visible              | `PUBLIC_LOG_LEVEL=warn` or higher   | Set `-e PUBLIC_LOG_LEVEL="info"` to see the startup env summary                                                              |
+
 ## Local Development
 
 ```bash

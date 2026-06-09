@@ -45,7 +45,7 @@
 - [x] T009 [US1] Create `src/lib/state/market-metric.svelte.ts` — `MarketMetricState` class with `data: MarketMetricCollectionResult | null = $state(null)`, `loading: boolean = $state(false)`, `error: Error | null = $state(null)`; export singleton `marketMetricState`
 - [x] T010 [US1] Add subscription glue in `src/routes/+layout.svelte` (inside `onMount`) — subscribe `marketMetricsData$` → `marketMetricState.data`, `marketMetricsError$` → `marketMetricState.error`, `marketMetricsLoading$` → `marketMetricState.loading`; call `refreshMarketMetrics()`; unsubscribe all in `onDestroy`
 - [x] T011 [US1] Write unit tests in `src/lib/rxjs/__tests__/market-metrics.stream.test.ts` — assert `data$` starts as `null`; mock `apiClient.listMarketMetrics` and assert `refresh()` emits result to `data$`; assert 401 error emits on `error$` while `data$` retains last good value; assert `loading$` transitions `false → true → false`; assert rapid double-`refresh()` results in only one emission (switchMap cancellation); **assert a second subscription to `marketMetricsData$` receives the last emitted value without triggering a new mock call** (BehaviorSubject replay — SC-002 parity). **Testing approach**: use `vi.fn()` mocks with `firstValueFrom` for synchronous value assertions; use `rxjs/testing` `TestScheduler` for marble-based timing assertions on `loading$` and switchMap cancellation. Document chosen approach in `src/lib/rxjs/__tests__/README.md`.
-- [ ] T011b [US1] Update `src/lib/components/organisms/DashboardMetricGrid.svelte` to render states driven by `marketMetricState` — show five skeleton placeholder cards while `marketMetricState.loading === true`; show an inline error banner with a retry button (calls `refreshMarketMetrics()`) when `marketMetricState.error !== null`; show a "no data available" message when `marketMetricState.data` is an empty collection (SC-001).
+- [x] T011b [US1] Update `src/lib/components/organisms/DashboardMetricGrid.svelte` to render states driven by `marketMetricState` — show five skeleton placeholder cards while `marketMetricState.loading === true`; show an inline error banner with a retry button (calls `refreshMarketMetrics()`) when `marketMetricState.error !== null`; show a "no data available" message when `marketMetricState.data` is an empty collection (SC-001).
 
 **Checkpoint**: US1 independently functional — market metrics tiles render live data with skeleton/error/empty states; error state preserved on API failure; `src/lib/state/` files import no RxJS symbols.
 
@@ -97,6 +97,26 @@
 
 ---
 
+## Phase 7: Pino Logging (FR-011 / SC-007)
+
+**Purpose**: Add structured debug/warn logging to all three RxJS stream modules. Logger level is controlled by the `PUBLIC_LOG_LEVEL` SvelteKit public env var (default `'info'`).
+
+**⚠️ Browser constraint**: Must use `pino/browser` (not default pino). Raw `LOG_LEVEL` is inaccessible in browser bundles — use `PUBLIC_LOG_LEVEL` via `$env/static/public`.
+
+- [x] T025 Install `pino ^8.x` via `pnpm add pino` and verify `package.json` dependency entry
+- [x] T026 Create `src/lib/rxjs/logger.ts` — pino logger with level from `$env/dynamic/public` `PUBLIC_LOG_LEVEL` (default `'info'`); uses `browser: { asObject: true }` for Vite/SSR compatibility
+- [x] T027 Update `src/lib/rxjs/market-metrics.stream.ts` — in `tap()` add `logger.debug({ resource: 'market-metrics', count: result.items?.length ?? 0 }, 'fetch ok')`; in `catchError()` add `logger.warn({ resource: 'market-metrics', message: error.message }, 'fetch error')`. No credentials logged.
+- [x] T028 Update `src/lib/rxjs/strategies.stream.ts` and `backtest-runs.stream.ts` with the same logging pattern (resource names `'strategies'` and `'backtest-runs'` respectively)
+- [x] T029 Add `PUBLIC_LOG_LEVEL=info` to `.env.example`; add a "Logging" section to `specs/022-rxjs-state-management/quickstart.md` documenting valid values (`debug`, `info`, `warn`, `error`) and the `PUBLIC_` prefix requirement
+
+**Checkpoint**: With `PUBLIC_LOG_LEVEL=debug` in `.env.local`, browser devtools console shows one debug entry per successful refresh and one warn entry per error — no credential data in log output (SC-007).
+
+- [x] T030 [SERVER] Update `src/hooks.server.ts` — add a server-side pino logger (plain Node.js, no browser config) and emit one `logger.info({ PUBLIC_BACKTEST_EAPI_URL, PUBLIC_USE_MOCK_DATA, PUBLIC_LOG_LEVEL }, 'app env')` call at module initialisation. Read values from `$env/dynamic/public`. `PUBLIC_BACKTEST_EAPI_TOKEN` MUST NOT be included. Confirm output appears in server stdout on `pnpm dev` start (SC-008).
+
+**Checkpoint (T030)**: Running `pnpm dev` shows a single JSON info line with the three safe env keys in server stdout before the first request is served.
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -107,6 +127,7 @@
 - **Phase 4 (US2)**: Depends on Phase 2 — no dependency on US1 or US3
 - **Phase 5 (US3)**: Depends on Phase 2 — no dependency on US1 or US2
 - **Phase 6 (Polish)**: Depends on all user story phases completing
+- **Phase 7 (Logging)**: Depends on Phase 3 streams existing (T008, T012, T015); can run in parallel with Phase 6
 
 ### Within-Phase Dependencies
 
@@ -117,6 +138,7 @@ T008 → T009 → T010 → T011   (US1 sequential: stream → state → layout �
 T012 → T013 → T014           (US2 sequential)
 T015 → T016 → T017           (US3 sequential)
 T018 → T019, T020, T021, T022, T023 → T024
+T025 → T026 → T027 → T028 → T029   (Phase 7 sequential: install → logger → streams → env)
 ```
 
 > **Branch note**: T010, T013, and T016 all modify `src/routes/+layout.svelte`. The companion branch `fix/jwt-bearer-auth` (PR #95) is now merged; confirm all layout changes are present on `022-rxjs-state-management` before opening the feature PR. Constitution Rule 1 requires the final merge to originate from the correctly named branch.

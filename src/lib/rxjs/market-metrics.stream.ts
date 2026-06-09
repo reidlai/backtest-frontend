@@ -13,6 +13,7 @@ import { BehaviorSubject, Subject, EMPTY, from } from 'rxjs';
 import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
 import type { MarketMetricCollectionResult } from '$lib/zodios';
 import { apiClient } from '$lib/zodios/client.js';
+import { logger } from './logger.js';
 
 // ── Internal subjects ─────────────────────────────────────────────────────────
 
@@ -37,9 +38,15 @@ _refresh$
 				tap((result) => {
 					marketMetricsData$.next(result);
 					marketMetricsError$.next(null);
+					logger.debug(
+						{ resource: 'market-metrics', count: result.items?.length ?? 0 },
+						'fetch ok'
+					);
 				}),
 				catchError((err: unknown) => {
-					marketMetricsError$.next(err instanceof Error ? err : new Error(String(err)));
+					const error = err instanceof Error ? err : new Error(String(err));
+					marketMetricsError$.next(error);
+					logger.warn({ resource: 'market-metrics', message: error.message }, 'fetch error');
 					return EMPTY;
 				}),
 				finalize(() => marketMetricsLoading$.next(false))

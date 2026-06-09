@@ -77,6 +77,8 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 - **FR-008**: Subscription glue that bridges RxJS streams to Svelte $state MUST live at the layout or app entry-point level (e.g., `src/routes/+layout.svelte` `onMount`). Existing strategy and backtest-run state modules (`strategy-list.svelte.ts`, `backtest-run.svelte.ts`) MUST NOT be modified to import from `rxjs` or `$lib/rxjs`; they remain RxJS-free singletons whose `$state` properties are written to by the layout subscription glue.
 - **FR-009**: Error states (network failure, 401, 404) MUST be captured in the BehaviorSubject error path and reflected in component state without crashing the application. The stream MUST remain in the error state until an explicit `refresh()` call is made — no auto-retry.
 - **FR-010**: The `src/lib/rxjs/` module MUST export a single index that exposes all BehaviorSubjects and refresh functions for tree-shaking-friendly imports.
+- **FR-011**: System MUST add a pino logger (browser bundle) at `src/lib/rxjs/logger.ts`, initialised with `level` from the SvelteKit public env var `PUBLIC_LOG_LEVEL` (default `'info'`). Each `*.stream.ts` MUST emit a `logger.debug(...)` entry on every successful API response (including resource name and response item count) and a `logger.warn(...)` entry on every API error (including resource name and error message). The logger MUST NOT emit JWT tokens, raw request headers, or any credential fields.
+- **FR-012**: System MUST emit a single `info`-level log entry at server startup (via `src/hooks.server.ts`) listing the safe subset of `PUBLIC_*` environment variables: `PUBLIC_BACKTEST_EAPI_URL`, `PUBLIC_USE_MOCK_DATA`, and `PUBLIC_LOG_LEVEL`. `PUBLIC_BACKTEST_EAPI_TOKEN` MUST be excluded from this log entry. The log uses a plain Node.js pino instance (not the browser bundle). The entry fires once per server process start and is suppressed when `PUBLIC_LOG_LEVEL=warn` or higher.
 
 ### Key Entities
 
@@ -95,6 +97,8 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 - **SC-004**: Rapid successive refresh calls result in exactly one completed network request (earlier in-flight requests are cancelled).
 - **SC-005**: All new Zod schemas pass runtime validation against the example payloads from the OpenAPI spec.
 - **SC-006**: The `src/lib/rxjs/` module adds no runtime code to components that do not import it (tree-shaking verified via bundle analysis).
+- **SC-007**: When `PUBLIC_LOG_LEVEL=debug` is set at build time, the browser devtools console shows exactly one `[debug]` entry per successful `refresh()` call and one `[warn]` entry per API error, each including the resource name. No log output appears for resources not imported by the current page.
+- **SC-008**: On server start (`pnpm dev` or `node build`), the server stdout shows one `info`-level JSON line containing `PUBLIC_BACKTEST_EAPI_URL`, `PUBLIC_USE_MOCK_DATA`, and `PUBLIC_LOG_LEVEL`. `PUBLIC_BACKTEST_EAPI_TOKEN` does not appear anywhere in that line.
 
 ## Clarifications
 
@@ -109,6 +113,7 @@ A developer wants the backtest runs list to follow the same RxJS pattern so that
 - Analysis remediation (U1): Assumptions updated — 401 redirect is out of scope; error propagation only.
 - Analysis remediation (I1/SC-006): Assumptions updated — tree-shaking is a Vite/Rollup build-system guarantee; no manual bundle analysis task needed.
 - Analysis remediation (U2): T011 updated — test approach specified (vi.fn + firstValueFrom; TestScheduler for marble assertions).
+- Analysis remediation (C1/U1/A1/E1) 2026-06-09: FR-011 and SC-007 added — pino logger at `src/lib/rxjs/logger.ts`; level controlled by `PUBLIC_LOG_LEVEL` (SvelteKit `$env/static/public`); logging boundary is stream-level tap/catchError (not Zodios interceptors); JWT and credential fields MUST NOT be logged.
 
 ## Assumptions
 

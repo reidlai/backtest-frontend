@@ -10,6 +10,7 @@ import { BehaviorSubject, Subject, EMPTY, from } from 'rxjs';
 import { switchMap, catchError, tap, finalize } from 'rxjs/operators';
 import type { PagedStrategyResult } from '$lib/zodios';
 import { apiClient } from '$lib/zodios/client.js';
+import { logger } from './logger.js';
 
 // ── Internal subjects ─────────────────────────────────────────────────────────
 
@@ -34,9 +35,12 @@ _refresh$
 				tap((result) => {
 					strategiesData$.next(result);
 					strategiesError$.next(null);
+					logger.debug({ resource: 'strategies', count: result.items?.length ?? 0 }, 'fetch ok');
 				}),
 				catchError((err: unknown) => {
-					strategiesError$.next(err instanceof Error ? err : new Error(String(err)));
+					const error = err instanceof Error ? err : new Error(String(err));
+					strategiesError$.next(error);
+					logger.warn({ resource: 'strategies', message: error.message }, 'fetch error');
 					return EMPTY;
 				}),
 				finalize(() => strategiesLoading$.next(false))
