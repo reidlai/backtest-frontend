@@ -111,6 +111,10 @@
 
 **Checkpoint**: With `PUBLIC_LOG_LEVEL=debug` in `.env.local`, browser devtools console shows one debug entry per successful refresh and one warn entry per error — no credential data in log output (SC-007).
 
+- [x] T030 [SERVER] Update `src/hooks.server.ts` — add a server-side pino logger (plain Node.js, no browser config) and emit one `logger.info({ PUBLIC_BACKTEST_EAPI_URL, PUBLIC_USE_MOCK_DATA, PUBLIC_LOG_LEVEL }, 'app env')` call at module initialisation. Read values from `$env/dynamic/public`. `PUBLIC_BACKTEST_EAPI_TOKEN` MUST NOT be included. Confirm output appears in server stdout on `pnpm dev` start (SC-008).
+
+**Checkpoint (T030)**: Running `pnpm dev` shows a single JSON info line with the three safe env keys in server stdout before the first request is served.
+
 ---
 
 ## Dependencies & Execution Order
